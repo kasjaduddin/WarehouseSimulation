@@ -59,7 +59,7 @@ namespace Keyboard
         [SerializeField] private Color selectedColor = Color.blue;
         
         [Header("Output Field Settings")]
-        [SerializeField] private TMP_InputField outputField;
+        public TMP_InputField outputField;
         [SerializeField] private Button enterButton;
         [SerializeField] private int maxCharacters = 15;
         [SerializeField] private int minCharacters = 3;
