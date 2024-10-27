@@ -1,19 +1,21 @@
 using UnityEngine;
+using TMPro;
 
 public class BinRegistrationManager : MonoBehaviour
 {
     public GoogleFormConnector connector;
-    // Start is called before the first frame update
+    public TextMeshProUGUI codeInputField;
+    public TextMeshProUGUI informationInputField;
     private string code;
     private string information;
     void Start()
     {
-        AddNewBin();
+
     }
-    void AddNewBin()
+    public void AddNewBin()
     {
-        code = "A1";
-        information = "Box";
+        code = codeInputField.text;
+        information = informationInputField.text;
 
         StartCoroutine(connector.WriteData(code, information));
     }
