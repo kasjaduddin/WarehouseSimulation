@@ -6,9 +6,9 @@ using System;
 
 public class GoogleSheetsConnector : MonoBehaviour
 {
-    private string apiKey;
-    private string sheetId;
-    private string baseUrl;
+    private string apiKey; // Variable to hold the API Key
+    private string sheetId; // Variable to hold the sheet ID
+    private string baseUrl; // Variable to hold the base URL of the Google Sheets
 
     void Start()
     {
@@ -22,8 +22,10 @@ public class GoogleSheetsConnector : MonoBehaviour
     public IEnumerator ReadData(string sheetName, System.Action<string> callback)
     {
         string url = string.Format(baseUrl, sheetName);
+
         using (UnityWebRequest www = UnityWebRequest.Get(url))
         {
+            // Send the GET request to the server and wait for a response
             yield return www.SendWebRequest();
             if (www.result != UnityWebRequest.Result.Success)
             {
