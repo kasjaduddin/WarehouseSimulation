@@ -5,17 +5,20 @@ using TMPro;
 
 public class BinListManager : MonoBehaviour
 {
+    public GoogleSheetsConnector connector; // Reference to the Google Sheets connector
+    private JArray bins; // Array to store bins data
+    public GameObject recordTemplate; // Template for displaying each record
+    public Transform container; // Container to hold the instantiated records
 
-    public GoogleSheetsConnector connector;
-    private JArray bins;
-    public GameObject recordTemplate;
-    public Transform container;
     // Start is called before the first frame update
     void OnEnable()
     {
+        // Invoke GetData method after a short delay
         bins = JArray.Parse(@"[[null, '', '']]");
         Invoke("GetData", 0.1f);
     }
+
+    // Get all bin data from Google Sheets
     public void GetData()
     {
         StartCoroutine(connector.ReadData("Bins", (data) =>
@@ -28,6 +31,7 @@ public class BinListManager : MonoBehaviour
         }));
     }
 
+    // Display all bin data to bin table
     void ShowRecord()
     {
         float templateHigh = 91f;
@@ -38,13 +42,14 @@ public class BinListManager : MonoBehaviour
             RectTransform entryRectTransform = newRow.GetComponent<RectTransform>();
             Image entryImage = newRow.GetComponent<Image>();
             entryRectTransform.anchoredPosition = new Vector2(0f, -templateHigh * i);
-            //entryImage.Find("Record Background").GetComponent<Image>().
             newRowTransform.Find("Id").GetComponent<TextMeshProUGUI>().text = (i + 1).ToString();
             newRowTransform.Find("Code").GetComponent<TextMeshProUGUI>().text = bins[i][1].ToString();
             newRowTransform.Find("Information").GetComponent<TextMeshProUGUI>().text = bins[i][2].ToString();
         }
         recordTemplate.SetActive(false);
     }
+
+    // Delete shows all bin data in the bin table
     public void DestroyRecord()
     {
         foreach (Transform child in container)
