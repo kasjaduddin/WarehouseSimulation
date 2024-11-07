@@ -29333,7 +29333,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 1.02e-43, y: 3e-45, z: 4.638e-42, w: 0}
+  m_BoundingSphereOverride: {x: 1.02e-43, y: 4e-45, z: 1.8932e-41, w: 0}
   m_UseBoundingSphereOverride: 0
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
@@ -31519,6 +31519,8 @@ MonoBehaviour:
   connector: {fileID: 1764455415}
   usernameInputField: {fileID: 2093681462}
   passwordInputField: {fileID: 1923564500}
+  loginPanel: {fileID: 1940044838}
+  keyboard: {fileID: 815358428}
 --- !u!1 &1942215836
 GameObject:
   m_ObjectHideFlags: 0

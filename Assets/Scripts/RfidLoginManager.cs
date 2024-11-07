@@ -8,6 +8,9 @@ public class RfidLoginManager : MonoBehaviour
     private JArray accounts; // Array to store account data
     public TextMeshProUGUI usernameInputField; // Input field for username
     public TextMeshProUGUI passwordInputField; // Input field for password
+    public GameObject loginPanel;
+    public GameObject keyboard;
+
     private string username; // Variable to store the username
     private string password; // Variable to store the password
     void Start()
@@ -35,6 +38,8 @@ public class RfidLoginManager : MonoBehaviour
                 if (password == account[1].ToString())
                 {
                     Debug.Log($"Login as {username}");
+                    loginPanel.SetActive(false);
+                    keyboard.SetActive(false);
                     break;
                 }
                 else
