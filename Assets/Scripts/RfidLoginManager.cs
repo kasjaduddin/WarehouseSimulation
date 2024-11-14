@@ -10,6 +10,7 @@ public class RfidLoginManager : MonoBehaviour
     public TextMeshProUGUI passwordInputField; // Input field for password
     public GameObject loginPanel;
     public GameObject keyboard;
+    public GameObject ErrorLoginPopUp;
 
     private string username; // Variable to store the username
     private string password; // Variable to store the password
@@ -43,7 +44,7 @@ public class RfidLoginManager : MonoBehaviour
                     break;
                 }
                 else
-                    Debug.Log("Wrong password");
+                    ErrorLoginPopUp.SetActive(true);
             else
                 Debug.Log($"User with username {username} not found");
         }
