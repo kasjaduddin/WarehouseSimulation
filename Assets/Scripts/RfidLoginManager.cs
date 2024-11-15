@@ -46,7 +46,7 @@ public class RfidLoginManager : MonoBehaviour
                 else
                     ErrorLoginPopUp.SetActive(true);
             else
-                Debug.Log($"User with username {username} not found");
+                ErrorLoginPopUp.SetActive(true);
         }
     }
 }
