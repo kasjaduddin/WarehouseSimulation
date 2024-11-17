@@ -35,18 +35,15 @@ public class RfidLoginManager : MonoBehaviour
 
         foreach (JArray account in accounts)
         {
-            if (username == account[0].ToString())
-                if (password == account[1].ToString())
-                {
-                    Debug.Log($"Login as {username}");
-                    loginPanel.SetActive(false);
-                    keyboard.SetActive(false);
-                    break;
-                }
-                else
-                    ErrorLoginPopUp.SetActive(true);
+            if (username == account[0].ToString() && password == account[1].ToString())
+            {
+                Debug.Log($"Login as {username}");
+                loginPanel.SetActive(false);
+                keyboard.SetActive(false);
+                break;
+            }
             else
                 ErrorLoginPopUp.SetActive(true);
         }
-    }
+    }  
 }
