@@ -41,7 +41,7 @@ public class BinListManager : MonoBehaviour
             Transform newRowTransform = newRow.transform;
             RectTransform entryRectTransform = newRow.GetComponent<RectTransform>();
             Image entryImage = newRow.GetComponent<Image>();
-            entryRectTransform.anchoredPosition = new Vector2(0f, -templateHigh * i);
+            entryRectTransform.anchoredPosition = new Vector2(0f, 228f + (-templateHigh * i));
             newRowTransform.Find("Id").GetComponent<TextMeshProUGUI>().text = (i + 1).ToString();
             newRowTransform.Find("Code").GetComponent<TextMeshProUGUI>().text = bins[i][1].ToString();
             newRowTransform.Find("Information").GetComponent<TextMeshProUGUI>().text = bins[i][2].ToString();
