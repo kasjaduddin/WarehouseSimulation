@@ -36238,7 +36238,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 0, y: -2.9827546e-38, z: 7.34e-43, w: 6e-44}
+  m_BoundingSphereOverride: {x: 6.42848e-40, y: 6e-44, z: 3e-45, w: 3.125e-42}
   m_UseBoundingSphereOverride: 0
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
@@ -37511,7 +37511,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: ad16d4843fc7f2149842d825329b6eb8, type: 3}
+  m_Sprite: {fileID: 21300000, guid: dbadf3ab40c8f7c4d8816f8fdaa32fea, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
