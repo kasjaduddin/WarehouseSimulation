@@ -40,13 +40,29 @@ public class BinListManager : MonoBehaviour
             GameObject newRow = Instantiate(recordTemplate, container);
             Transform newRowTransform = newRow.transform;
             RectTransform entryRectTransform = newRow.GetComponent<RectTransform>();
-            Image entryImage = newRow.GetComponent<Image>();
+
+            // Fill the UI elements with data
             entryRectTransform.anchoredPosition = new Vector2(0f, 228f + (-templateHigh * i));
             newRowTransform.Find("Id").GetComponent<TextMeshProUGUI>().text = (i + 1).ToString();
             newRowTransform.Find("Code").GetComponent<TextMeshProUGUI>().text = bins[i][1].ToString();
             newRowTransform.Find("Information").GetComponent<TextMeshProUGUI>().text = bins[i][2].ToString();
         }
         recordTemplate.SetActive(false);
+    }
+
+    private void GetRecordData(Transform recordTransform)
+    {
+        string id = recordTransform.Find("Id").GetComponent<TextMeshProUGUI>().text;
+        string code = recordTransform.Find("Code").GetComponent<TextMeshProUGUI>().text;
+        string information = recordTransform.Find("Information").GetComponent<TextMeshProUGUI>().text;
+
+        // Output the data to the console
+        Debug.Log($"Id: {id}, Code: {code}, Information: {information}");
+    }
+    // Edit selected record
+    public void EditRecord(Transform recordTransform)
+    {
+        GetRecordData(recordTransform);
     }
 
     // Delete shows all bin data in the bin table
