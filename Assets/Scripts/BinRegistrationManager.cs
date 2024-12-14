@@ -4,8 +4,8 @@ using TMPro;
 public class BinRegistrationManager : MonoBehaviour
 {
     public GoogleFormConnector connector; // Reference to the Google Form connector
-    public TextMeshProUGUI codeInputField; // Input field for the bin code
-    public TextMeshProUGUI informationInputField; // Input field for additional information
+    public TMP_InputField codeInputField;
+    public TMP_InputField informationInputField;
     private string code; // Variable to store the bin code
     private string information; // Variable to store the additional information
 
@@ -14,7 +14,7 @@ public class BinRegistrationManager : MonoBehaviour
     {
         code = codeInputField.text;
         information = informationInputField.text;
-
+        
         // Write data to the Google Form
         StartCoroutine(connector.WriteData(code, information));
     }
