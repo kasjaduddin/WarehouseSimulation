@@ -14,8 +14,16 @@ public class BinRegistrationManager : MonoBehaviour
     {
         code = codeInputField.text;
         information = informationInputField.text;
-        
+
         // Write data to the Google Form
         StartCoroutine(connector.WriteData(code, information));
+        ResetInput();
+    }
+
+    // Reset input field
+    public void ResetInput()
+    {
+        codeInputField.text = codeInputField.text.Remove(0);
+        informationInputField.text = informationInputField.text.Remove(0);
     }
 }
