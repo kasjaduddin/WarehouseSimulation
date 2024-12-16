@@ -74,9 +74,6 @@ crashlytics-build.properties
 # Sensitive data
 *.env
 
-# Ignore keystore file
-/Keystore/*
-
-# Ignore client id
-/[Aa]ssets/Authentication/*
-/[Aa]ssets/Authentication.meta
+# Firebase config files
+google-services.json
+google-services.json.meta
