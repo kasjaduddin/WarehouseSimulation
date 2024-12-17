@@ -25,7 +25,7 @@ namespace CompanySystem
                 { "numberoftags", "0" },
                 { "active", "1" }
             };
-            StartCoroutine(FirebaseServices.WriteData("bins", binData));
+            StartCoroutine(FirebaseServices.WriteData("bins", binData, true, "code"));
             ResetInput();
         }
 
