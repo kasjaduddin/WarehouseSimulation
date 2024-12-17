@@ -1,11 +1,12 @@
 using UnityEngine;
 using TMPro;
+using System.Collections.Generic;
 
 namespace CompanySystem
 {
     public class BinRegistrationManager : MonoBehaviour
     {
-        public GoogleFormConnector connector; // Reference to the Google Form connector
+        //public GoogleFormConnector connector; // Reference to the Google Form connector
         public TMP_InputField codeInputField;
         public TMP_InputField informationInputField;
         private string code; // Variable to store the bin code
@@ -17,8 +18,14 @@ namespace CompanySystem
             code = codeInputField.text;
             information = informationInputField.text;
 
-            // Write data to the Google Form
-            StartCoroutine(connector.WriteData(code, information));
+            var binData = new Dictionary<string, object>
+            {
+                { "code", code },
+                { "information", information },
+                { "numberoftags", "0" },
+                { "active", "1" }
+            };
+            StartCoroutine(FirebaseServices.WriteData("bins", binData));
             ResetInput();
         }
 
