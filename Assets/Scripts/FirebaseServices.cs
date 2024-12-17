@@ -32,43 +32,42 @@ public class FirebaseServices : MonoBehaviour
         });
     }
 
-    public static void WriteData(string collectionName, Dictionary<string, object> data)
+    public static IEnumerator WriteData(string collectionName, Dictionary<string, object> data)
     {
+        var getDataTask = reference.Child(collectionName).OrderByKey().LimitToLast(1).GetValueAsync();
 
-        reference.Child(collectionName).OrderByKey().LimitToLast(1).GetValueAsync().ContinueWithOnMainThread(task =>
+        yield return new WaitUntil(() => getDataTask.IsCompleted);
+
+        if (getDataTask.Exception != null)
         {
-            if (task.IsCompleted)
-            {
-                DataSnapshot snapshot = task.Result;
-                int newId = 1; // Default to 1 if no data exists
+            Debug.LogError($"Failed to find last ID in {collectionName} collection: {getDataTask.Exception}");
+            yield break;
+        }
 
-                // Find the next available ID
-                foreach (DataSnapshot child in snapshot.Children)
-                {
-                    int lastId = int.Parse(child.Key);
-                    newId = lastId + 1;
-                }
+        DataSnapshot snapshot = getDataTask.Result;
+        int newId = 1; // Default to 1 if no data exists
 
-                string documentId = newId.ToString();
-                DatabaseReference docRef = reference.Child(collectionName).Child(documentId);
+        // Find the next available ID
+        foreach (DataSnapshot child in snapshot.Children)
+        {
+            int lastId = int.Parse(child.Key);
+            newId = lastId + 1;
+        }
 
-                docRef.SetValueAsync(data).ContinueWithOnMainThread(innerTask =>
-                {
-                    if (innerTask.IsCompleted)
-                    {
-                        Debug.Log($"{documentId} added to {collectionName} collection.");
-                    }
-                    else
-                    {
-                        Debug.LogError($"Failed to add {documentId} to {collectionName} collection: {innerTask.Exception}");
-                    }
-                });
-            }
-            else
-            {
-                Debug.LogError($"Failed to find last ID in {collectionName} collection: {task.Exception}");
-            }
-        });
+        string documentId = newId.ToString();
+        DatabaseReference docRef = reference.Child(collectionName).Child(documentId);
+
+        var setDataTask = docRef.SetValueAsync(data);
+        yield return new WaitUntil(() => setDataTask.IsCompleted);
+
+        if (setDataTask.Exception != null)
+        {
+            Debug.LogError($"Failed to add {documentId} to {collectionName} collection: {setDataTask.Exception}");
+        }
+        else
+        {
+            Debug.Log($"{documentId} added to {collectionName} collection.");
+        }
     }
 
     public static IEnumerator ReadData(string collectionName, System.Action<JArray> callback)
