@@ -4,6 +4,8 @@ using UnityEngine;
 using Firebase;
 using Firebase.Database;
 using Firebase.Extensions;
+using System;
+using Newtonsoft.Json.Linq;
 
 public class FirebaseServices : MonoBehaviour
 {
@@ -39,7 +41,7 @@ public class FirebaseServices : MonoBehaviour
             {
                 DataSnapshot snapshot = task.Result;
                 int newId = 1; // Default to 1 if no data exists
-                
+
                 // Find the next available ID
                 foreach (DataSnapshot child in snapshot.Children)
                 {
@@ -65,6 +67,41 @@ public class FirebaseServices : MonoBehaviour
             else
             {
                 Debug.LogError($"Failed to find last ID in {collectionName} collection: {task.Exception}");
+            }
+        });
+    }
+
+    public static IEnumerator ReadData(string collectionName, System.Action<JArray> callback)
+    {
+        yield return reference.Child(collectionName).GetValueAsync().ContinueWithOnMainThread(task =>
+        {
+            if (task.IsFaulted)
+            {
+                Debug.LogError("Error reading data from Firebase: " + task.Exception);
+            }
+            else if (task.IsCompleted)
+            {
+                // Get data from snapshot
+                DataSnapshot snapshot = task.Result;
+
+                if (snapshot.Value is IList<object> list)
+                {
+                    // Transform data list to JArray
+                    JArray jArray = new JArray();
+                    foreach (DataSnapshot childSnapshot in snapshot.Children)
+                    {
+                        var jsonObject = JObject.FromObject(childSnapshot.Value);
+                        jsonObject["id"] = childSnapshot.Key;
+                        jArray.Add(jsonObject);
+                    }
+
+                    callback(jArray);
+                }
+                else
+                {
+                    Debug.LogError("Data format is not a list.");
+                    callback(null);
+                }
             }
         });
     }
