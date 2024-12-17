@@ -32,10 +32,30 @@ public class FirebaseServices : MonoBehaviour
         });
     }
 
-    public static IEnumerator WriteData(string collectionName, Dictionary<string, object> data)
+    public static IEnumerator WriteData(string collectionName, Dictionary<string, object> data, bool checkForDuplicate = false, string primaryKey = null)
     {
-        var getDataTask = reference.Child(collectionName).OrderByKey().LimitToLast(1).GetValueAsync();
+        if (checkForDuplicate && !string.IsNullOrEmpty(primaryKey) && data.ContainsKey(primaryKey))
+        {
+            // Pengecekan apakah data dengan primary/unique key sudah ada
+            var checkTask = reference.Child(collectionName).OrderByChild(primaryKey).EqualTo(data[primaryKey].ToString()).GetValueAsync();
+            yield return new WaitUntil(() => checkTask.IsCompleted);
 
+            if (checkTask.Exception != null)
+            {
+                Debug.LogError($"Error checking for duplicate: {checkTask.Exception}");
+                yield break;
+            }
+
+            DataSnapshot duplicateCheckSnapshot = checkTask.Result; // Ubah nama variabel untuk menghindari konflik
+            if (duplicateCheckSnapshot.Exists)
+            {
+                Debug.LogWarning($"Data with the same {primaryKey} already exists.");
+                yield break;
+            }
+        }
+
+        // Mendapatkan ID baru untuk dokumen
+        var getDataTask = reference.Child(collectionName).OrderByKey().LimitToLast(1).GetValueAsync();
         yield return new WaitUntil(() => getDataTask.IsCompleted);
 
         if (getDataTask.Exception != null)
@@ -44,11 +64,9 @@ public class FirebaseServices : MonoBehaviour
             yield break;
         }
 
-        DataSnapshot snapshot = getDataTask.Result;
-        int newId = 1; // Default to 1 if no data exists
-
-        // Find the next available ID
-        foreach (DataSnapshot child in snapshot.Children)
+        DataSnapshot getIdSnapshot = getDataTask.Result; // Ubah nama variabel untuk menghindari konflik
+        int newId = 1;
+        foreach (DataSnapshot child in getIdSnapshot.Children)
         {
             int lastId = int.Parse(child.Key);
             newId = lastId + 1;
