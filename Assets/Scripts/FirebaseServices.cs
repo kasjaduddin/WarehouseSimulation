@@ -36,7 +36,7 @@ public class FirebaseServices : MonoBehaviour
     {
         if (checkForDuplicate && !string.IsNullOrEmpty(primaryKey) && data.ContainsKey(primaryKey))
         {
-            // Pengecekan apakah data dengan primary/unique key sudah ada
+            // Check primary key
             var checkTask = reference.Child(collectionName).OrderByChild(primaryKey).EqualTo(data[primaryKey].ToString()).GetValueAsync();
             yield return new WaitUntil(() => checkTask.IsCompleted);
 
@@ -46,7 +46,7 @@ public class FirebaseServices : MonoBehaviour
                 yield break;
             }
 
-            DataSnapshot duplicateCheckSnapshot = checkTask.Result; // Ubah nama variabel untuk menghindari konflik
+            DataSnapshot duplicateCheckSnapshot = checkTask.Result;
             if (duplicateCheckSnapshot.Exists)
             {
                 Debug.LogWarning($"Data with the same {primaryKey} already exists.");
@@ -54,7 +54,7 @@ public class FirebaseServices : MonoBehaviour
             }
         }
 
-        // Mendapatkan ID baru untuk dokumen
+        // Get new id
         var getDataTask = reference.Child(collectionName).OrderByKey().LimitToLast(1).GetValueAsync();
         yield return new WaitUntil(() => getDataTask.IsCompleted);
 

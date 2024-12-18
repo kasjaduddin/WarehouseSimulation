@@ -1,6 +1,7 @@
 using UnityEngine;
 using TMPro;
 using System.Collections.Generic;
+using Record;
 
 namespace CompanySystem
 {
@@ -9,23 +10,21 @@ namespace CompanySystem
         //public GoogleFormConnector connector; // Reference to the Google Form connector
         public TMP_InputField codeInputField;
         public TMP_InputField informationInputField;
-        private string code; // Variable to store the bin code
-        private string information; // Variable to store the additional information
 
         // Register new bin to system
         public void AddNewBin()
         {
-            code = codeInputField.text;
-            information = informationInputField.text;
+            BinRecord newBin = new BinRecord(codeInputField.text, informationInputField.text);
 
             var binData = new Dictionary<string, object>
             {
-                { "code", code },
-                { "information", information },
-                { "numberoftags", "0" },
-                { "active", "1" }
+                { "code", newBin.Code },
+                { "information", newBin.Information },
+                { "numberoftags", newBin.NumberOfTags },
+                { "active", newBin.Active }
             };
             StartCoroutine(FirebaseServices.WriteData("bins", binData, true, "code"));
+
             ResetInput();
         }
 
