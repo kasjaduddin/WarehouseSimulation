@@ -19,18 +19,33 @@ namespace CompanySystem
         public void EditBin()
         {
             BinRecord newBin = new BinRecord(codeInputField.text, informationInputField.text);
+            string lastCode = BinListManager.selectedRecord.Code;
 
             var newBinData = new Dictionary<string, object>
-            {
-                { "id", BinListManager.selectedRecord.Id },
-                { "code", newBin.Code },
-                { "information", newBin.Information },
-                { "numberoftags", newBin.NumberOfTags },
-                { "active", newBin.Active }
-            };
-            StartCoroutine(FirebaseServices.ModifyData("bins", newBinData));
+    {
+        { "id", BinListManager.selectedRecord.Id },
+        { "code", newBin.Code },
+        { "information", newBin.Information },
+        { "numberoftags", newBin.NumberOfTags },
+        { "active", newBin.Active }
+    };
 
-            ResetInput();
+            StartCoroutine(FirebaseServices.ModifyData("bins", newBinData, true, lastCode, "code", message =>
+            {
+                Debug.Log(message);
+                if (message.Contains("updated"))
+                {
+                    ResetInput();
+                }
+                else if (message.Contains("already exists"))
+                {
+                    Debug.LogWarning("Modification failed: Duplicate primary key found.");
+                }
+                else
+                {
+                    Debug.LogError("Modification failed: " + message);
+                }
+            }));
         }
 
         // Reset input field

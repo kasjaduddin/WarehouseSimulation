@@ -4,7 +4,6 @@ using UnityEngine;
 using Firebase;
 using Firebase.Database;
 using Firebase.Extensions;
-using System;
 using Newtonsoft.Json.Linq;
 
 public class FirebaseServices : MonoBehaviour
@@ -123,13 +122,45 @@ public class FirebaseServices : MonoBehaviour
         });
     }
 
-    public static IEnumerator ModifyData(string collectionName, Dictionary<string, object> newData)
+    public static IEnumerator ModifyData(string collectionName, Dictionary<string, object> newData, bool checkForDuplicate = true, string lastCode = "", string primaryKey = "", System.Action<string> callback = null)
     {
-        // Check data id
+        string errorMsg = null;
+
         if (!newData.ContainsKey("id"))
         {
-            Debug.LogError("Data does not contain 'id' field.");
+            errorMsg = "Data does not contain 'id' field.";
+            Debug.LogError(errorMsg);
+            callback?.Invoke(errorMsg);
             yield break;
+        }
+
+        if (checkForDuplicate)
+        {
+            string newCode = newData.ContainsKey(primaryKey) ? newData[primaryKey].ToString() : null;
+
+            // Check for duplication if the new code is different from the last code
+            if (!string.IsNullOrEmpty(newCode) && newCode != lastCode)
+            {
+                var checkTask = reference.Child(collectionName).OrderByChild(primaryKey).EqualTo(newCode).GetValueAsync();
+                yield return new WaitUntil(() => checkTask.IsCompleted);
+
+                if (checkTask.Exception != null)
+                {
+                    errorMsg = $"Error checking for duplicate: {checkTask.Exception}";
+                    Debug.LogError(errorMsg);
+                    callback?.Invoke(errorMsg);
+                    yield break;
+                }
+
+                DataSnapshot duplicateCheckSnapshot = checkTask.Result;
+                if (duplicateCheckSnapshot.Exists)
+                {
+                    errorMsg = $"Data with the same {primaryKey} already exists.";
+                    Debug.LogWarning(errorMsg);
+                    callback?.Invoke(errorMsg);
+                    yield break;
+                }
+            }
         }
 
         string documentId = newData["id"].ToString();
@@ -144,11 +175,15 @@ public class FirebaseServices : MonoBehaviour
 
         if (updateTask.Exception != null)
         {
-            Debug.LogError($"Failed to update {documentId} in {collectionName} collection: {updateTask.Exception}");
+            errorMsg = $"Failed to update {documentId} in {collectionName} collection: {updateTask.Exception}";
+            Debug.LogError(errorMsg);
+            callback?.Invoke(errorMsg);
         }
         else
         {
-            Debug.Log($"{documentId} updated in {collectionName} collection.");
+            string successMsg = $"{documentId} updated in {collectionName} collection.";
+            Debug.Log(successMsg);
+            callback?.Invoke(successMsg);
         }
     }
 }

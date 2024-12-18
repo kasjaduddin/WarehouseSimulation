@@ -38,6 +38,7 @@ namespace CompanySystem
                 }
                 else
                 {
+                    recordTemplate.SetActive(false);
                     Debug.LogError("Failed to retrieve data.");
                 }
             }));
