@@ -64,7 +64,7 @@ public class FirebaseServices : MonoBehaviour
             yield break;
         }
 
-        DataSnapshot getIdSnapshot = getDataTask.Result; // Ubah nama variabel untuk menghindari konflik
+        DataSnapshot getIdSnapshot = getDataTask.Result;
         int newId = 1;
         foreach (DataSnapshot child in getIdSnapshot.Children)
         {
@@ -80,11 +80,11 @@ public class FirebaseServices : MonoBehaviour
 
         if (setDataTask.Exception != null)
         {
-            Debug.LogError($"Failed to add {documentId} to {collectionName} collection: {setDataTask.Exception}");
+            Debug.LogError($"Failed to add new bin to {collectionName} collection: {setDataTask.Exception}");
         }
         else
         {
-            Debug.Log($"{documentId} added to {collectionName} collection.");
+            Debug.Log($"new bin successfully added to {collectionName} collection.");
         }
     }
 
