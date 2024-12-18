@@ -122,4 +122,33 @@ public class FirebaseServices : MonoBehaviour
             }
         });
     }
+
+    public static IEnumerator ModifyData(string collectionName, Dictionary<string, object> newData)
+    {
+        // Check data id
+        if (!newData.ContainsKey("id"))
+        {
+            Debug.LogError("Data does not contain 'id' field.");
+            yield break;
+        }
+
+        string documentId = newData["id"].ToString();
+        DatabaseReference docRef = reference.Child(collectionName).Child(documentId);
+
+        // Delete id from newData so that it is not updated in the document
+        newData.Remove("id");
+
+        // Update data in Firebase
+        var updateTask = docRef.UpdateChildrenAsync(newData);
+        yield return new WaitUntil(() => updateTask.IsCompleted);
+
+        if (updateTask.Exception != null)
+        {
+            Debug.LogError($"Failed to update {documentId} in {collectionName} collection: {updateTask.Exception}");
+        }
+        else
+        {
+            Debug.Log($"{documentId} updated in {collectionName} collection.");
+        }
+    }
 }

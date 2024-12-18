@@ -1,8 +1,7 @@
 using UnityEngine;
-using UnityEngine.UI;
 using Newtonsoft.Json.Linq;
 using TMPro;
-using System.Collections.Generic;
+using Record;
 
 
 namespace CompanySystem
@@ -13,13 +12,18 @@ namespace CompanySystem
         private JArray bins; // Array to store bins data
         public GameObject recordTemplate; // Template for displaying each record
         public Transform container; // Container to hold the instantiated records
-        public static Record selectedRecord;
+        public static BinRecord selectedRecord;
 
         // Start is called before the first frame update
         void OnEnable()
         {
             // Invoke GetData method after a short delay
             Invoke("GetData", 0.1f);
+        }
+
+        private void OnDisable()
+        {
+            DestroyRecord();
         }
 
         // Get all bin data from Google Sheets
@@ -59,14 +63,14 @@ namespace CompanySystem
             recordTemplate.SetActive(false);
         }
 
-        private Record GetRecord(Transform recordTransform)
+        private BinRecord GetRecord(Transform recordTransform)
         {
             string id = recordTransform.Find("Id").GetComponent<TextMeshProUGUI>().text;
             string code = recordTransform.Find("Code").GetComponent<TextMeshProUGUI>().text;
             string information = recordTransform.Find("Information").GetComponent<TextMeshProUGUI>().text;
 
             // Create a BinRecord struct and return it
-            Record record = new Record(id, code, information);
+            BinRecord record = new BinRecord(id, code, information);
             return record;
         }
 
