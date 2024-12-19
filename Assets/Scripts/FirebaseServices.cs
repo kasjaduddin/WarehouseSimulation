@@ -31,8 +31,10 @@ public class FirebaseServices : MonoBehaviour
         });
     }
 
-    public static IEnumerator WriteData(string collectionName, Dictionary<string, object> data, bool checkForDuplicate = false, string primaryKey = null)
+    public static IEnumerator WriteData(string collectionName, Dictionary<string, object> data, bool checkForDuplicate = false, string primaryKey = null, System.Action<string> callback = null)
     {
+        string message = null;
+
         if (checkForDuplicate && !string.IsNullOrEmpty(primaryKey) && data.ContainsKey(primaryKey))
         {
             // Check primary key
@@ -41,14 +43,18 @@ public class FirebaseServices : MonoBehaviour
 
             if (checkTask.Exception != null)
             {
-                Debug.LogError($"Error checking for duplicate: {checkTask.Exception}");
+                message = $"Error checking for duplicate: {checkTask.Exception}";
+                Debug.LogError(message);
+                callback?.Invoke(message);
                 yield break;
             }
 
             DataSnapshot duplicateCheckSnapshot = checkTask.Result;
             if (duplicateCheckSnapshot.Exists)
             {
-                Debug.LogWarning($"Data with the same {primaryKey} already exists.");
+                message = $"Bin with code {data[primaryKey]} has been registered.\r\nReplace bin data?";
+                Debug.LogWarning(message);
+                callback?.Invoke(message);
                 yield break;
             }
         }
@@ -59,7 +65,9 @@ public class FirebaseServices : MonoBehaviour
 
         if (getDataTask.Exception != null)
         {
-            Debug.LogError($"Failed to find last ID in {collectionName} collection: {getDataTask.Exception}");
+            message = $"Failed to find last ID in {collectionName} collection: {getDataTask.Exception}";
+            Debug.LogError(message);
+            callback?.Invoke(message);
             yield break;
         }
 
@@ -79,11 +87,15 @@ public class FirebaseServices : MonoBehaviour
 
         if (setDataTask.Exception != null)
         {
-            Debug.LogError($"Failed to add new bin to {collectionName} collection: {setDataTask.Exception}");
+            message = $"Failed to add new bin to {collectionName} collection: {setDataTask.Exception}";
+            Debug.LogError(message);
+            callback?.Invoke(message);
         }
         else
         {
-            Debug.Log($"new bin successfully added to {collectionName} collection.");
+            message = $"New bin successfully added to {collectionName} collection.";
+            Debug.Log(message);
+            callback?.Invoke(message);
         }
     }
 
@@ -124,13 +136,13 @@ public class FirebaseServices : MonoBehaviour
 
     public static IEnumerator ModifyData(string collectionName, Dictionary<string, object> newData, bool checkForDuplicate = true, string lastCode = "", string primaryKey = "", System.Action<string> callback = null)
     {
-        string errorMsg = null;
+        string message = null;
 
         if (!newData.ContainsKey("id"))
         {
-            errorMsg = "Data does not contain 'id' field.";
-            Debug.LogError(errorMsg);
-            callback?.Invoke(errorMsg);
+            message = "Data does not contain 'id' field.";
+            Debug.LogError(message);
+            callback?.Invoke(message);
             yield break;
         }
 
@@ -146,18 +158,18 @@ public class FirebaseServices : MonoBehaviour
 
                 if (checkTask.Exception != null)
                 {
-                    errorMsg = $"Error checking for duplicate: {checkTask.Exception}";
-                    Debug.LogError(errorMsg);
-                    callback?.Invoke(errorMsg);
+                    message = $"Error checking for duplicate: {checkTask.Exception}";
+                    Debug.LogError(message);
+                    callback?.Invoke(message);
                     yield break;
                 }
 
                 DataSnapshot duplicateCheckSnapshot = checkTask.Result;
                 if (duplicateCheckSnapshot.Exists)
                 {
-                    errorMsg = $"Data with the same {primaryKey} already exists.";
-                    Debug.LogWarning(errorMsg);
-                    callback?.Invoke(errorMsg);
+                    message = $"Bin with code {newData[primaryKey]} has been registered.\r\nReplace bin data?";
+                    Debug.LogWarning(message);
+                    callback?.Invoke(message);
                     yield break;
                 }
             }
@@ -175,15 +187,15 @@ public class FirebaseServices : MonoBehaviour
 
         if (updateTask.Exception != null)
         {
-            errorMsg = $"Failed to update {documentId} in {collectionName} collection: {updateTask.Exception}";
-            Debug.LogError(errorMsg);
-            callback?.Invoke(errorMsg);
+            message = $"Failed to update data with id {documentId} in {collectionName} collection: {updateTask.Exception}";
+            Debug.LogError(message);
+            callback?.Invoke(message);
         }
         else
         {
-            string successMsg = $"{documentId} updated in {collectionName} collection.";
-            Debug.Log(successMsg);
-            callback?.Invoke(successMsg);
+            message = $"Data with id {documentId} successfully updated in {collectionName} collection.";
+            Debug.Log(message);
+            callback?.Invoke(message);
         }
     }
 }

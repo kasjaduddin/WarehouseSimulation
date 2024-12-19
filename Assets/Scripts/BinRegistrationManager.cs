@@ -23,9 +23,22 @@ namespace CompanySystem
                 { "active", newBin.Active }
             };
 
-            StartCoroutine(FirebaseServices.WriteData("bins", binData, true, "code"));
-
-            ResetInput();
+            StartCoroutine(FirebaseServices.WriteData("bins", binData, true, "code", message =>
+            {
+                if (message.Contains("successfully"))
+                {
+                    Debug.Log(message);
+                    ResetInput();
+                }
+                else if (message.Contains("registered"))
+                {
+                    Debug.LogWarning(message);
+                }
+                else
+                {
+                    Debug.LogError(message);
+                }
+            }));
         }
 
         // Reset input field

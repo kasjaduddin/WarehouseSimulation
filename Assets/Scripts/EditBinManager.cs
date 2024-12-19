@@ -32,18 +32,18 @@ namespace CompanySystem
 
             StartCoroutine(FirebaseServices.ModifyData("bins", newBinData, true, lastCode, "code", message =>
             {
-                Debug.Log(message);
-                if (message.Contains("updated"))
+                if (message.Contains("successfully"))
                 {
+                    Debug.Log(message);
                     ResetInput();
                 }
-                else if (message.Contains("already exists"))
+                else if (message.Contains("registered"))
                 {
-                    Debug.LogWarning("Modification failed: Duplicate primary key found.");
+                    Debug.LogWarning(message);
                 }
                 else
                 {
-                    Debug.LogError("Modification failed: " + message);
+                    Debug.LogError(message);
                 }
             }));
         }
