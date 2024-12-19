@@ -23,7 +23,6 @@ namespace CompanySystem
             {
                 if (message.Contains("successfully deleted"))
                 {
-                    Debug.Log(message);
                     transform.parent.gameObject.SetActive(false);
                     gameObject.SetActive(false);
                     RefreshTable();

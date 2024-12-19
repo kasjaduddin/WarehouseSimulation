@@ -2,6 +2,7 @@ using Record;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace CompanySystem
 {
@@ -9,6 +10,8 @@ namespace CompanySystem
     {
         public TMP_InputField codeInputField;
         public TMP_InputField informationInputField;
+
+        public GameObject binTable;
 
         void OnEnable()
         {
@@ -33,8 +36,9 @@ namespace CompanySystem
             {
                 if (message.Contains("successfully"))
                 {
-                    Debug.Log(message);
                     ResetInput();
+                    gameObject.SetActive(false);
+                    RefreshTable();
                     BinListManager.ResetSelectedRecord();
                 }
                 else if (message.Contains("registered"))
@@ -55,6 +59,11 @@ namespace CompanySystem
                 codeInputField.text = codeInputField.text.Remove(0);
             if (informationInputField.text.Length > 0)
                 informationInputField.text = informationInputField.text.Remove(0);
+        }
+        private void RefreshTable()
+        {
+            binTable.SetActive(false);
+            binTable.SetActive(true);
         }
     }
 }

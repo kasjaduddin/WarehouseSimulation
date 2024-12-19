@@ -2,14 +2,16 @@ using UnityEngine;
 using TMPro;
 using System.Collections.Generic;
 using Record;
+using UnityEngine.UIElements;
 
 namespace CompanySystem
 {
     public class BinRegistrationManager : MonoBehaviour
     {
-        //public GoogleFormConnector connector; // Reference to the Google Form connector
         public TMP_InputField codeInputField;
         public TMP_InputField informationInputField;
+
+        public GameObject binTable;
 
         // Register new bin to system
         public void AddNewBin()
@@ -27,8 +29,9 @@ namespace CompanySystem
             {
                 if (message.Contains("successfully"))
                 {
-                    Debug.Log(message);
                     ResetInput();
+                    gameObject.SetActive(false);
+                    RefreshTable();
                 }
                 else if (message.Contains("registered"))
                 {
@@ -48,6 +51,11 @@ namespace CompanySystem
                 codeInputField.text = codeInputField.text.Remove(0);
             if (informationInputField.text.Length > 0)
                 informationInputField.text = informationInputField.text.Remove(0);
+        }
+        private void RefreshTable()
+        {
+            binTable.SetActive(false);
+            binTable.SetActive(true);
         }
     }
 }
