@@ -111,24 +111,14 @@ public class FirebaseServices : MonoBehaviour
             {
                 // Get data from snapshot
                 DataSnapshot snapshot = task.Result;
-
-                if (snapshot.Value is IList<object> list)
+                JArray jArray = new JArray();
+                foreach (DataSnapshot childSnapshot in snapshot.Children)
                 {
-                    // Transform data list to JArray
-                    JArray jArray = new JArray();
-                    foreach (DataSnapshot childSnapshot in snapshot.Children)
-                    {
-                        var jsonObject = JObject.FromObject(childSnapshot.Value);
-                        jArray.Add(jsonObject);
-                    }
+                    var jsonObject = JObject.FromObject(childSnapshot.Value);
+                    jArray.Add(jsonObject);
+                }
 
-                    callback(jArray);
-                }
-                else
-                {
-                    Debug.LogError("Data format is not a list.");
-                    callback(null);
-                }
+                callback(jArray);
             }
         });
     }
