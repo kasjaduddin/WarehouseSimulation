@@ -77,6 +77,12 @@ namespace CompanySystem
             return record;
         }
 
+        public static void ResetSelectedRecord()
+        {
+            BinRecord emptyBin = new BinRecord(null, null, null);
+            selectedRecord = emptyBin;
+        }
+
         // Edit selected record
         public void EditRecord(Transform recordTransform)
         {

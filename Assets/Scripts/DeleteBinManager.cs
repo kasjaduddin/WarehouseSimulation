@@ -27,6 +27,7 @@ namespace CompanySystem
                     transform.parent.gameObject.SetActive(false);
                     gameObject.SetActive(false);
                     RefreshTable();
+                    BinListManager.ResetSelectedRecord();
                 }
                 else if (message.Contains("No data found"))
                 {
