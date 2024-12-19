@@ -101,12 +101,13 @@ namespace CompanySystem
         {
             foreach (Transform child in container)
             {
-                if (child != recordTemplate.transform)
+                if (child != recordTemplate.transform && child != deleteButton.transform)
                 {
                     Destroy(child.gameObject);
                 }
             }
             recordTemplate.SetActive(true);
+            deleteButton.SetActive(false);
         }
     }
 }
