@@ -119,7 +119,6 @@ public class FirebaseServices : MonoBehaviour
                     foreach (DataSnapshot childSnapshot in snapshot.Children)
                     {
                         var jsonObject = JObject.FromObject(childSnapshot.Value);
-                        jsonObject["id"] = childSnapshot.Key;
                         jArray.Add(jsonObject);
                     }
 
