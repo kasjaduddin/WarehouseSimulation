@@ -52,7 +52,7 @@ public class FirebaseServices : MonoBehaviour
             DataSnapshot duplicateCheckSnapshot = checkTask.Result;
             if (duplicateCheckSnapshot.Exists)
             {
-                message = $"Bin with code {data[primaryKey]} has been registered.\r\nReplace bin data?";
+                message = $"{collectionName.Remove(collectionName.Length - 1)} with {primaryKey} {data[primaryKey]} has been registered.\r\nReplace bin data?";
                 Debug.LogWarning(message);
                 callback?.Invoke(message);
                 yield break;
@@ -93,7 +93,7 @@ public class FirebaseServices : MonoBehaviour
         }
         else
         {
-            message = $"New bin successfully added to {collectionName} collection.";
+            message = $"New {collectionName.ToLower().Remove(collectionName.Length - 1)} successfully added to {collectionName} collection.";
             Debug.Log(message);
             callback?.Invoke(message);
         }
@@ -133,7 +133,7 @@ public class FirebaseServices : MonoBehaviour
         });
     }
 
-    public static IEnumerator ModifyData(string collectionName, Dictionary<string, object> newData, bool checkForDuplicate = true, string lastCode = "", string primaryKey = "", System.Action<string> callback = null)
+    public static IEnumerator ModifyData(string collectionName, Dictionary<string, object> newData, bool checkForDuplicate = true, string oldKey = "", string primaryKey = "", System.Action<string> callback = null)
     {
         string message = null;
 
@@ -147,12 +147,12 @@ public class FirebaseServices : MonoBehaviour
 
         if (checkForDuplicate)
         {
-            string newCode = newData.ContainsKey(primaryKey) ? newData[primaryKey].ToString() : null;
+            string newKey = newData.ContainsKey(primaryKey) ? newData[primaryKey].ToString() : null;
 
-            // Check for duplication if the new code is different from the last code
-            if (!string.IsNullOrEmpty(newCode) && newCode != lastCode)
+            // Check for duplication if the new key is different from the last key
+            if (!string.IsNullOrEmpty(newKey) && newKey != oldKey)
             {
-                var checkTask = reference.Child(collectionName).OrderByChild(primaryKey).EqualTo(newCode).GetValueAsync();
+                var checkTask = reference.Child(collectionName).OrderByChild(primaryKey).EqualTo(newKey).GetValueAsync();
                 yield return new WaitUntil(() => checkTask.IsCompleted);
 
                 if (checkTask.Exception != null)
@@ -166,7 +166,7 @@ public class FirebaseServices : MonoBehaviour
                 DataSnapshot duplicateCheckSnapshot = checkTask.Result;
                 if (duplicateCheckSnapshot.Exists)
                 {
-                    message = $"Bin with code {newData[primaryKey]} has been registered.\r\nReplace bin data?";
+                    message = $"{collectionName.Remove(collectionName.Length - 1)} with {primaryKey} {newData[primaryKey]} has been registered.\r\nReplace bin data?";
                     Debug.LogWarning(message);
                     callback?.Invoke(message);
                     yield break;
@@ -194,6 +194,52 @@ public class FirebaseServices : MonoBehaviour
         {
             message = $"Data with id {documentId} successfully updated in {collectionName} collection.";
             Debug.Log(message);
+            callback?.Invoke(message);
+        }
+    }
+
+    public static IEnumerator DeleteData(string collectionName, string primaryKey, string key, System.Action<string> callback = null)
+    {
+        string message = null;
+
+        // Mencari data dengan primaryKey dan key yang sesuai
+        var checkTask = reference.Child(collectionName).OrderByChild(primaryKey).EqualTo(key).GetValueAsync();
+        yield return new WaitUntil(() => checkTask.IsCompleted);
+
+        if (checkTask.Exception != null)
+        {
+            message = $"Error checking for {primaryKey} {key}: {checkTask.Exception}";
+            Debug.LogError(message);
+            callback?.Invoke(message);
+            yield break;
+        }
+
+        DataSnapshot snapshot = checkTask.Result;
+        if (snapshot.Exists)
+        {
+            // Menghapus data yang ditemukan
+            foreach (DataSnapshot child in snapshot.Children)
+            {
+                string documentId = child.Key;
+                var deleteTask = reference.Child(collectionName).Child(documentId).RemoveValueAsync();
+                yield return new WaitUntil(() => deleteTask.IsCompleted);
+
+                if (deleteTask.Exception != null)
+                {
+                    message = $"Failed to delete data with {primaryKey} {key} in {collectionName} collection: {deleteTask.Exception}";
+                    Debug.LogError(message);
+                    callback?.Invoke(message);
+                    yield break;
+                }
+            }
+            message = $"Data with {primaryKey} {key} successfully deleted in {collectionName} collection.";
+            Debug.Log(message);
+            callback?.Invoke(message);
+        }
+        else
+        {
+            message = $"No data found with {primaryKey} {key} in {collectionName} collection.";
+            Debug.LogWarning(message);
             callback?.Invoke(message);
         }
     }
