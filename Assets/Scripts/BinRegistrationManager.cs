@@ -3,6 +3,8 @@ using TMPro;
 using System.Collections.Generic;
 using Record;
 using UnityEngine.UIElements;
+using Unity.VisualScripting;
+using UnityEngine.EventSystems;
 
 namespace CompanySystem
 {
@@ -12,6 +14,9 @@ namespace CompanySystem
         public TMP_InputField informationInputField;
 
         public GameObject binTable;
+
+        public GameObject popup;
+        private GameObject warningPanel;
 
         // Register new bin to system
         public void AddNewBin()
@@ -24,18 +29,20 @@ namespace CompanySystem
                 { "numberoftags", newBin.NumberOfTags },
                 { "active", newBin.Active }
             };
-
+            
             StartCoroutine(FirebaseServices.WriteData("bins", binData, true, "code", message =>
             {
                 if (message.Contains("successfully"))
                 {
+                    HidePopup();
                     ResetInput();
                     gameObject.SetActive(false);
                     RefreshTable();
                 }
                 else if (message.Contains("registered"))
                 {
-                    Debug.LogWarning(message);
+                    ShowPopup();
+                    BinRegisteredHandler(message, newBin.Code);
                 }
                 else
                 {
@@ -56,6 +63,53 @@ namespace CompanySystem
         {
             binTable.SetActive(false);
             binTable.SetActive(true);
+        }
+
+        private void ShowPopup()
+        {
+            popup.SetActive(true);
+        }
+
+        private void HidePopup()
+        {
+            if (warningPanel != null && warningPanel.activeSelf)
+            {
+                warningPanel.transform.parent.gameObject.SetActive(false);
+                warningPanel.SetActive(false);
+            }
+        }
+
+        private void BinRegisteredHandler(string message, string code)
+        {
+            warningPanel = popup.transform.Find("Bin Registered").gameObject;
+            warningPanel.SetActive(true);
+            
+            TextMeshProUGUI warningText = warningPanel.GetComponentInChildren<TextMeshProUGUI>();
+            warningText.text = message;
+
+            GameObject replaceBinButton = warningPanel.transform.Find("Buttons").Find("Yes Button").gameObject;
+
+            // Add event trigger to replace bin button
+            EventTrigger trigger = replaceBinButton.GetComponent<EventTrigger>() ?? replaceBinButton.AddComponent<EventTrigger>();
+            trigger.triggers.Clear();
+
+            // Create entry for click/ pointer down event
+            EventTrigger.Entry entry = new EventTrigger.Entry
+            {
+                eventID = EventTriggerType.PointerDown
+            };
+
+            entry.callback.AddListener((eventData) =>
+            {
+                StartCoroutine(FirebaseServices.DeleteData("bins", "code", code, deleteResult =>
+                {
+                    if (deleteResult.Contains("successfully"))
+                    {
+                        AddNewBin();
+                    }
+                }));
+            });
+            trigger.triggers.Add(entry);
         }
     }
 }
