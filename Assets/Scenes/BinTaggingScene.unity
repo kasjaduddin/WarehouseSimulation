@@ -3966,10 +3966,10 @@ RectTransform:
   - {fileID: 1653261508}
   m_Father: {fileID: 296945967}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 14}
-  m_SizeDelta: {x: 1500, y: 650}
+  m_AnchorMin: {x: 0.5, y: 0}
+  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchoredPosition: {x: 0, y: 19.5}
+  m_SizeDelta: {x: 1500, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &187542631
 GameObject:
@@ -6027,6 +6027,7 @@ GameObject:
   - component: {fileID: 296945969}
   - component: {fileID: 296945968}
   - component: {fileID: 296945971}
+  - component: {fileID: 296945972}
   m_Layer: 0
   m_Name: Table
   m_TagString: Untagged
@@ -6135,6 +6136,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_ShowMaskGraphic: 0
+--- !u!114 &296945972
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 296945966}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5d95b1987315584780bc9b7f22b41bb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tableContainer: {fileID: 185150498}
+  maskHeight: 600
+  templateHeight: 91
 --- !u!1 &304584419
 GameObject:
   m_ObjectHideFlags: 0
@@ -22003,8 +22019,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe812ffb9b4d33145881c7f5d9222f07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  recordTemplate: {fileID: 699239837}
+  Table: {fileID: 296945966}
   container: {fileID: 185150498}
+  recordTemplate: {fileID: 699239837}
   deleteButton: {fileID: 1653261507}
 --- !u!1001 &1091265565
 PrefabInstance:
@@ -39071,7 +39088,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 1.02e-43, y: 1e-45, z: 2.096e-42, w: 2.466481e-35}
+  m_BoundingSphereOverride: {x: 1.02e-43, y: 3e-45, z: 6.78e-43, w: 0}
   m_UseBoundingSphereOverride: 0
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0

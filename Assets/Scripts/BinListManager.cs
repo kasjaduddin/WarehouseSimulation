@@ -9,9 +9,9 @@ namespace CompanySystem
     public class BinListManager : MonoBehaviour
     {
         private JArray bins; // Array to store bins data
-        public GameObject recordTemplate; // Template for displaying each record
+        public GameObject Table;
         public Transform container; // Container to hold the instantiated records
-
+        public GameObject recordTemplate; // Template for displaying each record
         public static BinRecord selectedRecord; // Variabel to hold selected record data
 
         public GameObject deleteButton; // Button to delete selected record data
@@ -62,6 +62,8 @@ namespace CompanySystem
                 newRowTransform.Find("Code").GetComponent<TextMeshProUGUI>().text = bins[i]["code"].ToString();
                 newRowTransform.Find("Information").GetComponent<TextMeshProUGUI>().text = bins[i]["information"].ToString();
                 newRowTransform.Find("Number of Tag").GetComponent<TextMeshProUGUI>().text = bins[i]["numberoftags"].ToString();
+
+                Table.GetComponent<DynamicTableManager>().enabled = true;
             }
             recordTemplate.SetActive(false);
         }
