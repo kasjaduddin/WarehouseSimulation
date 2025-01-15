@@ -5473,7 +5473,7 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 1431813737}
+        - m_Target: {fileID: 0}
           m_TargetAssemblyTypeName: BinListManager, Assembly-CSharp
           m_MethodName: EditRecord
           m_Mode: 2
@@ -21571,7 +21571,7 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 1431813737}
+        - m_Target: {fileID: 0}
           m_TargetAssemblyTypeName: CompanySystem.BinListManager, Assembly-CSharp
           m_MethodName: ShowDeleteButton
           m_Mode: 2
@@ -35365,7 +35365,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1431813738}
-  - component: {fileID: 1431813737}
+  - component: {fileID: 1431813739}
   m_Layer: 0
   m_Name: Item List
   m_TagString: Untagged
@@ -35373,22 +35373,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1431813737
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1431813736}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe812ffb9b4d33145881c7f5d9222f07, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Table: {fileID: 317818101}
-  container: {fileID: 436924949}
-  recordTemplate: {fileID: 1629172367}
-  deleteButton: {fileID: 348516526}
 --- !u!224 &1431813738
 RectTransform:
   m_ObjectHideFlags: 0
@@ -35411,6 +35395,22 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -40}
   m_SizeDelta: {x: 1920, y: 1000}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1431813739
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1431813736}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a05612496aae07a4bbc6b1f0df574faf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Table: {fileID: 317818101}
+  container: {fileID: 436924949}
+  recordTemplate: {fileID: 1629172367}
+  deleteButton: {fileID: 348516526}
 --- !u!1 &1442521954
 GameObject:
   m_ObjectHideFlags: 0

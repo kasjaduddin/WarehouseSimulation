@@ -1,3 +1,5 @@
+using UnityEngine.Rendering.LookDev;
+
 namespace Record
 {
     public struct BinRecord
@@ -22,6 +24,39 @@ namespace Record
             Id = id;
             Code = code;
             Information = information;
+            NumberOfTags = 0;
+            Active = true;
+        }
+    }
+
+    public struct ItemRecord
+    {
+        public string Id;
+        public string Sku;
+        public string ItemName;
+        public string BinCode;
+        public string Quantity;
+        public int NumberOfTags;
+        public bool Active;
+
+        public ItemRecord(string sku, string itemName, string binCode, string quantity)
+        {
+            Id = string.Empty;
+            Sku = sku;
+            ItemName = itemName;
+            BinCode = binCode;
+            Quantity = quantity;
+            NumberOfTags = 0;
+            Active = true;
+        }
+
+        public ItemRecord(string id, string sku, string itemName, string binCode, string quantity)
+        {
+            Id = string.Empty;
+            Sku = sku;
+            ItemName = itemName;
+            BinCode = binCode;
+            Quantity = quantity;
             NumberOfTags = 0;
             Active = true;
         }
