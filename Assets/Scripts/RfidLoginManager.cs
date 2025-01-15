@@ -4,7 +4,7 @@ using TMPro;
 
 public class RfidLoginManager : MonoBehaviour
 {
-    public GoogleSheetsConnector connector; // Reference to the Google Sheets connector
+    //public GoogleSheetsConnector connector; // Reference to the Google Sheets connector
     private JArray accounts; // Array to store account data
     public TextMeshProUGUI usernameInputField; // Input field for username
     public TextMeshProUGUI passwordInputField; // Input field for password
@@ -16,13 +16,13 @@ public class RfidLoginManager : MonoBehaviour
     private string password; // Variable to store the password
     void Start()
     {
-        StartCoroutine(connector.ReadData("Accounts", (data) =>
+        /*StartCoroutine(connector.ReadData("Accounts", (data) =>
         {
             // Parse JSON response
             JObject parsedData = JObject.Parse(data);
             accounts = (JArray)parsedData["values"];
             accounts.RemoveAt(0);
-        }));
+        }));*/
     }
 
     // Check if the username and password matches
