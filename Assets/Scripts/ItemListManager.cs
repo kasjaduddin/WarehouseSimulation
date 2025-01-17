@@ -59,10 +59,10 @@ namespace CompanySystem
                 // Fill the UI elements with data
                 entryRectTransform.anchoredPosition = new Vector2(0f, 228f + (-templateHigh * i));
                 newRowTransform.Find("Id").GetComponent<TextMeshProUGUI>().text = (i + 1).ToString();
-                newRowTransform.Find("SKU").GetComponent<TextMeshProUGUI>().text = items[i]["code"].ToString();
-                newRowTransform.Find("Item Name").GetComponent<TextMeshProUGUI>().text = items[i]["information"].ToString();
-                newRowTransform.Find("Bin Code").GetComponent<TextMeshProUGUI>().text = items[i]["information"].ToString();
-                newRowTransform.Find("Quantity").GetComponent<TextMeshProUGUI>().text = items[i]["information"].ToString();
+                newRowTransform.Find("SKU").GetComponent<TextMeshProUGUI>().text = items[i]["sku"].ToString();
+                newRowTransform.Find("Item Name").GetComponent<TextMeshProUGUI>().text = items[i]["itemname"].ToString();
+                newRowTransform.Find("Bin Code").GetComponent<TextMeshProUGUI>().text = items[i]["bincode"].ToString();
+                newRowTransform.Find("Quantity").GetComponent<TextMeshProUGUI>().text = items[i]["quantity"].ToString();
                 newRowTransform.Find("Number of Tag").GetComponent<TextMeshProUGUI>().text = items[i]["numberoftags"].ToString();
 
                 Table.GetComponent<DynamicTableManager>().enabled = true;

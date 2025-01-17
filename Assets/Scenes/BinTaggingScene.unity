@@ -14752,8 +14752,8 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 731798189}
-          m_TargetAssemblyTypeName: BinRegistrationManager, Assembly-CSharp
-          m_MethodName: AddNewBin
+          m_TargetAssemblyTypeName: CompanySystem.ItemRegistrationManager, Assembly-CSharp
+          m_MethodName: AddNewItem
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -15216,7 +15216,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 731798189}
-          m_TargetAssemblyTypeName: BinRegistrationManager, Assembly-CSharp
+          m_TargetAssemblyTypeName: CompanySystem.ItemRegistrationManager, Assembly-CSharp
           m_MethodName: ResetInput
           m_Mode: 1
           m_Arguments:
@@ -18834,7 +18834,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &731798188
 RectTransform:
   m_ObjectHideFlags: 0
@@ -18872,13 +18872,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 731798187}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 77c550f6c2e9e4e48b1267af523baafd, type: 3}
+  m_Script: {fileID: 11500000, guid: 84e3a0fc6476a49449efd230c354baa8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  codeInputField: {fileID: 0}
-  informationInputField: {fileID: 0}
-  binTable: {fileID: 1431813736}
-  popup: {fileID: 754270307}
+  skuInputField: {fileID: 833245848}
+  itemNameInputField: {fileID: 1865641909}
+  binCodeInputField: {fileID: 2146004931}
+  quantityInputField: {fileID: 226885147}
+  uomInputField: {fileID: 403743860}
+  itemTable: {fileID: 1431813736}
 --- !u!1 &732570046
 GameObject:
   m_ObjectHideFlags: 0
@@ -30770,7 +30772,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 731798189}
-          m_TargetAssemblyTypeName: BinRegistrationManager, Assembly-CSharp
+          m_TargetAssemblyTypeName: CompanySystem.ItemRegistrationManager, Assembly-CSharp
           m_MethodName: ResetInput
           m_Mode: 1
           m_Arguments:
@@ -49539,7 +49541,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1890916867
 RectTransform:
   m_ObjectHideFlags: 0
