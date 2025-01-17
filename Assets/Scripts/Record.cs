@@ -38,8 +38,9 @@ namespace Record
         public string Quantity;
         public int NumberOfTags;
         public bool Active;
+        public string UOM;
 
-        public ItemRecord(string sku, string itemName, string binCode, string quantity)
+        public ItemRecord(string sku, string itemName, string binCode, string quantity, string uom)
         {
             Id = string.Empty;
             Sku = sku;
@@ -48,9 +49,10 @@ namespace Record
             Quantity = quantity;
             NumberOfTags = 0;
             Active = true;
+            UOM = uom;
         }
 
-        public ItemRecord(string id, string sku, string itemName, string binCode, string quantity)
+        public ItemRecord(string id, string sku, string itemName, string binCode, string quantity, string uom)
         {
             Id = string.Empty;
             Sku = sku;
@@ -59,6 +61,7 @@ namespace Record
             Quantity = quantity;
             NumberOfTags = 0;
             Active = true;
+            UOM = uom;
         }
     }
 }
