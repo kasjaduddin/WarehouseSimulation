@@ -12,7 +12,7 @@ namespace CompanySystem
         public TMP_InputField itemNameInputField;
         public TMP_InputField binCodeInputField;
         public TMP_InputField quantityInputField;
-        public TMP_InputField uomInputField;
+        public TMP_Dropdown uomInputField;
 
         public GameObject itemTable;
         public GameObject popup;
@@ -21,7 +21,7 @@ namespace CompanySystem
         // Register new item to system
         public void AddNewItem()
         {
-            ItemRecord newItem = new ItemRecord(skuInputField.text, itemNameInputField.text, binCodeInputField.text, quantityInputField.text, uomInputField.text);
+            ItemRecord newItem = new ItemRecord(skuInputField.text, itemNameInputField.text, binCodeInputField.text, quantityInputField.text, uomInputField.captionText.text);
             var itemData = new Dictionary<string, object>
             {
                 { "sku", newItem.Sku },
@@ -64,8 +64,6 @@ namespace CompanySystem
                 binCodeInputField.text = binCodeInputField.text.Remove(0);
             if (quantityInputField.text.Length > 0)
                 quantityInputField.text = quantityInputField.text.Remove(0);
-            if (uomInputField.text.Length > 0)
-                uomInputField.text = uomInputField.text.Remove(0);
         }
         private void RefreshTable()
         {
