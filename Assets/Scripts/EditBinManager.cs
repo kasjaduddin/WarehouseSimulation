@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UIElements;
 
 namespace CompanySystem
 {
@@ -35,7 +34,7 @@ namespace CompanySystem
                 { "numberoftags", newBin.NumberOfTags },
                 { "active", newBin.Active }
             };
-            Debug.Log($"Old: {oldCode}\r\nNew: {newBinData["code"]}");
+            
             StartCoroutine(FirebaseServices.ModifyData("bins", newBinData, true, oldCode, "code", message =>
             {
                 if (message.Contains("successfully"))

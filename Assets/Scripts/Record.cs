@@ -54,7 +54,7 @@ namespace Record
 
         public ItemRecord(string id, string sku, string itemName, string binCode, string quantity, string uom)
         {
-            Id = string.Empty;
+            Id = id;
             Sku = sku;
             ItemName = itemName;
             BinCode = binCode;
