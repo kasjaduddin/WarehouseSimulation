@@ -2,8 +2,6 @@ using UnityEngine;
 using TMPro;
 using System.Collections.Generic;
 using Record;
-using UnityEngine.EventSystems;
-using UnityEngine.UIElements;
 
 namespace CompanySystem
 {

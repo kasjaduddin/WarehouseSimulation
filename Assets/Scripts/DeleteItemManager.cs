@@ -3,27 +3,27 @@ using UnityEngine;
 
 namespace CompanySystem
 {
-    public class DeleteBinManager : MonoBehaviour
+    public class DeleteItemManager : MonoBehaviour
     {
-        string code;
+        string sku;
         public TextMeshProUGUI warningText;
 
-        public GameObject binTable;
+        public GameObject itemTable;
         private void OnEnable()
         {
-            code = BinListManager.selectedRecord.Code;
-            warningText.text = $"Data bin with code {code} will be deleted.\r\nAre you sure?";
+            sku = ItemListManager.selectedRecord.Sku;
+            warningText.text = $"Data item with sku {sku} will be deleted.\r\nAre you sure?";
         }
-        public void DeleteBin()
+        public void DeleteItem()
         {
-            StartCoroutine(FirebaseServices.DeleteData("bins", "code", code, message =>
+            StartCoroutine(FirebaseServices.DeleteData("items", "sku", sku, message =>
             {
                 if (message.Contains("successfully deleted"))
                 {
                     transform.parent.gameObject.SetActive(false);
                     gameObject.SetActive(false);
                     RefreshTable();
-                    BinListManager.ResetSelectedRecord();
+                    ItemListManager.ResetSelectedRecord();
                 }
                 else if (message.Contains("No data found"))
                 {
@@ -38,8 +38,8 @@ namespace CompanySystem
 
         private void RefreshTable()
         {
-            binTable.SetActive(false);
-            binTable.SetActive(true);
+            itemTable.SetActive(false);
+            itemTable.SetActive(true);
         }
     }
 }

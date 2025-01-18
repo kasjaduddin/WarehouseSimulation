@@ -64,6 +64,7 @@ namespace CompanySystem
                 newRowTransform.Find("Bin Code").GetComponent<TextMeshProUGUI>().text = items[i]["bincode"].ToString();
                 newRowTransform.Find("Quantity").GetComponent<TextMeshProUGUI>().text = items[i]["quantity"].ToString();
                 newRowTransform.Find("Number of Tag").GetComponent<TextMeshProUGUI>().text = items[i]["numberoftags"].ToString();
+                newRowTransform.Find("UOM").GetComponent<TextMeshProUGUI>().text = items[i]["uom"].ToString();
 
                 Table.GetComponent<DynamicTableManager>().enabled = true;
             }
@@ -77,15 +78,16 @@ namespace CompanySystem
             string itemName = recordTransform.Find("Item Name").GetComponent<TextMeshProUGUI>().text;
             string binCode = recordTransform.Find("Bin Code").GetComponent<TextMeshProUGUI>().text;
             string quantity = recordTransform.Find("Quantity").GetComponent<TextMeshProUGUI>().text;
+            string uom = recordTransform.Find("UOM").GetComponent<TextMeshProUGUI>().text;
 
             // Create a ItemRecord struct and return it
-            ItemRecord record = new ItemRecord(id, sku, itemName, binCode, quantity);
+            ItemRecord record = new ItemRecord(id, sku, itemName, binCode, quantity, uom);
             return record;
         }
 
         public static void ResetSelectedRecord()
         {
-            ItemRecord emptyItem = new ItemRecord(null, null, null, null, null);
+            ItemRecord emptyItem = new ItemRecord(null, null, null, null, null, null);
             selectedRecord = emptyItem;
         }
 
