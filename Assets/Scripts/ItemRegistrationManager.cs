@@ -95,10 +95,10 @@ namespace CompanySystem
             TextMeshProUGUI warningText = warningPanel.GetComponentInChildren<TextMeshProUGUI>();
             warningText.text = message;
 
-            GameObject replaceBinButton = warningPanel.transform.Find("Buttons").Find("Yes Button").gameObject;
+            GameObject replaceItemButton = warningPanel.transform.Find("Buttons").Find("Yes Button").gameObject;
 
             // Add event trigger to replace bin button
-            EventTrigger trigger = replaceBinButton.GetComponent<EventTrigger>() ?? replaceBinButton.AddComponent<EventTrigger>();
+            EventTrigger trigger = replaceItemButton.GetComponent<EventTrigger>() ?? replaceItemButton.AddComponent<EventTrigger>();
             trigger.triggers.Clear();
 
             // Create entry for click/ pointer down event
