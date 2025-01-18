@@ -15,7 +15,7 @@ namespace CompanySystem
         public TMP_InputField itemNameInputField;
         public TMP_InputField binCodeInputField;
         public TMP_InputField quantityInputField;
-        public TMP_InputField uomInputField;
+        public TMP_Dropdown uomInputField;
 
         public GameObject itemTable;
 
@@ -28,13 +28,13 @@ namespace CompanySystem
             itemNameInputField.text = ItemListManager.selectedRecord.ItemName.ToString();
             binCodeInputField.text = ItemListManager.selectedRecord.BinCode.ToString();
             quantityInputField.text = ItemListManager.selectedRecord.Quantity.ToString();
-            uomInputField.text = ItemListManager.selectedRecord.UOM.ToString();
+            uomInputField.captionText.text = ItemListManager.selectedRecord.UOM.ToString();
         }
 
         // Register new item to system
         public void EditItem()
         {
-            ItemRecord newItem = new ItemRecord(skuInputField.text, itemNameInputField.text, binCodeInputField.text, quantityInputField.text, uomInputField.text);
+            ItemRecord newItem = new ItemRecord(skuInputField.text, itemNameInputField.text, binCodeInputField.text, quantityInputField.text, uomInputField.captionText.text);
             string oldSku = ItemListManager.selectedRecord.Sku;
 
             var newItemData = new Dictionary<string, object>
@@ -82,8 +82,6 @@ namespace CompanySystem
                 binCodeInputField.text = binCodeInputField.text.Remove(0);
             if (quantityInputField.text.Length > 0)
                 quantityInputField.text = quantityInputField.text.Remove(0);
-            if (uomInputField.text.Length > 0)
-                uomInputField.text = uomInputField.text.Remove(0);
         }
 
         private void RefreshTable()
