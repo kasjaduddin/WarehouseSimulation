@@ -61,7 +61,7 @@ namespace CompanySystem
                 newRowTransform.Find("Id").GetComponent<TextMeshProUGUI>().text = (i + 1).ToString();
                 newRowTransform.Find("Code").GetComponent<TextMeshProUGUI>().text = bins[i]["code"].ToString();
                 newRowTransform.Find("Information").GetComponent<TextMeshProUGUI>().text = bins[i]["information"].ToString();
-                newRowTransform.Find("Number of Tag").GetComponent<TextMeshProUGUI>().text = bins[i]["numberoftags"].ToString();
+                newRowTransform.Find("Number of Tag").GetComponent<TextMeshProUGUI>().text = bins[i]["number_of_tags"].ToString();
 
                 Table.GetComponent<DynamicTableManager>().enabled = true;
             }
