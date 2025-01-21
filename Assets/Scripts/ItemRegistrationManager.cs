@@ -50,6 +50,7 @@ namespace CompanySystem
                 { "sku", newItem.Sku },
                 { "item_name", newItem.ItemName },
                 { "bin_code", newItem.BinCode },
+                { "quantity", newItem.Quantity },
                 { "uom", newItem.UOM },
                 { "active", newItem.Active },
                 { "number_of_tags", newItem.NumberOfTags }
