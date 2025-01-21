@@ -178,6 +178,149 @@ public class FirebaseServices : MonoBehaviour
         });
     }
 
+    public static IEnumerator ModifyData(string collectionName, Dictionary<string, object> newData, System.Action<string> callback = null)
+    {
+        string message = null;
+
+        if (!newData.ContainsKey("id"))
+        {
+            message = "Data does not contain 'id' field.";
+            Debug.LogError(message);
+            callback?.Invoke(message);
+            yield break;
+        }
+
+        string documentId = newData["id"].ToString();
+        DatabaseReference docRef = reference.Child(collectionName).Child(documentId);
+
+        // Delete id from newData so that it is not updated in the document
+        newData.Remove("id");
+
+        // Update data in Firebase
+        var updateTask = docRef.UpdateChildrenAsync(newData);
+        yield return new WaitUntil(() => updateTask.IsCompleted);
+
+        if (updateTask.Exception != null)
+        {
+            message = $"Failed to update data with id {documentId} in {collectionName} collection: {updateTask.Exception}";
+            Debug.LogError(message);
+            callback?.Invoke(message);
+        }
+        else
+        {
+            message = $"Data with id {documentId} successfully updated in {collectionName} collection.";
+            Debug.Log(message);
+            callback?.Invoke(message);
+        }
+    }
+
+    public static IEnumerator ModifyData(string collectionName, Dictionary<string, object> newData, string oldKey, string primaryKey, System.Action<string> callback = null)
+    {
+        string message = null;
+
+        if (!newData.ContainsKey("id"))
+        {
+            message = "Data does not contain 'id' field.";
+            Debug.LogError(message);
+            callback?.Invoke(message);
+            yield break;
+        }
+
+        string newKey = newData.ContainsKey(primaryKey) ? newData[primaryKey].ToString() : null;
+
+        // Check for duplication if the new key is different from the last key
+        if (!string.IsNullOrEmpty(newKey) && newKey != oldKey)
+        {
+            var checkTask = reference.Child(collectionName).OrderByChild(primaryKey).EqualTo(newKey).GetValueAsync();
+            yield return new WaitUntil(() => checkTask.IsCompleted);
+
+            if (checkTask.Exception != null)
+            {
+                message = $"Error checking for duplicate: {checkTask.Exception}";
+                Debug.LogError(message);
+                callback?.Invoke(message);
+                yield break;
+            }
+
+            DataSnapshot duplicateCheckSnapshot = checkTask.Result;
+            if (duplicateCheckSnapshot.Exists)
+            {
+                message = $"{collectionName.Remove(collectionName.Length - 1)} with {primaryKey} {newData[primaryKey]} has been registered.\r\nReplace bin data?";
+                Debug.LogWarning(message);
+                callback?.Invoke(message);
+                yield break;
+            }
+        }
+
+        yield return ModifyData(collectionName, newData, callback);
+    }
+
+    public static IEnumerator ModifyData(string collectionName, Dictionary<string, object> newData, string oldFirstPrimaryKey, string firstPrimaryKey, string oldSecondPrimaryKey, string secondPrimaryKey, System.Action<string> callback = null)
+    {
+        string message = null;
+
+        if (!newData.ContainsKey("id"))
+        {
+            message = "Data does not contain 'id' field.";
+            Debug.LogError(message);
+            callback?.Invoke(message);
+            yield break;
+        }
+
+        string newKey1 = newData.ContainsKey(firstPrimaryKey) ? newData[firstPrimaryKey].ToString() : null;
+        string newKey2 = newData.ContainsKey(secondPrimaryKey) ? newData[secondPrimaryKey].ToString() : null;
+
+        // Check first primary key
+        if (!string.IsNullOrEmpty(newKey1) && newKey1 != oldFirstPrimaryKey)
+        {
+            var checkTask1 = reference.Child(collectionName).OrderByChild(firstPrimaryKey).EqualTo(newKey1).GetValueAsync();
+            yield return new WaitUntil(() => checkTask1.IsCompleted);
+
+            if (checkTask1.Exception != null)
+            {
+                message = $"Error checking for duplicate: {checkTask1.Exception}";
+                Debug.LogError(message);
+                callback?.Invoke(message);
+                yield break;
+            }
+
+            DataSnapshot duplicateCheckSnapshot1 = checkTask1.Result;
+            if (duplicateCheckSnapshot1.Exists)
+            {
+                message = $"{collectionName.Remove(collectionName.Length - 1)} with {firstPrimaryKey} {newData[firstPrimaryKey]} has been registered.\r\nReplace bin data?";
+                Debug.LogWarning(message);
+                callback?.Invoke(message);
+                yield break;
+            }
+        }
+
+        // Check second primary key
+        if (!string.IsNullOrEmpty(newKey2) && newKey2 != oldSecondPrimaryKey)
+        {
+            var checkTask2 = reference.Child(collectionName).OrderByChild(secondPrimaryKey).EqualTo(newKey2).GetValueAsync();
+            yield return new WaitUntil(() => checkTask2.IsCompleted);
+
+            if (checkTask2.Exception != null)
+            {
+                message = $"Error checking for duplicate: {checkTask2.Exception}";
+                Debug.LogError(message);
+                callback?.Invoke(message);
+                yield break;
+            }
+
+            DataSnapshot duplicateCheckSnapshot2 = checkTask2.Result;
+            if (duplicateCheckSnapshot2.Exists)
+            {
+                message = $"{collectionName.Remove(collectionName.Length - 1)} with {secondPrimaryKey} {newData[secondPrimaryKey]} has been registered.\r\nReplace bin data?";
+                Debug.LogWarning(message);
+                callback?.Invoke(message);
+                yield break;
+            }
+        }
+
+        yield return ModifyData(collectionName, newData, callback);
+    }
+
     public static IEnumerator ModifyData(string collectionName, Dictionary<string, object> newData, bool checkForDuplicate = true, string oldKey = "", string primaryKey = "", System.Action<string> callback = null)
     {
         string message = null;

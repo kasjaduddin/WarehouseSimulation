@@ -31,11 +31,11 @@ namespace CompanySystem
                 { "id", BinListManager.selectedRecord.Id },
                 { "code", newBin.Code },
                 { "information", newBin.Information },
-                { "numberoftags", newBin.NumberOfTags },
+                { "number_of_tags", newBin.NumberOfTags },
                 { "active", newBin.Active }
             };
             
-            StartCoroutine(FirebaseServices.ModifyData("bins", newBinData, true, oldCode, "code", message =>
+            StartCoroutine(FirebaseServices.ModifyData("bins", newBinData, oldCode, "code", message =>
             {
                 if (message.Contains("successfully"))
                 {

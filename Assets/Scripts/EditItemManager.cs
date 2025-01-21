@@ -67,7 +67,7 @@ namespace CompanySystem
                 { "number_of_tags", newItem.NumberOfTags }
             };
             
-            StartCoroutine(FirebaseServices.ModifyData("items", newItemData, true, oldSku, "sku", message =>
+            StartCoroutine(FirebaseServices.ModifyData("items", newItemData, oldSku, "sku", message =>
             {
                 if (message.Contains("successfully"))
                 {
