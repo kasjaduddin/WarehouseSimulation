@@ -10,27 +10,49 @@ namespace CompanySystem
     {
         public TMP_InputField skuInputField;
         public TMP_InputField itemNameInputField;
-        public TMP_InputField binCodeInputField;
-        public TMP_InputField quantityInputField;
-        public TMP_Dropdown uomInputField;
+        public TMP_Dropdown binCodeDropdown;
+        public TMP_Dropdown uomDropdown;
 
         public GameObject itemTable;
         public GameObject popup;
         private GameObject warningPanel;
 
+        private void OnEnable()
+        {
+            // Invoke GetData method after a short delay
+            Invoke("GetBinCodes", 0.1f);
+        }
+
+        public void GetBinCodes()
+        {
+            StartCoroutine(FirebaseServices.ReadData("bins", data =>
+            {
+                if (data != null)
+                {
+                    foreach (var item in data)
+                    {
+                        binCodeDropdown.options.Add(new TMP_Dropdown.OptionData(item["code"].ToString()));
+                    }
+                }
+                else
+                {
+                    Debug.LogError("Failed to retrieve data.");
+                }
+            }));
+        }
+
         // Register new item to system
         public void AddNewItem()
         {
-            ItemRecord newItem = new ItemRecord(skuInputField.text, itemNameInputField.text, binCodeInputField.text, quantityInputField.text, uomInputField.captionText.text);
+            ItemRecord newItem = new ItemRecord(skuInputField.text, itemNameInputField.text, binCodeDropdown.captionText.text, uomDropdown.captionText.text);
             var itemData = new Dictionary<string, object>
             {
                 { "sku", newItem.Sku },
-                { "itemname", newItem.ItemName },
-                { "bincode", newItem.BinCode },
-                { "quantity", newItem.Quantity },
+                { "item_name", newItem.ItemName },
+                { "bin_code", newItem.BinCode },
                 { "uom", newItem.UOM },
                 { "active", newItem.Active },
-                { "numberoftags", newItem.NumberOfTags }
+                { "number_of_tags", newItem.NumberOfTags }
             };
 
             StartCoroutine(FirebaseServices.WriteData("items", itemData, true, "sku", message =>
@@ -60,10 +82,6 @@ namespace CompanySystem
                 skuInputField.text = skuInputField.text.Remove(0);
             if (itemNameInputField.text.Length > 0)
                 itemNameInputField.text = itemNameInputField.text.Remove(0);
-            if (binCodeInputField.text.Length > 0)
-                binCodeInputField.text = binCodeInputField.text.Remove(0);
-            if (quantityInputField.text.Length > 0)
-                quantityInputField.text = quantityInputField.text.Remove(0);
         }
         private void RefreshTable()
         {

@@ -35,30 +35,30 @@ namespace Record
         public string Sku;
         public string ItemName;
         public string BinCode;
-        public string Quantity;
+        public int Quantity;
         public int NumberOfTags;
         public bool Active;
         public string UOM;
 
-        public ItemRecord(string sku, string itemName, string binCode, string quantity, string uom)
+        public ItemRecord(string sku, string itemName, string binCode, string uom)
         {
             Id = string.Empty;
             Sku = sku;
             ItemName = itemName;
             BinCode = binCode;
-            Quantity = quantity;
+            Quantity = 0;
             NumberOfTags = 0;
             Active = true;
             UOM = uom;
         }
 
-        public ItemRecord(string id, string sku, string itemName, string binCode, string quantity, string uom)
+        public ItemRecord(string id, string sku, string itemName, string binCode, string uom)
         {
             Id = id;
             Sku = sku;
             ItemName = itemName;
             BinCode = binCode;
-            Quantity = quantity;
+            Quantity = 0;
             NumberOfTags = 0;
             Active = true;
             UOM = uom;

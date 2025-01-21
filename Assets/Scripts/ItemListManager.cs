@@ -28,7 +28,7 @@ namespace CompanySystem
             DestroyRecord();
         }
 
-        // Get all bin data from Google Sheets
+        // Get all bin data from Database
         public void GetData()
         {
             StartCoroutine(FirebaseServices.ReadData("items", data =>
@@ -77,17 +77,16 @@ namespace CompanySystem
             string sku = recordTransform.Find("SKU").GetComponent<TextMeshProUGUI>().text;
             string itemName = recordTransform.Find("Item Name").GetComponent<TextMeshProUGUI>().text;
             string binCode = recordTransform.Find("Bin Code").GetComponent<TextMeshProUGUI>().text;
-            string quantity = recordTransform.Find("Quantity").GetComponent<TextMeshProUGUI>().text;
             string uom = recordTransform.Find("UOM").GetComponent<TextMeshProUGUI>().text;
 
             // Create a ItemRecord struct and return it
-            ItemRecord record = new ItemRecord(id, sku, itemName, binCode, quantity, uom);
+            ItemRecord record = new ItemRecord(id, sku, itemName, binCode, uom);
             return record;
         }
 
         public static void ResetSelectedRecord()
         {
-            ItemRecord emptyItem = new ItemRecord(null, null, null, null, null, null);
+            ItemRecord emptyItem = new ItemRecord(null, null, null, null, null);
             selectedRecord = emptyItem;
         }
 
