@@ -94,7 +94,7 @@ public class FirebaseServices : MonoBehaviour
         DataSnapshot duplicateCheckSnapshot = checkTask.Result;
         if (duplicateCheckSnapshot.Exists)
         {
-            message = $"{collectionName.Remove(collectionName.Length - 1)} with {primaryKey} {data[primaryKey]} has been registered.\r\nReplace bin data?";
+            message = $"{collectionName.Remove(collectionName.Length - 1)} with {primaryKey} {data[primaryKey]} has been registered.\r\nReplace {collectionName.Remove(collectionName.Length - 1)} data?";
             Debug.LogWarning(message);
             callback?.Invoke(message);
             yield break;
@@ -123,7 +123,7 @@ public class FirebaseServices : MonoBehaviour
         DataSnapshot duplicateCheckSnapshot1 = checkTask1.Result;
         if (duplicateCheckSnapshot1.Exists)
         {
-            message = $"{collectionName.Remove(collectionName.Length - 1)} with {firstPrimaryKey} {data[firstPrimaryKey]} has been registered.\r\nReplace bin data?";
+            message = $"{collectionName.Remove(collectionName.Length - 1)} with {firstPrimaryKey} {data[firstPrimaryKey]} has been registered.\r\nReplace {collectionName.Remove(collectionName.Length - 1)} data?";
             Debug.LogWarning(message);
             callback?.Invoke(message);
             yield break;
@@ -144,7 +144,7 @@ public class FirebaseServices : MonoBehaviour
         DataSnapshot duplicateCheckSnapshot2 = checkTask2.Result;
         if (duplicateCheckSnapshot2.Exists)
         {
-            message = $"{collectionName.Remove(collectionName.Length - 1)} with {secondPrimaryKey} {data[secondPrimaryKey]} has been registered.\r\nReplace bin data?";
+            message = $"{collectionName.Remove(collectionName.Length - 1)} with {secondPrimaryKey} {data[secondPrimaryKey]} has been registered.";
             Debug.LogWarning(message);
             callback?.Invoke(message);
             yield break;

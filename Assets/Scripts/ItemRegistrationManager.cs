@@ -33,6 +33,7 @@ namespace CompanySystem
                     {
                         binCodeDropdown.options.Add(new TMP_Dropdown.OptionData(item["code"].ToString()));
                     }
+                    binCodeDropdown.captionText.text = binCodeDropdown.options[0].text;
                 }
                 else
                 {
@@ -56,7 +57,7 @@ namespace CompanySystem
                 { "number_of_tags", newItem.NumberOfTags }
             };
 
-            StartCoroutine(FirebaseServices.WriteData("items", itemData, "sku", message =>
+            StartCoroutine(FirebaseServices.WriteData("items", itemData, "sku", "bin_code", message =>
             {
                 if (message.Contains("successfully"))
                 {
@@ -65,10 +66,16 @@ namespace CompanySystem
                     gameObject.SetActive(false);
                     RefreshTable();
                 }
-                else if (message.Contains("registered"))
+                else if (message.Contains("registered") && message.Contains("Replace"))
                 {
                     ShowPopup();
                     ItemRegisteredHandler(message, newItem.Sku);
+                }
+                else if (message.Contains("registered") && !message.Contains("Replace"))
+                {
+                    ShowPopup();
+                    message = $"Bin with bin code {newItem.BinCode} already in use";
+                    BinInUseHandler(message);
                 }
                 else
                 {
@@ -76,6 +83,7 @@ namespace CompanySystem
                 }
             }));
         }
+
         // Reset input field
         public void ResetInput()
         {
@@ -83,6 +91,8 @@ namespace CompanySystem
                 skuInputField.text = skuInputField.text.Remove(0);
             if (itemNameInputField.text.Length > 0)
                 itemNameInputField.text = itemNameInputField.text.Remove(0);
+
+            binCodeDropdown.options.Clear();
         }
         private void RefreshTable()
         {
@@ -135,6 +145,15 @@ namespace CompanySystem
                 }));
             });
             trigger.triggers.Add(entry);
+        }
+
+        private void BinInUseHandler(string message)
+        {
+            warningPanel = popup.transform.Find("Bin In Use").gameObject;
+            warningPanel.SetActive(true);
+
+            TextMeshProUGUI warningText = warningPanel.GetComponentInChildren<TextMeshProUGUI>();
+            warningText.text = message;
         }
     }
 }
