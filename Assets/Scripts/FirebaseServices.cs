@@ -31,33 +31,9 @@ public class FirebaseServices : MonoBehaviour
         });
     }
 
-    public static IEnumerator WriteData(string collectionName, Dictionary<string, object> data, bool checkForDuplicate = false, string primaryKey = null, System.Action<string> callback = null)
+    public static IEnumerator WriteData(string collectionName, Dictionary<string, object> data, System.Action<string> callback = null)
     {
         string message = null;
-
-        if (checkForDuplicate && !string.IsNullOrEmpty(primaryKey) && data.ContainsKey(primaryKey))
-        {
-            // Check primary key
-            var checkTask = reference.Child(collectionName).OrderByChild(primaryKey).EqualTo(data[primaryKey].ToString()).GetValueAsync();
-            yield return new WaitUntil(() => checkTask.IsCompleted);
-
-            if (checkTask.Exception != null)
-            {
-                message = $"Error checking for duplicate: {checkTask.Exception}";
-                Debug.LogError(message);
-                callback?.Invoke(message);
-                yield break;
-            }
-
-            DataSnapshot duplicateCheckSnapshot = checkTask.Result;
-            if (duplicateCheckSnapshot.Exists)
-            {
-                message = $"{collectionName.Remove(collectionName.Length - 1)} with {primaryKey} {data[primaryKey]} has been registered.\r\nReplace bin data?";
-                Debug.LogWarning(message);
-                callback?.Invoke(message);
-                yield break;
-            }
-        }
 
         // Get new id
         var getDataTask = reference.Child(collectionName).OrderByKey().LimitToLast(1).GetValueAsync();
@@ -97,6 +73,85 @@ public class FirebaseServices : MonoBehaviour
             Debug.Log(message);
             callback?.Invoke(message);
         }
+    }
+
+    public static IEnumerator WriteData(string collectionName, Dictionary<string, object> data, string primaryKey, System.Action<string> callback = null)
+    {
+        string message = null;
+
+        // Check primary key
+        var checkTask = reference.Child(collectionName).OrderByChild(primaryKey).EqualTo(data[primaryKey].ToString()).GetValueAsync();
+        yield return new WaitUntil(() => checkTask.IsCompleted);
+
+        if (checkTask.Exception != null)
+        {
+            message = $"Error checking for duplicate: {checkTask.Exception}";
+            Debug.LogError(message);
+            callback?.Invoke(message);
+            yield break;
+        }
+
+        DataSnapshot duplicateCheckSnapshot = checkTask.Result;
+        if (duplicateCheckSnapshot.Exists)
+        {
+            message = $"{collectionName.Remove(collectionName.Length - 1)} with {primaryKey} {data[primaryKey]} has been registered.\r\nReplace bin data?";
+            Debug.LogWarning(message);
+            callback?.Invoke(message);
+            yield break;
+        }
+
+        // Get new id
+        yield return WriteData(collectionName, data, callback);
+    }
+
+    public static IEnumerator WriteData(string collectionName, Dictionary<string, object> data, string firstPrimaryKey, string secondPrimaryKey, System.Action<string> callback = null)
+    {
+        string message = null;
+
+        // Check first primary key
+        var checkTask1 = reference.Child(collectionName).OrderByChild(firstPrimaryKey).EqualTo(data[firstPrimaryKey].ToString()).GetValueAsync();
+        yield return new WaitUntil(() => checkTask1.IsCompleted);
+
+        if (checkTask1.Exception != null)
+        {
+            message = $"Error checking for duplicate: {checkTask1.Exception}";
+            Debug.LogError(message);
+            callback?.Invoke(message);
+            yield break;
+        }
+
+        DataSnapshot duplicateCheckSnapshot1 = checkTask1.Result;
+        if (duplicateCheckSnapshot1.Exists)
+        {
+            message = $"{collectionName.Remove(collectionName.Length - 1)} with {firstPrimaryKey} {data[firstPrimaryKey]} has been registered.\r\nReplace bin data?";
+            Debug.LogWarning(message);
+            callback?.Invoke(message);
+            yield break;
+        }
+
+        // Check second primary key
+        var checkTask2 = reference.Child(collectionName).OrderByChild(secondPrimaryKey).EqualTo(data[secondPrimaryKey].ToString()).GetValueAsync();
+        yield return new WaitUntil(() => checkTask2.IsCompleted);
+
+        if (checkTask2.Exception != null)
+        {
+            message = $"Error checking for duplicate: {checkTask2.Exception}";
+            Debug.LogError(message);
+            callback?.Invoke(message);
+            yield break;
+        }
+
+        DataSnapshot duplicateCheckSnapshot2 = checkTask2.Result;
+        if (duplicateCheckSnapshot2.Exists)
+        {
+            message = $"{collectionName.Remove(collectionName.Length - 1)} with {secondPrimaryKey} {data[secondPrimaryKey]} has been registered.\r\nReplace bin data?";
+            Debug.LogWarning(message);
+            callback?.Invoke(message);
+            yield break;
+        }
+
+        // Get new id
+        yield return WriteData(collectionName, data, callback);
     }
 
     public static IEnumerator ReadData(string collectionName, System.Action<JArray> callback)

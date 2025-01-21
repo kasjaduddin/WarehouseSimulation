@@ -24,11 +24,11 @@ namespace CompanySystem
             {
                 { "code", newBin.Code },
                 { "information", newBin.Information },
-                { "numberoftags", newBin.NumberOfTags },
+                { "number_of_tags", newBin.NumberOfTags },
                 { "active", newBin.Active }
             };
             
-            StartCoroutine(FirebaseServices.WriteData("bins", binData, true, "code", message =>
+            StartCoroutine(FirebaseServices.WriteData("bins", binData, "code", message =>
             {
                 if (message.Contains("successfully"))
                 {
