@@ -123,7 +123,7 @@ public class FirebaseServices : MonoBehaviour
         DataSnapshot duplicateCheckSnapshot1 = checkTask1.Result;
         if (duplicateCheckSnapshot1.Exists)
         {
-            message = $"{collectionName.Remove(collectionName.Length - 1)} with {firstPrimaryKey} {data[firstPrimaryKey]} has been registered.\r\nReplace {collectionName.Remove(collectionName.Length - 1)} data?";
+            message = $"{collectionName.Remove(collectionName.Length - 1)} with {firstPrimaryKey} {data[firstPrimaryKey]} has been registered.";
             Debug.LogWarning(message);
             callback?.Invoke(message);
             yield break;
@@ -144,7 +144,7 @@ public class FirebaseServices : MonoBehaviour
         DataSnapshot duplicateCheckSnapshot2 = checkTask2.Result;
         if (duplicateCheckSnapshot2.Exists)
         {
-            message = $"{collectionName.Remove(collectionName.Length - 1)} with {secondPrimaryKey} {data[secondPrimaryKey]} has been registered.";
+            message = $"{collectionName.Remove(collectionName.Length - 1)} with {secondPrimaryKey} {data[secondPrimaryKey]} has been registered.\r\nReplace {collectionName.Remove(collectionName.Length - 1)} data?";
             Debug.LogWarning(message);
             callback?.Invoke(message);
             yield break;
@@ -245,7 +245,7 @@ public class FirebaseServices : MonoBehaviour
             DataSnapshot duplicateCheckSnapshot = checkTask.Result;
             if (duplicateCheckSnapshot.Exists)
             {
-                message = $"{collectionName.Remove(collectionName.Length - 1)} with {primaryKey} {newData[primaryKey]} has been registered.\r\nReplace bin data?";
+                message = $"{collectionName.Remove(collectionName.Length - 1)} with {primaryKey} {newData[primaryKey]} has been registered.\r\nReplace {collectionName.Remove(collectionName.Length - 1)} data?";
                 Debug.LogWarning(message);
                 callback?.Invoke(message);
                 yield break;
@@ -287,7 +287,7 @@ public class FirebaseServices : MonoBehaviour
             DataSnapshot duplicateCheckSnapshot1 = checkTask1.Result;
             if (duplicateCheckSnapshot1.Exists)
             {
-                message = $"{collectionName.Remove(collectionName.Length - 1)} with {firstPrimaryKey} {newData[firstPrimaryKey]} has been registered.\r\nReplace bin data?";
+                message = $"{collectionName.Remove(collectionName.Length - 1)} with {firstPrimaryKey} {newData[firstPrimaryKey]} has been registered.";
                 Debug.LogWarning(message);
                 callback?.Invoke(message);
                 yield break;
@@ -311,7 +311,7 @@ public class FirebaseServices : MonoBehaviour
             DataSnapshot duplicateCheckSnapshot2 = checkTask2.Result;
             if (duplicateCheckSnapshot2.Exists)
             {
-                message = $"{collectionName.Remove(collectionName.Length - 1)} with {secondPrimaryKey} {newData[secondPrimaryKey]} has been registered.\r\nReplace bin data?";
+                message = $"{collectionName.Remove(collectionName.Length - 1)} with {secondPrimaryKey} {newData[secondPrimaryKey]} has been registered.\r\nReplace {collectionName.Remove(collectionName.Length - 1)} data?";
                 Debug.LogWarning(message);
                 callback?.Invoke(message);
                 yield break;
@@ -319,71 +319,6 @@ public class FirebaseServices : MonoBehaviour
         }
 
         yield return ModifyData(collectionName, newData, callback);
-    }
-
-    public static IEnumerator ModifyData(string collectionName, Dictionary<string, object> newData, bool checkForDuplicate = true, string oldKey = "", string primaryKey = "", System.Action<string> callback = null)
-    {
-        string message = null;
-
-        if (!newData.ContainsKey("id"))
-        {
-            message = "Data does not contain 'id' field.";
-            Debug.LogError(message);
-            callback?.Invoke(message);
-            yield break;
-        }
-
-        if (checkForDuplicate)
-        {
-            string newKey = newData.ContainsKey(primaryKey) ? newData[primaryKey].ToString() : null;
-
-            // Check for duplication if the new key is different from the last key
-            if (!string.IsNullOrEmpty(newKey) && newKey != oldKey)
-            {
-                var checkTask = reference.Child(collectionName).OrderByChild(primaryKey).EqualTo(newKey).GetValueAsync();
-                yield return new WaitUntil(() => checkTask.IsCompleted);
-
-                if (checkTask.Exception != null)
-                {
-                    message = $"Error checking for duplicate: {checkTask.Exception}";
-                    Debug.LogError(message);
-                    callback?.Invoke(message);
-                    yield break;
-                }
-
-                DataSnapshot duplicateCheckSnapshot = checkTask.Result;
-                if (duplicateCheckSnapshot.Exists)
-                {
-                    message = $"{collectionName.Remove(collectionName.Length - 1)} with {primaryKey} {newData[primaryKey]} has been registered.\r\nReplace bin data?";
-                    Debug.LogWarning(message);
-                    callback?.Invoke(message);
-                    yield break;
-                }
-            }
-        }
-
-        string documentId = newData["id"].ToString();
-        DatabaseReference docRef = reference.Child(collectionName).Child(documentId);
-
-        // Delete id from newData so that it is not updated in the document
-        newData.Remove("id");
-
-        // Update data in Firebase
-        var updateTask = docRef.UpdateChildrenAsync(newData);
-        yield return new WaitUntil(() => updateTask.IsCompleted);
-
-        if (updateTask.Exception != null)
-        {
-            message = $"Failed to update data with id {documentId} in {collectionName} collection: {updateTask.Exception}";
-            Debug.LogError(message);
-            callback?.Invoke(message);
-        }
-        else
-        {
-            message = $"Data with id {documentId} successfully updated in {collectionName} collection.";
-            Debug.Log(message);
-            callback?.Invoke(message);
-        }
     }
 
     public static IEnumerator DeleteData(string collectionName, string primaryKey, string key, System.Action<string> callback = null)
