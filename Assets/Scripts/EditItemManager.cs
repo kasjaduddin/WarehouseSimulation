@@ -25,10 +25,6 @@ namespace CompanySystem
         {
             // Invoke GetData method after a short delay
             Invoke("GetBinCodes", 0.1f);
-
-            skuInputField.text = ItemListManager.selectedRecord.Sku.ToString();
-            itemNameInputField.text = ItemListManager.selectedRecord.ItemName.ToString();
-            uomDropdown.captionText.text = ItemListManager.selectedRecord.UOM.ToString();
         }
         public void GetBinCodes()
         {
@@ -40,7 +36,7 @@ namespace CompanySystem
                     {
                         binCodeDropdown.options.Add(new TMP_Dropdown.OptionData(item["code"].ToString()));
                     }
-                    binCodeDropdown.captionText.text = ItemListManager.selectedRecord.BinCode.ToString();
+                    LoadItem();
                 }
                 else
                 {
@@ -49,11 +45,20 @@ namespace CompanySystem
             }));
         }
 
-        // Register new item to system
+        private void LoadItem()
+        {
+            binCodeDropdown.captionText.text = ItemListManager.selectedRecord.BinCode.ToString();
+            skuInputField.text = ItemListManager.selectedRecord.Sku.ToString();
+            itemNameInputField.text = ItemListManager.selectedRecord.ItemName.ToString();
+            uomDropdown.captionText.text = ItemListManager.selectedRecord.UOM.ToString();
+        }
+
+        // Edit item to system
         public void EditItem()
         {
             ItemRecord newItem = new ItemRecord(skuInputField.text, itemNameInputField.text, binCodeDropdown.captionText.text, uomDropdown.captionText.text);
             string oldSku = ItemListManager.selectedRecord.Sku;
+            string oldBinCode = ItemListManager.selectedRecord.BinCode;
 
             var newItemData = new Dictionary<string, object>
             {
@@ -67,7 +72,7 @@ namespace CompanySystem
                 { "number_of_tags", newItem.NumberOfTags }
             };
             
-            StartCoroutine(FirebaseServices.ModifyData("items", newItemData, oldSku, "sku", message =>
+            StartCoroutine(FirebaseServices.ModifyData("items", newItemData, oldBinCode, "bin_code", oldSku, "sku", message =>
             {
                 if (message.Contains("successfully"))
                 {
@@ -77,10 +82,16 @@ namespace CompanySystem
                     RefreshTable();
                     ItemListManager.ResetSelectedRecord();
                 }
-                else if (message.Contains("registered"))
+                else if (message.Contains("registered") && message.Contains("Replace"))
                 {
                     ShowPopup();
                     ItemRegisteredHandler(message, newItem.Sku);
+                }
+                else if (message.Contains("registered") && !message.Contains("Replace"))
+                {
+                    ShowPopup();
+                    message = $"Bin with bin code {newItem.BinCode} already in use";
+                    BinInUseHandler(message);
                 }
                 else
                 {
@@ -96,6 +107,8 @@ namespace CompanySystem
                 skuInputField.text = skuInputField.text.Remove(0);
             if (itemNameInputField.text.Length > 0)
                 itemNameInputField.text = itemNameInputField.text.Remove(0);
+
+            binCodeDropdown.options.Clear();
         }
 
         private void RefreshTable()
@@ -149,6 +162,15 @@ namespace CompanySystem
                 }));
             });
             trigger.triggers.Add(entry);
+        }
+
+        private void BinInUseHandler(string message)
+        {
+            warningPanel = popup.transform.Find("Bin In Use").gameObject;
+            warningPanel.SetActive(true);
+
+            TextMeshProUGUI warningText = warningPanel.GetComponentInChildren<TextMeshProUGUI>();
+            warningText.text = message;
         }
     }
 }
