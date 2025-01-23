@@ -14,6 +14,7 @@ namespace CompanySystem
         public TMP_Dropdown uomDropdown;
 
         public GameObject itemTable;
+
         public GameObject popup;
         private GameObject warningPanel;
 
