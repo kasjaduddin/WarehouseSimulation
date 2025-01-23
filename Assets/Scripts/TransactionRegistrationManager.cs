@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UnityEditorInternal.Profiling.Memory.Experimental;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -61,7 +62,8 @@ namespace CompanySystem
                 else if (message.Contains("registered"))
                 {
                     ShowPopup();
-                    //BinRegisteredHandler(message, newBin.Code);
+                    message = $"Transaction with invoice number {transactionData["invoice_number"]} has been registered";
+                    TransactionRegisteredHandler(message);
                 }
                 else
                 {
@@ -103,6 +105,15 @@ namespace CompanySystem
                 warningPanel.transform.parent.gameObject.SetActive(false);
                 warningPanel.SetActive(false);
             }
+        }
+
+        private void TransactionRegisteredHandler(string message)
+        {
+            warningPanel = popup.transform.Find("Transaction Registered").gameObject;
+            warningPanel.SetActive(true);
+
+            TextMeshProUGUI warningText = warningPanel.GetComponentInChildren<TextMeshProUGUI>();
+            warningText.text = message;
         }
     }
 }
