@@ -178,23 +178,51 @@ public class FirebaseServices : MonoBehaviour
         });
     }
 
-    public static IEnumerator ModifyData(string collectionName, Dictionary<string, object> newData, System.Action<string> callback = null)
+    public static IEnumerator ModifyData(string collectionName, Dictionary<string, object> newData, string primaryKey, System.Action<string> callback = null)
     {
         string message = null;
 
-        if (!newData.ContainsKey("id"))
+        if (!newData.ContainsKey(primaryKey))
         {
-            message = "Data does not contain 'id' field.";
+            message = $"Data does not contain '{primaryKey}' field.";
             Debug.LogError(message);
             callback?.Invoke(message);
             yield break;
         }
 
-        string documentId = newData["id"].ToString();
+        string primaryKeyValue = newData[primaryKey].ToString();
+        var getDocumentTask = reference.Child(collectionName).OrderByChild(primaryKey).EqualTo(primaryKeyValue).GetValueAsync();
+        yield return new WaitUntil(() => getDocumentTask.IsCompleted);
+
+        if (getDocumentTask.Exception != null)
+        {
+            message = $"Failed to find document with {primaryKey} = {primaryKeyValue} in {collectionName} collection: {getDocumentTask.Exception}";
+            Debug.LogError(message);
+            callback?.Invoke(message);
+            yield break;
+        }
+
+        DataSnapshot documentSnapshot = getDocumentTask.Result;
+        if (!documentSnapshot.Exists)
+        {
+            message = $"{collectionName.Remove(collectionName.Length - 1)} with {primaryKey} = {primaryKeyValue} does not exist.";
+            Debug.LogWarning(message);
+            callback?.Invoke(message);
+            yield break;
+        }
+
+        // Assuming the primaryKey is unique and we get exactly one child
+        string documentId = null;
+        foreach (DataSnapshot child in documentSnapshot.Children)
+        {
+            documentId = child.Key;
+            break;
+        }
+
         DatabaseReference docRef = reference.Child(collectionName).Child(documentId);
 
-        // Delete id from newData so that it is not updated in the document
-        newData.Remove("id");
+        // Delete primaryKey from newData so that it is not updated in the document
+        newData.Remove(primaryKey);
 
         // Update data in Firebase
         var updateTask = docRef.UpdateChildrenAsync(newData);
@@ -202,13 +230,13 @@ public class FirebaseServices : MonoBehaviour
 
         if (updateTask.Exception != null)
         {
-            message = $"Failed to update data with id {documentId} in {collectionName} collection: {updateTask.Exception}";
+            message = $"Failed to update data with {primaryKey} = {primaryKeyValue} in {collectionName} collection: {updateTask.Exception}";
             Debug.LogError(message);
             callback?.Invoke(message);
         }
         else
         {
-            message = $"Data with id {documentId} successfully updated in {collectionName} collection.";
+            message = $"Data with {primaryKey} = {primaryKeyValue} successfully updated in {collectionName} collection.";
             Debug.Log(message);
             callback?.Invoke(message);
         }
@@ -217,14 +245,6 @@ public class FirebaseServices : MonoBehaviour
     public static IEnumerator ModifyData(string collectionName, Dictionary<string, object> newData, string oldKey, string primaryKey, System.Action<string> callback = null)
     {
         string message = null;
-
-        if (!newData.ContainsKey("id"))
-        {
-            message = "Data does not contain 'id' field.";
-            Debug.LogError(message);
-            callback?.Invoke(message);
-            yield break;
-        }
 
         string newKey = newData.ContainsKey(primaryKey) ? newData[primaryKey].ToString() : null;
 
@@ -252,20 +272,12 @@ public class FirebaseServices : MonoBehaviour
             }
         }
 
-        yield return ModifyData(collectionName, newData, callback);
+        yield return ModifyData(collectionName, newData, primaryKey, callback);
     }
 
     public static IEnumerator ModifyData(string collectionName, Dictionary<string, object> newData, string oldFirstPrimaryKey, string firstPrimaryKey, string oldSecondPrimaryKey, string secondPrimaryKey, System.Action<string> callback = null)
     {
         string message = null;
-
-        if (!newData.ContainsKey("id"))
-        {
-            message = "Data does not contain 'id' field.";
-            Debug.LogError(message);
-            callback?.Invoke(message);
-            yield break;
-        }
 
         string newKey1 = newData.ContainsKey(firstPrimaryKey) ? newData[firstPrimaryKey].ToString() : null;
         string newKey2 = newData.ContainsKey(secondPrimaryKey) ? newData[secondPrimaryKey].ToString() : null;
@@ -318,7 +330,7 @@ public class FirebaseServices : MonoBehaviour
             }
         }
 
-        yield return ModifyData(collectionName, newData, callback);
+        yield return ModifyData(collectionName, newData, secondPrimaryKey, callback);
     }
 
     public static IEnumerator DeleteData(string collectionName, string primaryKey, string key, System.Action<string> callback = null)

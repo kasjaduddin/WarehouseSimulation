@@ -59,7 +59,7 @@ namespace CompanySystem
             ItemRecord newItem = new ItemRecord(skuInputField.text, itemNameInputField.text, binCodeDropdown.captionText.text, uomDropdown.captionText.text);
             string oldSku = ItemListManager.selectedRecord.Sku;
             string oldBinCode = ItemListManager.selectedRecord.BinCode;
-
+            Debug.Log(ItemListManager.selectedRecord.Id);
             var newItemData = new Dictionary<string, object>
             {
                 { "id", ItemListManager.selectedRecord.Id },
