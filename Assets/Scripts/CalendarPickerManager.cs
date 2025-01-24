@@ -1,9 +1,8 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Globalization;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CalendarPickerManager : MonoBehaviour
 {
@@ -36,6 +35,7 @@ public class CalendarPickerManager : MonoBehaviour
         {
             GameObject day = Instantiate(dayTemplate, dayContainer);
             day.transform.Find("Text (TMP)").GetComponent<TextMeshProUGUI>().text = (i + 1).ToString();
+            day.GetComponent<Button>().onClick.AddListener(() => SelectDate(day.transform.Find("Text (TMP)").GetComponent<TextMeshProUGUI>().text));
         }
         dayTemplate.SetActive(false);
     }
@@ -62,5 +62,10 @@ public class CalendarPickerManager : MonoBehaviour
     {
         date = date.AddMonths(1);
         LoadCalendar();
+    }
+
+    public void SelectDate(string day)
+    {
+        selectedDate.text = $"{day}/{date.Month}/{date.Year}";
     }
 }

@@ -31,12 +31,11 @@ namespace CompanySystem
 
         private void OnEnable()
         {
-            LoadDate();   
-        }
+            selectedDate.day = DateTime.Now.Day.ToString();
+            selectedDate.month = DateTime.Now.Month.ToString();
+            selectedDate.year = DateTime.Now.Year.ToString();
 
-        private void Update()
-        {
-            invoiceDate.text = $"{selectedDate.day}/{selectedDate.month}/{selectedDate.year}";
+            LoadDate();   
         }
 
         public void AddNewTransaction()
@@ -74,9 +73,7 @@ namespace CompanySystem
 
         private void LoadDate()
         {
-            selectedDate.day = DateTime.Now.Day.ToString();
-            selectedDate.month = DateTime.Now.Month.ToString();
-            selectedDate.year = DateTime.Now.Year.ToString();
+            invoiceDate.text = $"{selectedDate.day}/{selectedDate.month}/{selectedDate.year}";
         }
 
         // Reset input field
