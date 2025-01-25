@@ -10,13 +10,7 @@ namespace CompanySystem
         public TMP_InputField invoiceNumberInputField;
         public TextMeshProUGUI invoiceDate;
         public TMP_InputField vendorInputField;
-        private struct Date
-        {
-            public string day;
-            public string month;
-            public string year;
-        }
-        private Date selectedDate;
+        
         public GameObject calendarPicker;
 
         public GameObject transactionTable;

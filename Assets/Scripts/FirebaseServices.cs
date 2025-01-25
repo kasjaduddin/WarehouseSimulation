@@ -178,77 +178,13 @@ public class FirebaseServices : MonoBehaviour
         });
     }
 
-    public static IEnumerator ModifyData(string collectionName, Dictionary<string, object> newData, string primaryKey, System.Action<string> callback = null)
-    {
-        string message = null;
-
-        if (!newData.ContainsKey(primaryKey))
-        {
-            message = $"Data does not contain '{primaryKey}' field.";
-            Debug.LogError(message);
-            callback?.Invoke(message);
-            yield break;
-        }
-
-        string primaryKeyValue = newData[primaryKey].ToString();
-        var getDocumentTask = reference.Child(collectionName).OrderByChild(primaryKey).EqualTo(primaryKeyValue).GetValueAsync();
-        yield return new WaitUntil(() => getDocumentTask.IsCompleted);
-
-        if (getDocumentTask.Exception != null)
-        {
-            message = $"Failed to find document with {primaryKey} = {primaryKeyValue} in {collectionName} collection: {getDocumentTask.Exception}";
-            Debug.LogError(message);
-            callback?.Invoke(message);
-            yield break;
-        }
-
-        DataSnapshot documentSnapshot = getDocumentTask.Result;
-        if (!documentSnapshot.Exists)
-        {
-            message = $"{collectionName.Remove(collectionName.Length - 1)} with {primaryKey} = {primaryKeyValue} does not exist.";
-            Debug.LogWarning(message);
-            callback?.Invoke(message);
-            yield break;
-        }
-
-        // Assuming the primaryKey is unique and we get exactly one child
-        string documentId = null;
-        foreach (DataSnapshot child in documentSnapshot.Children)
-        {
-            documentId = child.Key;
-            break;
-        }
-
-        DatabaseReference docRef = reference.Child(collectionName).Child(documentId);
-
-        // Delete primaryKey from newData so that it is not updated in the document
-        newData.Remove(primaryKey);
-
-        // Update data in Firebase
-        var updateTask = docRef.UpdateChildrenAsync(newData);
-        yield return new WaitUntil(() => updateTask.IsCompleted);
-
-        if (updateTask.Exception != null)
-        {
-            message = $"Failed to update data with {primaryKey} = {primaryKeyValue} in {collectionName} collection: {updateTask.Exception}";
-            Debug.LogError(message);
-            callback?.Invoke(message);
-        }
-        else
-        {
-            message = $"Data with {primaryKey} = {primaryKeyValue} successfully updated in {collectionName} collection.";
-            Debug.Log(message);
-            callback?.Invoke(message);
-        }
-    }
-
     public static IEnumerator ModifyData(string collectionName, Dictionary<string, object> newData, string oldKey, string primaryKey, System.Action<string> callback = null)
     {
         string message = null;
 
         string newKey = newData.ContainsKey(primaryKey) ? newData[primaryKey].ToString() : null;
 
-        // Check for duplication if the new key is different from the last key
+        // Check for duplication if the new key is different from the old key
         if (!string.IsNullOrEmpty(newKey) && newKey != oldKey)
         {
             var checkTask = reference.Child(collectionName).OrderByChild(primaryKey).EqualTo(newKey).GetValueAsync();
@@ -272,7 +208,53 @@ public class FirebaseServices : MonoBehaviour
             }
         }
 
-        yield return ModifyData(collectionName, newData, primaryKey, callback);
+        // Get the current document ID using the old key
+        var getDocumentTask = reference.Child(collectionName).OrderByChild(primaryKey).EqualTo(oldKey).GetValueAsync();
+        yield return new WaitUntil(() => getDocumentTask.IsCompleted);
+
+        if (getDocumentTask.Exception != null)
+        {
+            message = $"Failed to find document with {primaryKey} = {oldKey} in {collectionName} collection: {getDocumentTask.Exception}";
+            Debug.LogError(message);
+            callback?.Invoke(message);
+            yield break;
+        }
+
+        DataSnapshot documentSnapshot = getDocumentTask.Result;
+        if (!documentSnapshot.Exists)
+        {
+            message = $"{collectionName.Remove(collectionName.Length - 1)} with {primaryKey} = {oldKey} does not exist.";
+            Debug.LogWarning(message);
+            callback?.Invoke(message);
+            yield break;
+        }
+
+        // Assuming the primaryKey is unique and we get exactly one child
+        string documentId = null;
+        foreach (DataSnapshot child in documentSnapshot.Children)
+        {
+            documentId = child.Key;
+            break;
+        }
+
+        DatabaseReference docRef = reference.Child(collectionName).Child(documentId);
+
+        // Update data in Firebase
+        var updateTask = docRef.UpdateChildrenAsync(newData);
+        yield return new WaitUntil(() => updateTask.IsCompleted);
+
+        if (updateTask.Exception != null)
+        {
+            message = $"Failed to update data with {primaryKey} = {oldKey} in {collectionName} collection: {updateTask.Exception}";
+            Debug.LogError(message);
+            callback?.Invoke(message);
+        }
+        else
+        {
+            message = $"Data with {primaryKey} = {oldKey} successfully updated in {collectionName} collection.";
+            Debug.Log(message);
+            callback?.Invoke(message);
+        }
     }
 
     public static IEnumerator ModifyData(string collectionName, Dictionary<string, object> newData, string oldFirstPrimaryKey, string firstPrimaryKey, string oldSecondPrimaryKey, string secondPrimaryKey, System.Action<string> callback = null)
@@ -330,7 +312,7 @@ public class FirebaseServices : MonoBehaviour
             }
         }
 
-        yield return ModifyData(collectionName, newData, secondPrimaryKey, callback);
+        yield return ModifyData(collectionName, newData, oldSecondPrimaryKey, secondPrimaryKey, callback);
     }
 
     public static IEnumerator DeleteData(string collectionName, string primaryKey, string key, System.Action<string> callback = null)
