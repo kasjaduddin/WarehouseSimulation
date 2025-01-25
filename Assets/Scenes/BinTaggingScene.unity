@@ -8114,7 +8114,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &228167736
 RectTransform:
   m_ObjectHideFlags: 0
@@ -35203,13 +35203,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1022341858}
+  - component: {fileID: 1022341859}
   m_Layer: 0
   m_Name: Transaction List
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1022341858
 RectTransform:
   m_ObjectHideFlags: 0
@@ -35232,6 +35233,22 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -40}
   m_SizeDelta: {x: 1920, y: 1000}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1022341859
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1022341856}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa14da26ec7d0d34087a0a2add0a778f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Table: {fileID: 2077506840}
+  container: {fileID: 290516620}
+  recordTemplate: {fileID: 554961315}
+  editButton: {fileID: 1682646100}
 --- !u!1 &1027385415
 GameObject:
   m_ObjectHideFlags: 0
@@ -63789,7 +63806,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 0, y: -9.1835e-41, z: 0, w: -1.6430016e-36}
+  m_BoundingSphereOverride: {x: 9.1835e-41, y: NaN, z: NaN, w: NaN}
   m_UseBoundingSphereOverride: 0
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
