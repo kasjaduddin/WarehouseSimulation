@@ -1,5 +1,6 @@
 using Newtonsoft.Json.Linq;
 using Record;
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Rendering.LookDev;
@@ -73,20 +74,22 @@ namespace CompanySystem
 
         private ItemRecord GetRecord(Transform recordTransform)
         {
-            string id = recordTransform.Find("Id").GetComponent<TextMeshProUGUI>().text;
             string sku = recordTransform.Find("SKU").GetComponent<TextMeshProUGUI>().text;
             string itemName = recordTransform.Find("Item Name").GetComponent<TextMeshProUGUI>().text;
             string binCode = recordTransform.Find("Bin Code").GetComponent<TextMeshProUGUI>().text;
+            int quantity = Int32.Parse(recordTransform.Find("Quantity").GetComponent<TextMeshProUGUI>().text);
             string uom = recordTransform.Find("UOM").GetComponent<TextMeshProUGUI>().text;
+            bool active = true;
+            int numberOfTags = Int32.Parse(recordTransform.Find("Number of Tag").GetComponent<TextMeshProUGUI>().text);
 
             // Create a ItemRecord struct and return it
-            ItemRecord record = new ItemRecord(id, sku, itemName, binCode, uom);
+            ItemRecord record = new ItemRecord(sku, itemName, binCode, quantity, uom, active, numberOfTags);
             return record;
         }
 
         public static void ResetSelectedRecord()
         {
-            ItemRecord emptyItem = new ItemRecord(null, null, null, null, null);
+            ItemRecord emptyItem = new ItemRecord(null, null, null, 0, null, true, 0);
             selectedRecord = emptyItem;
         }
 

@@ -20,19 +20,18 @@ namespace Record
             Active = true;
         }
 
-        public BinRecord(string id, string code, string information)
+        public BinRecord(string id, string code, string information, int numberOfTags, bool active)
         {
             Id = id;
             Code = code;
             Information = information;
-            NumberOfTags = 0;
-            Active = true;
+            NumberOfTags = numberOfTags;
+            Active = active;
         }
     }
 
     public struct ItemRecord
     {
-        public string Id;
         public string Sku;
         public string ItemName;
         public string BinCode;
@@ -43,32 +42,29 @@ namespace Record
 
         public ItemRecord(string sku, string itemName, string binCode, string uom)
         {
-            Id = string.Empty;
             Sku = sku;
             ItemName = itemName;
             BinCode = binCode;
             Quantity = 0;
-            NumberOfTags = 0;
-            Active = true;
             UOM = uom;
+            Active = true;
+            NumberOfTags = 0;
         }
 
-        public ItemRecord(string id, string sku, string itemName, string binCode, string uom)
+        public ItemRecord(string sku, string itemName, string binCode, int quantity, string uom, bool active, int numberOfTags)
         {
-            Id = id;
             Sku = sku;
             ItemName = itemName;
             BinCode = binCode;
-            Quantity = 0;
-            NumberOfTags = 0;
-            Active = true;
+            Quantity = quantity;
             UOM = uom;
+            Active = active;
+            NumberOfTags = numberOfTags;
         }
     }
 
     public struct TransactionRecord
     {
-        public string Id;
         public string Code;
         public string InvoiceNumber;
         public string InvoiceDate;
@@ -79,8 +75,15 @@ namespace Record
             string date = $"{DateTime.Now.Year}{DateTime.Now.Month:D2}{DateTime.Now.Day:D2}";
             string time = $"{DateTime.Now.Hour:D2}{DateTime.Now.Minute:D2}{DateTime.Now.Second:D2}";
 
-            Id = string.Empty;
             Code = $"TRANS-{date}-{time}";
+            InvoiceNumber = invoiceNumber;
+            InvoiceDate = invoiceDate;
+            Vendor = vendor;
+        }
+
+        public TransactionRecord(string code, string invoiceNumber, string invoiceDate, string vendor)
+        {
+            Code = code;
             InvoiceNumber = invoiceNumber;
             InvoiceDate = invoiceDate;
             Vendor = vendor;

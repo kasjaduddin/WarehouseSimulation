@@ -2,6 +2,7 @@ using UnityEngine;
 using Newtonsoft.Json.Linq;
 using TMPro;
 using Record;
+using System;
 
 
 namespace CompanySystem
@@ -73,15 +74,17 @@ namespace CompanySystem
             string id = recordTransform.Find("Id").GetComponent<TextMeshProUGUI>().text;
             string code = recordTransform.Find("Code").GetComponent<TextMeshProUGUI>().text;
             string information = recordTransform.Find("Information").GetComponent<TextMeshProUGUI>().text;
+            int numberOfTags = Int32.Parse(recordTransform.Find("Number of Tag").GetComponent<TextMeshProUGUI>().text);
+            bool active = true;
 
             // Create a BinRecord struct and return it
-            BinRecord record = new BinRecord(id, code, information);
+            BinRecord record = new BinRecord(id, code, information, numberOfTags, active);
             return record;
         }
 
         public static void ResetSelectedRecord()
         {
-            BinRecord emptyBin = new BinRecord(null, null, null);
+            BinRecord emptyBin = new BinRecord(null, null, null, 0, true);
             selectedRecord = emptyBin;
         }
 
