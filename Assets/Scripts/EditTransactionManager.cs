@@ -1,20 +1,15 @@
 using Record;
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using UnityEditorInternal.Profiling.Memory.Experimental;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 namespace CompanySystem
 {
-    public class TransactionRegistrationManager : MonoBehaviour
+    public class EditTransactionManager : MonoBehaviour
     {
         public TMP_InputField invoiceNumberInputField;
         public TextMeshProUGUI invoiceDate;
         public TMP_InputField vendorInputField;
-
         private struct Date
         {
             public string day;
@@ -29,19 +24,19 @@ namespace CompanySystem
         public GameObject popup;
         private GameObject warningPanel;
 
-        private void OnEnable()
+        void OnEnable()
         {
-            selectedDate.day = DateTime.Now.Day.ToString();
-            selectedDate.month = DateTime.Now.Month.ToString();
-            selectedDate.year = DateTime.Now.Year.ToString();
+            invoiceNumberInputField.text = TransactionListManager.selectedRecord.InvoiceNumber;
+            vendorInputField.text = TransactionListManager.selectedRecord.Vendor;
             
-            LoadDate();   
+            LoadDate();
         }
-
-        public void AddNewTransaction()
+        public void EditTransaction()
         {
             TransactionRecord newTransaction = new TransactionRecord(invoiceNumberInputField.text, invoiceDate.text, vendorInputField.text);
-            var transactionData = new Dictionary<string, object>
+            string oldInvoiceNumber = TransactionListManager.selectedRecord.InvoiceNumber;
+
+            var newTransactionData = new Dictionary<string, object>
             {
                 { "code", newTransaction.Code },
                 { "invoice_number", newTransaction.InvoiceNumber },
@@ -49,7 +44,7 @@ namespace CompanySystem
                 { "vendor", newTransaction.Vendor }
             };
 
-            StartCoroutine(FirebaseServices.WriteData("transactions", transactionData, "invoice_number", message =>
+            StartCoroutine(FirebaseServices.ModifyData("transactions", newTransactionData, oldInvoiceNumber, "invoice_number", message =>
             {
                 if (message.Contains("successfully"))
                 {
@@ -57,11 +52,12 @@ namespace CompanySystem
                     ResetInput();
                     gameObject.SetActive(false);
                     RefreshTable();
+                    TransactionListManager.ResetSelectedRecord();
                 }
                 else if (message.Contains("registered"))
                 {
                     ShowPopup();
-                    message = $"Transaction with invoice number {transactionData["invoice_number"]} has been registered";
+                    message = $"Transaction with invoice number {newTransactionData["invoice_number"]} has been registered";
                     TransactionRegisteredHandler(message);
                 }
                 else
@@ -73,7 +69,7 @@ namespace CompanySystem
 
         private void LoadDate()
         {
-            invoiceDate.text = $"{selectedDate.day}/{selectedDate.month}/{selectedDate.year}";
+            invoiceDate.text = TransactionListManager.selectedRecord.InvoiceDate;
         }
 
         // Reset input field

@@ -7373,7 +7373,7 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 228167735}
+        - m_Target: {fileID: 1759217997}
           m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
           m_MethodName: SetActive
           m_Mode: 6
@@ -8107,7 +8107,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 228167736}
-  - component: {fileID: 228167738}
+  - component: {fileID: 228167737}
   m_Layer: 0
   m_Name: Edit Transaction
   m_TagString: Untagged
@@ -8142,7 +8142,7 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -40}
   m_SizeDelta: {x: 1920, y: 1000}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &228167738
+--- !u!114 &228167737
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8151,7 +8151,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 228167735}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 58972f2755adae94c9aa2d62558b77fa, type: 3}
+  m_Script: {fileID: 11500000, guid: 4dc7494b96634e043844ee5458d123c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   invoiceNumberInputField: {fileID: 1832329920}
@@ -8216,9 +8216,8 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 228167738}
-          m_TargetAssemblyTypeName: CompanySystem.TransactionRegistrationManager,
-            Assembly-CSharp
+        - m_Target: {fileID: 228167737}
+          m_TargetAssemblyTypeName: CompanySystem.EditTransactionManager, Assembly-CSharp
           m_MethodName: ResetInput
           m_Mode: 1
           m_Arguments:
@@ -14572,9 +14571,8 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 228167738}
-          m_TargetAssemblyTypeName: CompanySystem.TransactionRegistrationManager,
-            Assembly-CSharp
+        - m_Target: {fileID: 228167737}
+          m_TargetAssemblyTypeName: CompanySystem.EditTransactionManager, Assembly-CSharp
           m_MethodName: ResetInput
           m_Mode: 1
           m_Arguments:
@@ -31744,7 +31742,7 @@ GameObject:
   - component: {fileID: 898976140}
   - component: {fileID: 898976139}
   m_Layer: 0
-  m_Name: Expand Edit Button
+  m_Name: Expand Delete Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -38233,9 +38231,9 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: CompanySystem.ItemListManager, Assembly-CSharp
-          m_MethodName: ShowDeleteButton
+        - m_Target: {fileID: 1022341859}
+          m_TargetAssemblyTypeName: CompanySystem.TransactionListManager, Assembly-CSharp
+          m_MethodName: ShowEditButton
           m_Mode: 2
           m_Arguments:
             m_ObjectArgument: {fileID: 554961316}
@@ -46316,10 +46314,9 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 228167738}
-          m_TargetAssemblyTypeName: CompanySystem.TransactionRegistrationManager,
-            Assembly-CSharp
-          m_MethodName: AddNewTransaction
+        - m_Target: {fileID: 228167737}
+          m_TargetAssemblyTypeName: CompanySystem.EditTransactionManager, Assembly-CSharp
+          m_MethodName: EditTransaction
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -58252,7 +58249,7 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 1682646100}
+        - m_Target: {fileID: 1022341856}
           m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
           m_MethodName: SetActive
           m_Mode: 6
@@ -58264,19 +58261,7 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-        - m_Target: {fileID: 1793854878}
-          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-          m_MethodName: SetActive
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 1
-          m_CallState: 2
-        - m_Target: {fileID: 0}
+        - m_Target: {fileID: 228167735}
           m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
           m_MethodName: SetActive
           m_Mode: 6
@@ -58310,7 +58295,7 @@ MonoBehaviour:
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 1, g: 0, b: 0, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
@@ -76497,9 +76482,8 @@ GameObject:
   - component: {fileID: 2139988106}
   - component: {fileID: 2139988105}
   - component: {fileID: 2139988104}
-  - component: {fileID: 2139988103}
   m_Layer: 0
-  m_Name: Edit Button
+  m_Name: Setting Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -76524,59 +76508,6 @@ RectTransform:
   m_AnchoredPosition: {x: 14, y: 0}
   m_SizeDelta: {x: 113, y: 43}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &2139988103
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2139988101}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Delegates:
-  - eventID: 2
-    callback:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: CompanySystem.ItemListManager, Assembly-CSharp
-          m_MethodName: EditRecord
-          m_Mode: 2
-          m_Arguments:
-            m_ObjectArgument: {fileID: 554961316}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Transform, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-          m_MethodName: SetActive
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 1
-          m_CallState: 2
-        - m_Target: {fileID: 1022341856}
-          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-          m_MethodName: SetActive
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
 --- !u!114 &2139988104
 MonoBehaviour:
   m_ObjectHideFlags: 0

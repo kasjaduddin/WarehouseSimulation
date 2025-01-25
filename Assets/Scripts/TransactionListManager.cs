@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace CompanySystem
 {
-    public class Transaction : MonoBehaviour
+    public class TransactionListManager : MonoBehaviour
     {
         private JArray transactions; // Array to store transactions data
         public GameObject Table;
@@ -85,7 +85,6 @@ namespace CompanySystem
             selectedRecord = emptyTransaction;
         }
 
-        // Edit selected record
         public void AddItems(Transform recordTransform)
         {
             selectedRecord = GetRecord(recordTransform);
