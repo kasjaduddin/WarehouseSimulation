@@ -4,6 +4,7 @@ using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Rendering.LookDev;
+using UnityEngine.UI;
 
 namespace CompanySystem
 {
@@ -66,6 +67,11 @@ namespace CompanySystem
                 newRowTransform.Find("Quantity").GetComponent<TextMeshProUGUI>().text = items[i]["quantity"].ToString();
                 newRowTransform.Find("Number of Tag").GetComponent<TextMeshProUGUI>().text = items[i]["number_of_tags"].ToString();
                 newRowTransform.Find("UOM").GetComponent<TextMeshProUGUI>().text = items[i]["uom"].ToString();
+
+                if (i % 2 != 0)
+                {
+                    newRowTransform.Find("Record Background").GetComponent<Image>().color = new Color32(255, 255, 255, 255);
+                }
 
                 Table.GetComponent<DynamicTableManager>().enabled = true;
             }

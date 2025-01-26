@@ -2,6 +2,7 @@ using Newtonsoft.Json.Linq;
 using Record;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace CompanySystem
 {
@@ -61,6 +62,11 @@ namespace CompanySystem
                 newRowTransform.Find("Invoice Number").GetComponent<TextMeshProUGUI>().text = transactions[i]["invoice_number"].ToString();
                 newRowTransform.Find("Invoice Date").GetComponent<TextMeshProUGUI>().text = transactions[i]["invoice_date"].ToString();
                 newRowTransform.Find("Vendor").GetComponent<TextMeshProUGUI>().text = transactions[i]["vendor"].ToString();
+
+                if (i % 2 != 0)
+                {
+                    newRowTransform.Find("Record Background").GetComponent<Image>().color = new Color32(255, 255, 255, 255);
+                }
 
                 Table.GetComponent<DynamicTableManager>().enabled = true;
             }

@@ -3,6 +3,7 @@ using Newtonsoft.Json.Linq;
 using TMPro;
 using Record;
 using System;
+using UnityEngine.UI;
 
 
 namespace CompanySystem
@@ -63,6 +64,11 @@ namespace CompanySystem
                 newRowTransform.Find("Code").GetComponent<TextMeshProUGUI>().text = bins[i]["code"].ToString();
                 newRowTransform.Find("Information").GetComponent<TextMeshProUGUI>().text = bins[i]["information"].ToString();
                 newRowTransform.Find("Number of Tag").GetComponent<TextMeshProUGUI>().text = bins[i]["number_of_tags"].ToString();
+
+                if (i % 2 != 0)
+                {
+                    newRowTransform.Find("Record Background").GetComponent<Image>().color = new Color32(255, 255, 255, 255);
+                }
 
                 Table.GetComponent<DynamicTableManager>().enabled = true;
             }
