@@ -16,6 +16,8 @@ namespace CompanySystem
 
         public GameObject editButton; // Button to edit selected record data
 
+        public GameObject transactionDetail;
+
         // Start is called before the first frame update
         void OnEnable()
         {
@@ -91,9 +93,12 @@ namespace CompanySystem
             selectedRecord = emptyTransaction;
         }
 
-        public void AddItems(Transform recordTransform)
+        public void ShowDetail(Transform recordTransform)
         {
             selectedRecord = GetRecord(recordTransform);
+
+            gameObject.SetActive(false);
+            transactionDetail.gameObject.SetActive(true);
         }
 
         // Edit selected record
