@@ -28,7 +28,6 @@ namespace CompanySystem
 
             var newBinData = new Dictionary<string, object>
             {
-                { "id", BinListManager.selectedRecord.Id },
                 { "code", newBin.Code },
                 { "information", newBin.Information },
                 { "number_of_tags", newBin.NumberOfTags },

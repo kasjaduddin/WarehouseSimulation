@@ -35515,6 +35515,7 @@ MonoBehaviour:
   container: {fileID: 290516620}
   recordTemplate: {fileID: 554961315}
   editButton: {fileID: 1682646100}
+  transactionDetail: {fileID: 0}
 --- !u!1 &1027385415
 GameObject:
   m_ObjectHideFlags: 0
@@ -55382,7 +55383,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1601890158
 RectTransform:
   m_ObjectHideFlags: 0
@@ -64057,7 +64058,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 1.02e-43, y: 4e-45, z: 1.298e-42, w: 0}
+  m_BoundingSphereOverride: {x: 6.49e-43, y: 7.1e-44, z: 0, w: 3.321486e-36}
   m_UseBoundingSphereOverride: 0
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
@@ -67128,7 +67129,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1890916867
 RectTransform:
   m_ObjectHideFlags: 0

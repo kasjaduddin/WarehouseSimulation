@@ -77,20 +77,19 @@ namespace CompanySystem
 
         private BinRecord GetRecord(Transform recordTransform)
         {
-            string id = recordTransform.Find("Id").GetComponent<TextMeshProUGUI>().text;
             string code = recordTransform.Find("Code").GetComponent<TextMeshProUGUI>().text;
             string information = recordTransform.Find("Information").GetComponent<TextMeshProUGUI>().text;
             int numberOfTags = Int32.Parse(recordTransform.Find("Number of Tag").GetComponent<TextMeshProUGUI>().text);
             bool active = true;
 
             // Create a BinRecord struct and return it
-            BinRecord record = new BinRecord(id, code, information, numberOfTags, active);
+            BinRecord record = new BinRecord(code, information, numberOfTags, active);
             return record;
         }
 
         public static void ResetSelectedRecord()
         {
-            BinRecord emptyBin = new BinRecord(null, null, null, 0, true);
+            BinRecord emptyBin = new BinRecord();
             selectedRecord = emptyBin;
         }
 

@@ -5,7 +5,6 @@ namespace Record
 {
     public struct BinRecord
     {
-        public string Id;
         public string Code;
         public string Information;
         public int NumberOfTags;
@@ -13,16 +12,14 @@ namespace Record
 
         public BinRecord(string code, string information)
         {
-            Id = string.Empty;
             Code = code;
             Information = information;
             NumberOfTags = 0;
             Active = true;
         }
 
-        public BinRecord(string id, string code, string information, int numberOfTags, bool active)
+        public BinRecord(string code, string information, int numberOfTags, bool active)
         {
-            Id = id;
             Code = code;
             Information = information;
             NumberOfTags = numberOfTags;
