@@ -60,6 +60,17 @@ namespace Record
             Active = active;
             NumberOfTags = numberOfTags;
         }
+
+        public ItemRecord(JObject record)
+        {
+            Sku = record["sku"].ToString();
+            ItemName = record["item_name"].ToString();
+            BinCode = record["bin_code"].ToString();
+            Quantity = Int16.Parse(record["quantity"].ToString());
+            UOM = record["uom"].ToString();
+            Active = bool.Parse(record["active"].ToString());
+            NumberOfTags = Int16.Parse(record["number_of_tags"].ToString());
+        }
     }
 
     public struct TransactionRecord

@@ -1,6 +1,7 @@
 using Newtonsoft.Json.Linq;
 using Record;
 using System;
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Rendering.LookDev;
@@ -16,6 +17,7 @@ namespace CompanySystem
         public GameObject recordTemplate; // Template for displaying each record
         public static ItemRecord selectedRecord; // Variabel to hold selected record data
 
+        public GameObject editPage; // Page to edit selected record data
         public GameObject deleteButton; // Button to delete selected record data
 
         // Start is called before the first frame update
@@ -30,7 +32,7 @@ namespace CompanySystem
             DestroyRecord();
         }
 
-        // Get all bin data from Database
+        // Get all item data from Database
         public void GetData()
         {
             StartCoroutine(FirebaseServices.ReadData("items", data =>
@@ -48,7 +50,7 @@ namespace CompanySystem
             }));
         }
 
-        // Display all bin data to bin table
+        // Display all item data to item table
         void ShowRecord()
         {
             float templateHigh = 91f;
@@ -78,38 +80,48 @@ namespace CompanySystem
             recordTemplate.SetActive(false);
         }
 
-        private ItemRecord GetRecord(Transform recordTransform)
+        private void GetRecord(Transform recordTransform)
         {
             string sku = recordTransform.Find("SKU").GetComponent<TextMeshProUGUI>().text;
-            string itemName = recordTransform.Find("Item Name").GetComponent<TextMeshProUGUI>().text;
-            string binCode = recordTransform.Find("Bin Code").GetComponent<TextMeshProUGUI>().text;
-            int quantity = Int32.Parse(recordTransform.Find("Quantity").GetComponent<TextMeshProUGUI>().text);
-            string uom = recordTransform.Find("UOM").GetComponent<TextMeshProUGUI>().text;
-            bool active = true;
-            int numberOfTags = Int32.Parse(recordTransform.Find("Number of Tag").GetComponent<TextMeshProUGUI>().text);
 
-            // Create a ItemRecord struct and return it
-            ItemRecord record = new ItemRecord(sku, itemName, binCode, quantity, uom, active, numberOfTags);
-            return record;
+            StartCoroutine(FirebaseServices.ReadData("items", "sku", sku, data =>
+            {
+                if (data != null)
+                {
+                    ItemRecord record = new ItemRecord(data);
+                    selectedRecord = record;
+                }
+                else
+                {
+                    Debug.LogError("Failed to retrieve data.");
+                }
+            }));
         }
 
-        public static void ResetSelectedRecord()
+        public void OnEditButtonClick(Transform recordTransform)
         {
-            ItemRecord emptyItem = new ItemRecord(null, null, null, 0, null, true, 0);
-            selectedRecord = emptyItem;
+            StartCoroutine(OpenEditPage(recordTransform));
         }
 
-        // Edit selected record
-        public void EditRecord(Transform recordTransform)
+        public void OnExpandButtonClick(Transform recordTransform)
         {
-            selectedRecord = GetRecord(recordTransform);
+            StartCoroutine(ShowDeleteButton(recordTransform));
         }
 
-        // Edit selected record
-        public void ShowDeleteButton(Transform recordTransform)
+        private IEnumerator OpenEditPage(Transform recordTransform)
         {
-            selectedRecord = GetRecord(recordTransform);
+            GetRecord(recordTransform);
 
+            yield return new WaitForSeconds(0.1f);
+            gameObject.SetActive(false);
+            editPage.SetActive(true);
+        }
+
+        public IEnumerator ShowDeleteButton(Transform recordTransform)
+        {
+            GetRecord(recordTransform);
+
+            yield return new WaitForSeconds(0.1f);
             // Show delete button under expand button
             deleteButton.SetActive(true);
             float recordY = recordTransform.GetComponent<RectTransform>().anchoredPosition.y;
@@ -118,7 +130,13 @@ namespace CompanySystem
             deleteButton.transform.SetAsLastSibling();
         }
 
-        // Delete shows all bin data in the bin table
+        public static void ResetSelectedRecord()
+        {
+            ItemRecord emptyItem = new ItemRecord(null, null, null, 0, null, true, 0);
+            selectedRecord = emptyItem;
+        }
+
+        // Delete shows all item data in the item table
         public void DestroyRecord()
         {
             foreach (Transform child in container)

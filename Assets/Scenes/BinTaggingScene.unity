@@ -8919,7 +8919,6 @@ GameObject:
   - component: {fileID: 250519322}
   - component: {fileID: 250519321}
   - component: {fileID: 250519320}
-  - component: {fileID: 250519319}
   m_Layer: 0
   m_Name: Edit Button
   m_TagString: Untagged
@@ -8946,59 +8945,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 95, y: 58}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &250519319
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 250519317}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Delegates:
-  - eventID: 2
-    callback:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 1431813739}
-          m_TargetAssemblyTypeName: CompanySystem.ItemListManager, Assembly-CSharp
-          m_MethodName: EditRecord
-          m_Mode: 2
-          m_Arguments:
-            m_ObjectArgument: {fileID: 1629172368}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Transform, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 911821581}
-          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-          m_MethodName: SetActive
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 1
-          m_CallState: 2
-        - m_Target: {fileID: 1431813736}
-          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-          m_MethodName: SetActive
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
 --- !u!114 &250519320
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9042,7 +8988,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 250519321}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1431813739}
+        m_TargetAssemblyTypeName: CompanySystem.ItemListManager, Assembly-CSharp
+        m_MethodName: OnEditButtonClick
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 1629172368}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Transform, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &250519321
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9273,7 +9231,7 @@ MonoBehaviour:
         m_Calls:
         - m_Target: {fileID: 1085535922}
           m_TargetAssemblyTypeName: CompanySystem.BinListManager, Assembly-CSharp
-          m_MethodName: ShowDeleteButton
+          m_MethodName: OnExpandButtonClick
           m_Mode: 2
           m_Arguments:
             m_ObjectArgument: {fileID: 699239838}
@@ -32008,7 +31966,6 @@ GameObject:
   - component: {fileID: 898976142}
   - component: {fileID: 898976141}
   - component: {fileID: 898976140}
-  - component: {fileID: 898976139}
   m_Layer: 0
   m_Name: Expand Delete Button
   m_TagString: Untagged
@@ -32035,35 +31992,6 @@ RectTransform:
   m_AnchoredPosition: {x: 62.3, y: 0}
   m_SizeDelta: {x: 30, y: 43}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &898976139
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 898976137}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Delegates:
-  - eventID: 2
-    callback:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 1431813739}
-          m_TargetAssemblyTypeName: CompanySystem.ItemListManager, Assembly-CSharp
-          m_MethodName: ShowDeleteButton
-          m_Mode: 2
-          m_Arguments:
-            m_ObjectArgument: {fileID: 1629172368}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Transform, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
 --- !u!114 &898976140
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -32107,7 +32035,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 898976141}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1431813739}
+        m_TargetAssemblyTypeName: CompanySystem.ItemListManager, Assembly-CSharp
+        m_MethodName: OnExpandButtonClick
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 1629172368}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Transform, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &898976141
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -37635,6 +37575,7 @@ MonoBehaviour:
   Table: {fileID: 296945966}
   container: {fileID: 185150498}
   recordTemplate: {fileID: 699239837}
+  editPage: {fileID: 1938384123}
   deleteButton: {fileID: 1653261507}
 --- !u!1001 &1091265565
 PrefabInstance:
@@ -50213,6 +50154,7 @@ MonoBehaviour:
   Table: {fileID: 317818101}
   container: {fileID: 436924949}
   recordTemplate: {fileID: 1629172367}
+  editPage: {fileID: 911821581}
   deleteButton: {fileID: 348516526}
 --- !u!1 &1438875693
 GameObject:
@@ -62782,36 +62724,12 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 1085535922}
-          m_TargetAssemblyTypeName: BinListManager, Assembly-CSharp
-          m_MethodName: EditRecord
+          m_TargetAssemblyTypeName: CompanySystem.BinListManager, Assembly-CSharp
+          m_MethodName: OnEditButtonClick
           m_Mode: 2
           m_Arguments:
             m_ObjectArgument: {fileID: 699239838}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Transform, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 1938384123}
-          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-          m_MethodName: SetActive
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 1
-          m_CallState: 2
-        - m_Target: {fileID: 1085535920}
-          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-          m_MethodName: SetActive
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
             m_IntArgument: 0
             m_FloatArgument: 0
             m_StringArgument: 
@@ -64058,7 +63976,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 0, y: NaN, z: NaN, w: 9.1869e-41}
+  m_BoundingSphereOverride: {x: 8.69e-43, y: 0, z: 0, w: 1e-45}
   m_UseBoundingSphereOverride: 0
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
@@ -66099,7 +66017,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1861447885
 RectTransform:
   m_ObjectHideFlags: 0
@@ -67129,7 +67047,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1890916867
 RectTransform:
   m_ObjectHideFlags: 0
