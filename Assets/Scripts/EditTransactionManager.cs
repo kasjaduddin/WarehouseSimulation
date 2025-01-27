@@ -27,7 +27,7 @@ namespace CompanySystem
         }
         public void EditTransaction()
         {
-            TransactionRecord newTransaction = new TransactionRecord(invoiceNumberInputField.text, invoiceDate.text, vendorInputField.text);
+            TransactionRecord newTransaction = new TransactionRecord(TransactionListManager.selectedRecord.Code, invoiceNumberInputField.text, invoiceDate.text, vendorInputField.text);
             string oldInvoiceNumber = TransactionListManager.selectedRecord.InvoiceNumber;
 
             var newTransactionData = new Dictionary<string, object>
