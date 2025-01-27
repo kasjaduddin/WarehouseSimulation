@@ -4,6 +4,7 @@ using TMPro;
 using Record;
 using System;
 using UnityEngine.UI;
+using System.Collections;
 
 
 namespace CompanySystem
@@ -15,6 +16,8 @@ namespace CompanySystem
         public Transform container; // Container to hold the instantiated records
         public GameObject recordTemplate; // Template for displaying each record
         public static BinRecord selectedRecord; // Variabel to hold selected record data
+
+        public GameObject editPage; // Page to edit selected record data
 
         public GameObject deleteButton; // Button to delete selected record data
 
@@ -75,41 +78,60 @@ namespace CompanySystem
             recordTemplate.SetActive(false);
         }
 
-        private BinRecord GetRecord(Transform recordTransform)
+        private void GetRecord(Transform recordTransform)
         {
             string code = recordTransform.Find("Code").GetComponent<TextMeshProUGUI>().text;
-            string information = recordTransform.Find("Information").GetComponent<TextMeshProUGUI>().text;
-            int numberOfTags = Int32.Parse(recordTransform.Find("Number of Tag").GetComponent<TextMeshProUGUI>().text);
-            bool active = true;
 
-            // Create a BinRecord struct and return it
-            BinRecord record = new BinRecord(code, information, numberOfTags, active);
-            return record;
+            StartCoroutine(FirebaseServices.ReadData("bins", "code", code, data =>
+            {
+                if (data != null)
+                {
+                    BinRecord record = new BinRecord(data);
+                    selectedRecord = record;
+                }
+                else
+                {
+                    Debug.LogError("Failed to retrieve data.");
+                }
+            }));
         }
 
-        public static void ResetSelectedRecord()
+        public void OnEditButtonClick(Transform recordTransform)
         {
-            BinRecord emptyBin = new BinRecord();
-            selectedRecord = emptyBin;
+            StartCoroutine(OpenEditPage(recordTransform));
         }
 
-        // Edit selected record
-        public void EditRecord(Transform recordTransform)
+        public void OnExpandButtonClick(Transform recordTransform)
         {
-            selectedRecord = GetRecord(recordTransform);
+            StartCoroutine(ShowDeleteButton(recordTransform));
         }
 
-        // Edit selected record
-        public void ShowDeleteButton(Transform recordTransform)
+        private IEnumerator OpenEditPage(Transform recordTransform)
         {
-            selectedRecord = GetRecord(recordTransform);
+            GetRecord(recordTransform);
 
+            yield return new WaitForSeconds(0.1f);
+            gameObject.SetActive(false);
+            editPage.SetActive(true);
+        }
+
+        public IEnumerator ShowDeleteButton(Transform recordTransform)
+        {
+            GetRecord(recordTransform);
+
+            yield return new WaitForSeconds(0.1f);
             // Show delete button under expand button
             deleteButton.SetActive(true);
             float recordY = recordTransform.GetComponent<RectTransform>().anchoredPosition.y;
             RectTransform deleteButtonRectTransform = deleteButton.GetComponent<RectTransform>();
             deleteButtonRectTransform.anchoredPosition = new Vector2(deleteButtonRectTransform.anchoredPosition.x, recordY - 46f);
             deleteButton.transform.SetAsLastSibling();
+        }
+
+        public static void ResetSelectedRecord()
+        {
+            BinRecord emptyBin = new BinRecord();
+            selectedRecord = emptyBin;
         }
 
         // Delete shows all bin data in the bin table

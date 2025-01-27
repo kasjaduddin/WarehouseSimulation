@@ -20,12 +20,12 @@ namespace Record
             Active = true;
         }
 
-        public BinRecord(string code, string information, int numberOfTags, bool active)
+        public BinRecord(JObject record)
         {
-            Code = code;
-            Information = information;
-            NumberOfTags = numberOfTags;
-            Active = active;
+            Code = record["code"].ToString();
+            Information = record["information"].ToString();
+            NumberOfTags = Int16.Parse(record["number_of_tags"].ToString());
+            Active = bool.Parse(record["active"].ToString());
         }
     }
 
