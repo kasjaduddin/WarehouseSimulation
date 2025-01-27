@@ -1,4 +1,6 @@
+using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
 using UnityEngine.Rendering.LookDev;
 
 namespace Record
@@ -62,11 +64,20 @@ namespace Record
 
     public struct TransactionRecord
     {
+        public struct TransactionItem
+        {
+            public string Sku;
+            public string ItemName;
+            public int Quantity;
+            public string Information;
+            public string Status;
+        }
+
         public string Code;
         public string InvoiceNumber;
         public string InvoiceDate;
         public string Vendor;
-
+        public List<TransactionItem> Items;
         public TransactionRecord(string invoiceNumber, string invoiceDate, string vendor)
         {
             string date = $"{DateTime.Now.Year}{DateTime.Now.Month:D2}{DateTime.Now.Day:D2}";
@@ -76,6 +87,7 @@ namespace Record
             InvoiceNumber = invoiceNumber;
             InvoiceDate = invoiceDate;
             Vendor = vendor;
+            Items = new List<TransactionItem>();
         }
 
         public TransactionRecord(string code, string invoiceNumber, string invoiceDate, string vendor)
@@ -84,6 +96,16 @@ namespace Record
             InvoiceNumber = invoiceNumber;
             InvoiceDate = invoiceDate;
             Vendor = vendor;
+            Items = new List<TransactionItem>();
+        }
+
+        public TransactionRecord(JObject record)
+        {
+            Code = record["code"].ToString();
+            InvoiceNumber = record["invoice_number"].ToString();
+            InvoiceDate = record["invoice_date"].ToString();
+            Vendor = record["vendor"].ToString();
+            Items = new List<TransactionItem>();
         }
     }
 }

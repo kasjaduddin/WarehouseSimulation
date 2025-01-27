@@ -93,10 +93,28 @@ namespace CompanySystem
             selectedRecord = emptyTransaction;
         }
 
-        public void ShowDetail(Transform recordTransform)
+        public void GetDetail(Transform recordTransform)
         {
-            selectedRecord = GetRecord(recordTransform);
+            string code = recordTransform.Find("Code").GetComponent<TextMeshProUGUI>().text;
 
+            StartCoroutine(FirebaseServices.ReadData("transactions", "code", code, data =>
+            {
+                if (data != null)
+                {
+                    TransactionRecord transaction = new TransactionRecord(data);
+                    selectedRecord = transaction;
+                    ShowDetail(recordTransform);
+                }
+                else
+                {
+                    recordTemplate.SetActive(false);
+                    Debug.LogError("Failed to retrieve data.");
+                }
+            }));
+        }
+
+        private void ShowDetail(Transform recordTransform)
+        {
             gameObject.SetActive(false);
             transactionDetail.gameObject.SetActive(true);
         }
