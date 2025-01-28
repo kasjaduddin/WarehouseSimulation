@@ -15,7 +15,7 @@ namespace CompanySystem
         public GameObject recordTemplate; // Template for displaying each record
         public static TransactionRecord selectedRecord; // Variabel to hold selected record data
 
-        public GameObject detailPage; // Page to edit selected record data
+        public GameObject detailPage; // Page to open detail selected record data
         public GameObject editButton; // Button to edit selected record data
 
         // Start is called before the first frame update
