@@ -132,7 +132,7 @@ namespace CompanySystem
 
         public static void ResetSelectedRecord()
         {
-            ItemRecord emptyItem = new ItemRecord(null, null, null, 0, null, true, 0);
+            ItemRecord emptyItem = new ItemRecord();
             selectedRecord = emptyItem;
         }
 

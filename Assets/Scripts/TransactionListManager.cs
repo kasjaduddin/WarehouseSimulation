@@ -1,5 +1,6 @@
 using Newtonsoft.Json.Linq;
 using Record;
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -14,9 +15,8 @@ namespace CompanySystem
         public GameObject recordTemplate; // Template for displaying each record
         public static TransactionRecord selectedRecord; // Variabel to hold selected record data
 
+        public GameObject detailPage; // Page to edit selected record data
         public GameObject editButton; // Button to edit selected record data
-
-        public GameObject transactionDetail;
 
         // Start is called before the first frame update
         void OnEnable()
@@ -30,7 +30,7 @@ namespace CompanySystem
             DestroyRecord();
         }
 
-        // Get all bin data from Database
+        // Get all transaction data from Database
         public void GetData()
         {
             StartCoroutine(FirebaseServices.ReadData("transactions", data =>
@@ -48,7 +48,7 @@ namespace CompanySystem
             }));
         }
 
-        // Display all bin data to bin table
+        // Display all transaction data to transaction table
         void ShowRecord()
         {
             float templateHigh = 91f;
@@ -75,25 +75,7 @@ namespace CompanySystem
             recordTemplate.SetActive(false);
         }
 
-        private TransactionRecord GetRecord(Transform recordTransform)
-        {
-            string code = recordTransform.Find("Code").GetComponent<TextMeshProUGUI>().text;
-            string invoiceNumber = recordTransform.Find("Invoice Number").GetComponent<TextMeshProUGUI>().text;
-            string invoiceDate = recordTransform.Find("Invoice Date").GetComponent<TextMeshProUGUI>().text;
-            string vendor = recordTransform.Find("Vendor").GetComponent<TextMeshProUGUI>().text;
-
-            // Create a TransactionRecord struct and return it
-            TransactionRecord record = new TransactionRecord(code, invoiceNumber, invoiceDate, vendor);
-            return record;
-        }
-
-        public static void ResetSelectedRecord()
-        {
-            TransactionRecord emptyTransaction = new TransactionRecord(null, null, null, null);
-            selectedRecord = emptyTransaction;
-        }
-
-        public void GetDetail(Transform recordTransform)
+        private void GetRecord(Transform recordTransform)
         {
             string code = recordTransform.Find("Code").GetComponent<TextMeshProUGUI>().text;
 
@@ -101,29 +83,40 @@ namespace CompanySystem
             {
                 if (data != null)
                 {
-                    TransactionRecord transaction = new TransactionRecord(data);
-                    selectedRecord = transaction;
-                    ShowDetail(recordTransform);
+                    TransactionRecord record = new TransactionRecord(data);
+                    selectedRecord = record;
                 }
                 else
                 {
-                    recordTemplate.SetActive(false);
                     Debug.LogError("Failed to retrieve data.");
                 }
             }));
         }
 
-        private void ShowDetail(Transform recordTransform)
+        public void OnSettingButtonClick(Transform recordTransform)
         {
-            gameObject.SetActive(false);
-            transactionDetail.gameObject.SetActive(true);
+            StartCoroutine(OpenDetailPage(recordTransform));
         }
 
-        // Edit selected record
-        public void ShowEditButton(Transform recordTransform)
+        public void OnExpandButtonClick(Transform recordTransform)
         {
-            selectedRecord = GetRecord(recordTransform);
+            StartCoroutine(ShowEditButton(recordTransform));
+        }
 
+        private IEnumerator OpenDetailPage(Transform recordTransform)
+        {
+            GetRecord(recordTransform);
+
+            yield return new WaitForSeconds(0.1f);
+            gameObject.SetActive(false);
+            detailPage.SetActive(true);
+        }
+
+        public IEnumerator ShowEditButton(Transform recordTransform)
+        {
+            GetRecord(recordTransform);
+            
+            yield return new WaitForSeconds(0.1f);
             // Show edit button under expand button
             editButton.SetActive(true);
             float recordY = recordTransform.GetComponent<RectTransform>().anchoredPosition.y;
@@ -132,7 +125,13 @@ namespace CompanySystem
             editButton.transform.SetAsLastSibling();
         }
 
-        // Delete shows all bin data in the bin table
+        public static void ResetSelectedRecord()
+        {
+            TransactionRecord emptyTransaction = new TransactionRecord();
+            selectedRecord = emptyTransaction;
+        }
+
+        // Delete shows all transaction data in the transaction table
         public void DestroyRecord()
         {
             foreach (Transform child in container)

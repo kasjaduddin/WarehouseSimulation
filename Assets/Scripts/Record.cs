@@ -50,17 +50,6 @@ namespace Record
             NumberOfTags = 0;
         }
 
-        public ItemRecord(string sku, string itemName, string binCode, int quantity, string uom, bool active, int numberOfTags)
-        {
-            Sku = sku;
-            ItemName = itemName;
-            BinCode = binCode;
-            Quantity = quantity;
-            UOM = uom;
-            Active = active;
-            NumberOfTags = numberOfTags;
-        }
-
         public ItemRecord(JObject record)
         {
             Sku = record["sku"].ToString();
@@ -82,6 +71,27 @@ namespace Record
             public int Quantity;
             public string Information;
             public string Status;
+
+            public TransactionItem(JObject item)
+            {
+                Sku = item["sku"].ToString();
+                ItemName = item["item_name"].ToString();
+                Quantity = int.Parse(item["quantity"].ToString());
+                Information = item["information"].ToString();
+                Status = item["status"].ToString();
+            }
+
+            public Dictionary<string, object> ToDictionary()
+            {
+                return new Dictionary<string, object>
+                {
+                    { "sku", Sku },
+                    { "item_name", ItemName },
+                    { "quantity", Quantity },
+                    { "information", Information },
+                    { "status", Status }
+                };
+            }
         }
 
         public string Code;
@@ -89,6 +99,7 @@ namespace Record
         public string InvoiceDate;
         public string Vendor;
         public List<TransactionItem> Items;
+
         public TransactionRecord(string invoiceNumber, string invoiceDate, string vendor)
         {
             string date = $"{DateTime.Now.Year}{DateTime.Now.Month:D2}{DateTime.Now.Day:D2}";
@@ -98,16 +109,17 @@ namespace Record
             InvoiceNumber = invoiceNumber;
             InvoiceDate = invoiceDate;
             Vendor = vendor;
-            Items = new List<TransactionItem>();
-        }
-
-        public TransactionRecord(string code, string invoiceNumber, string invoiceDate, string vendor)
-        {
-            Code = code;
-            InvoiceNumber = invoiceNumber;
-            InvoiceDate = invoiceDate;
-            Vendor = vendor;
-            Items = new List<TransactionItem>();
+            Items = new List<TransactionItem>
+            {
+                new TransactionItem(new JObject
+                {
+                    { "sku", "tes" },
+                    { "item_name", "item" },
+                    { "quantity", 10 },
+                    { "information", "2345d" },
+                    { "status", "pending" }
+                })
+            };
         }
 
         public TransactionRecord(JObject record)
@@ -117,6 +129,13 @@ namespace Record
             InvoiceDate = record["invoice_date"].ToString();
             Vendor = record["vendor"].ToString();
             Items = new List<TransactionItem>();
+            if (record["items"] != null)
+            {
+                foreach (var item in record["items"])
+                {
+                    Items.Add(new TransactionItem(item.ToObject<JObject>()));
+                }
+            }
         }
     }
 }

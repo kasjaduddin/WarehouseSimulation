@@ -2,6 +2,7 @@ using Record;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEditorInternal.Profiling.Memory.Experimental;
 using UnityEngine;
@@ -46,7 +47,8 @@ namespace CompanySystem
                 { "code", newTransaction.Code },
                 { "invoice_number", newTransaction.InvoiceNumber },
                 { "invoice_date", newTransaction.InvoiceDate },
-                { "vendor", newTransaction.Vendor }
+                { "vendor", newTransaction.Vendor },
+                { "items", newTransaction.Items.Select(item => item.ToDictionary()).ToList() }
             };
 
             StartCoroutine(FirebaseServices.WriteData("transactions", transactionData, "invoice_number", message =>
