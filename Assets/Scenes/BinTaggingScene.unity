@@ -7625,7 +7625,6 @@ GameObject:
   - component: {fileID: 218705784}
   - component: {fileID: 218705783}
   - component: {fileID: 218705782}
-  - component: {fileID: 218705781}
   m_Layer: 0
   m_Name: Edit Button
   m_TagString: Untagged
@@ -7652,59 +7651,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 95, y: 58}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &218705781
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 218705779}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Delegates:
-  - eventID: 2
-    callback:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: CompanySystem.ItemListManager, Assembly-CSharp
-          m_MethodName: EditRecord
-          m_Mode: 2
-          m_Arguments:
-            m_ObjectArgument: {fileID: 1378374078}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Transform, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 498873046}
-          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-          m_MethodName: SetActive
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 1
-          m_CallState: 2
-        - m_Target: {fileID: 1988272130}
-          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-          m_MethodName: SetActive
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
 --- !u!114 &218705782
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7748,7 +7694,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 218705783}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1988272133}
+        m_TargetAssemblyTypeName: CompanySystem.TransactionDetailManager, Assembly-CSharp
+        m_MethodName: OnEditButtonClick
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 1378374078}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Transform, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &218705783
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -23231,7 +23189,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &628482569
 RectTransform:
   m_ObjectHideFlags: 0
@@ -40207,7 +40165,6 @@ GameObject:
   - component: {fileID: 1155320922}
   - component: {fileID: 1155320921}
   - component: {fileID: 1155320920}
-  - component: {fileID: 1155320919}
   m_Layer: 0
   m_Name: Expand Edit Button
   m_TagString: Untagged
@@ -40234,35 +40191,6 @@ RectTransform:
   m_AnchoredPosition: {x: 62.3, y: 0}
   m_SizeDelta: {x: 30, y: 43}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1155320919
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1155320917}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Delegates:
-  - eventID: 2
-    callback:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: CompanySystem.ItemListManager, Assembly-CSharp
-          m_MethodName: ShowDeleteButton
-          m_Mode: 2
-          m_Arguments:
-            m_ObjectArgument: {fileID: 1378374078}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Transform, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
 --- !u!114 &1155320920
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -40306,7 +40234,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1155320921}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1988272133}
+        m_TargetAssemblyTypeName: CompanySystem.TransactionDetailManager, Assembly-CSharp
+        m_MethodName: OnExpandButtonClick
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 1378374078}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Transform, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1155320921
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -63958,7 +63898,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 8.69e-43, y: 0, z: 0, w: 1e-45}
+  m_BoundingSphereOverride: {x: 0, y: 4.500306e-39, z: 4.545857e-39, w: 3.0079735e-26}
   m_UseBoundingSphereOverride: 0
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
@@ -70505,16 +70445,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 1988272130}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dd0e6b3503ad1a840b72fad6f9405041, type: 3}
+  m_Script: {fileID: 11500000, guid: 366abbc65f995764fb6ac5d42d59fd4b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  transactionCode: {fileID: 2086426120}
-  transactionInvoiceNumber: {fileID: 2135940610}
-  transactionInvoiceDate: {fileID: 64657696}
-  transactionVendor: {fileID: 346078212}
   Table: {fileID: 964014733}
   container: {fileID: 2129270704}
   recordTemplate: {fileID: 1378374077}
+  editPage: {fileID: 498873046}
+  optionButtons: {fileID: 1487022026}
 --- !u!4 &1989177883 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: bf7151579c38e2a44be94ba8773876c1, type: 3}

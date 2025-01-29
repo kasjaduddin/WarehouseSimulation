@@ -13,7 +13,7 @@ namespace CompanySystem
         public GameObject Table;
         public Transform container; // Container to hold the instantiated records
         public GameObject recordTemplate; // Template for displaying each record
-        public static TransactionRecord selectedRecord; // Variabel to hold selected record data
+        public static TransactionItem selectedRecord; // Variabel to hold selected record data
 
         public GameObject editPage; // Page to edit selected record data
         public GameObject optionButtons;
@@ -82,14 +82,15 @@ namespace CompanySystem
 
         private void GetRecord(Transform recordTransform)
         {
+            string code = TransactionListManager.selectedRecord.Code;
             string sku = recordTransform.Find("SKU").GetComponent<TextMeshProUGUI>().text;
 
-            StartCoroutine(FirebaseServices.ReadData("transactions", "sku", sku, data =>
+            StartCoroutine(FirebaseServices.ReadData ("transactions", "code", code, "items", "sku", sku, data =>
             {
                 if (data != null)
                 {
                     TransactionItem record = new TransactionItem(data);
-                    //selectedRecord = record;
+                    selectedRecord = record;
                 }
                 else
                 {
@@ -132,7 +133,7 @@ namespace CompanySystem
 
         public static void ResetSelectedRecord()
         {
-            TransactionRecord emptyTransaction = new TransactionRecord();
+            TransactionItem emptyTransaction = new TransactionItem();
             selectedRecord = emptyTransaction;
         }
 

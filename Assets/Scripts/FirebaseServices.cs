@@ -202,6 +202,47 @@ public class FirebaseServices : MonoBehaviour
         });
     }
 
+    public static IEnumerator ReadData(string collectionName, string documentPrimaryKey, string documentKey, string listName, string objectPrimaryKey, string objectKey, System.Action<JObject> callback)
+    {
+        // Search documents by documentPrimaryKey and documentKey
+        yield return reference.Child(collectionName).OrderByChild(documentPrimaryKey).EqualTo(documentKey).GetValueAsync().ContinueWithOnMainThread(task =>
+        {
+            if (task.IsFaulted)
+            {
+                Debug.LogError("Error reading data from Firebase: " + task.Exception);
+            }
+            else if (task.IsCompleted)
+            {
+                // Get data from snapshot
+                DataSnapshot snapshot = task.Result;
+                JObject jsonObject = null;
+
+                // Find the appropriate document
+                foreach (DataSnapshot childSnapshot in snapshot.Children)
+                {
+                    var document = JObject.FromObject(childSnapshot.Value);
+
+                    if (document[listName] != null)
+                    {
+                        foreach (var item in document[listName])
+                        {
+                            if (item[objectPrimaryKey].ToString() == objectKey)
+                            {
+                                jsonObject = item.ToObject<JObject>();
+                                break;
+                            }
+                        }
+                    }
+
+                    if (jsonObject != null)
+                        break;
+                }
+
+                callback(jsonObject);
+            }
+        });
+    }
+
     public static IEnumerator ModifyData(string collectionName, Dictionary<string, object> newData, string oldKey, string primaryKey, System.Action<string> callback = null)
     {
         string message = null;
