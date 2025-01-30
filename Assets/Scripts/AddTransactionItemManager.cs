@@ -77,11 +77,10 @@ namespace CompanySystem
             };
 
             bool transactionSuccess = false;
-            bool itemQuantitySuccess = false;
+            bool updateQuantitySuccess = false;
 
-            yield return FirebaseServices.ModifyData("transactions", "code", code, "items", newTransactionItem, message =>
+            StartCoroutine(FirebaseServices.ModifyData("transactions", "code", code, "items", newTransactionItem, message =>
             {
-                Debug.Log(message);
                 transactionSuccess = message.Contains("successfully");
                 if (transactionSuccess)
                 {
@@ -92,12 +91,12 @@ namespace CompanySystem
                 {
                     Debug.LogError("Failed to add item to transaction.");
                 }
-            });
+            }));
 
-            yield return FirebaseServices.ModifyData("items", newItemQuantity, sku, "sku", message =>
+            StartCoroutine(FirebaseServices.ModifyData("items", newItemQuantity, sku, "sku", message =>
             {
-                itemQuantitySuccess = message.Contains("successfully");
-                if (itemQuantitySuccess)
+                updateQuantitySuccess = message.Contains("successfully");
+                if (updateQuantitySuccess)
                 {
                     Debug.Log("Item quantity updated.");
                 }
@@ -105,17 +104,11 @@ namespace CompanySystem
                 {
                     Debug.LogError("Failed to update item quantity.");
                 }
-            });
+            }));
 
-            if (transactionSuccess && itemQuantitySuccess)
-            {
-                gameObject.SetActive(false);
-                RefreshTable();
-            }
-            else
-            {
-                Debug.LogError("Failed to update data.");
-            }
+            yield return new WaitUntil(() => transactionSuccess && updateQuantitySuccess);
+            RefreshTable();
+            gameObject.SetActive(false);
         }
 
         // Reset input field
