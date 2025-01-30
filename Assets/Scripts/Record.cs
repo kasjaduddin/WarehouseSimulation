@@ -70,7 +70,6 @@ namespace Record
             public string ItemName;
             public int Quantity;
             public string Information;
-            public string Status;
 
             public TransactionItem(JObject item)
             {
@@ -78,7 +77,6 @@ namespace Record
                 ItemName = item["item_name"].ToString();
                 Quantity = int.Parse(item["quantity"].ToString());
                 Information = item["information"].ToString();
-                Status = item["status"].ToString();
             }
 
             public Dictionary<string, object> ToDictionary()
@@ -88,8 +86,7 @@ namespace Record
                     { "sku", Sku },
                     { "item_name", ItemName },
                     { "quantity", Quantity },
-                    { "information", Information },
-                    { "status", Status }
+                    { "information", Information }
                 };
             }
         }

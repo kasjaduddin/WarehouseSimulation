@@ -63,10 +63,7 @@ namespace CompanySystem
                 { "sku", newItem.Sku },
                 { "item_name", newItem.ItemName },
                 { "bin_code", newItem.BinCode },
-                { "quantity", newItem.Quantity },
-                { "uom", newItem.UOM },
-                { "active", newItem.Active },
-                { "number_of_tags", newItem.NumberOfTags }
+                { "uom", newItem.UOM }
             };
             
             StartCoroutine(FirebaseServices.ModifyData("items", newItemData, oldBinCode, "bin_code", oldSku, "sku", message =>

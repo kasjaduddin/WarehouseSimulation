@@ -22,7 +22,7 @@ namespace CompanySystem
         void OnEnable()
         {
             // Invoke GetData method after a short delay
-            Invoke("LoadData", 0.1f);
+            Invoke("LoadData", 0.1f);Debug.Log("LoadData");
         }
 
         private void OnDisable()
@@ -62,11 +62,11 @@ namespace CompanySystem
                 newRowTransform.Find("Quantity").GetComponent<TextMeshProUGUI>().text = item.Quantity.ToString();
                 newRowTransform.Find("Information").GetComponent<TextMeshProUGUI>().text = item.Information;
 
-                if (TransactionListManager.selectedRecord.Items[i].Status.Equals("Approved"))
+                if (TransactionListManager.selectedRecord.Items[i].Information.Equals("Approved"))
                 {
                     newRowTransform.Find("Record Background").GetComponent<Image>().color = new Color32(111, 191, 177, 255);
                 }
-                else if (TransactionListManager.selectedRecord.Items[i].Status.Equals("Not approved"))
+                else if (TransactionListManager.selectedRecord.Items[i].Information.Equals("Not approved"))
                 {
                     newRowTransform.Find("Record Background").GetComponent<Image>().color = new Color32(210, 102, 90, 255);
                 }
@@ -85,7 +85,7 @@ namespace CompanySystem
             string code = TransactionListManager.selectedRecord.Code;
             string sku = recordTransform.Find("SKU").GetComponent<TextMeshProUGUI>().text;
 
-            StartCoroutine(FirebaseServices.ReadData ("transactions", "code", code, "items", "sku", sku, data =>
+            StartCoroutine(FirebaseServices.ReadData("transactions", "code", code, "items", "sku", sku, data =>
             {
                 if (data != null)
                 {
