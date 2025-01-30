@@ -1,4 +1,3 @@
-using Newtonsoft.Json.Linq;
 using Record;
 using System.Collections;
 using TMPro;
@@ -22,7 +21,7 @@ namespace CompanySystem
         void OnEnable()
         {
             // Invoke GetData method after a short delay
-            Invoke("LoadData", 0.1f);Debug.Log("LoadData");
+            StartCoroutine(LoadData());
         }
 
         private void OnDisable()
@@ -31,14 +30,28 @@ namespace CompanySystem
         }
 
         // Get all transaction data from Database
-        private void LoadData()
+        private IEnumerator LoadData()
         {
+            StartCoroutine(FirebaseServices.ReadData("transactions", "code", TransactionListManager.selectedRecord.Code, data =>
+            {
+                if (data != null)
+                {
+                    TransactionRecord record = new TransactionRecord(data);
+                    TransactionListManager.selectedRecord = record;
+                }
+                else
+                {
+                    Debug.LogError("Failed to retrieve data.");
+                }
+            }));
+
             Transform information = gameObject.transform.Find("Information");
             information.Find("Code").GetComponent<TextMeshProUGUI>().text = TransactionListManager.selectedRecord.Code;
             information.Find("Invoice Number").GetComponent<TextMeshProUGUI>().text = TransactionListManager.selectedRecord.InvoiceNumber;
             information.Find("Invoice Date").GetComponent<TextMeshProUGUI>().text = TransactionListManager.selectedRecord.InvoiceDate;
             information.Find("Vendor").GetComponent<TextMeshProUGUI>().text = TransactionListManager.selectedRecord.Vendor;
 
+            yield return new WaitForSeconds(0.1f);
             ShowItems();
         }
 
