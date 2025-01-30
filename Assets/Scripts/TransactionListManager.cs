@@ -23,6 +23,8 @@ namespace CompanySystem
         {
             // Invoke GetData method after a short delay
             Invoke("GetData", 0.1f);
+
+            ResetSelectedRecord();
         }
 
         private void OnDisable()

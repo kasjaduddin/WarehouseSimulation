@@ -1,7 +1,6 @@
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using UnityEngine.Rendering.LookDev;
 
 namespace Record
 {
@@ -106,17 +105,7 @@ namespace Record
             InvoiceNumber = invoiceNumber;
             InvoiceDate = invoiceDate;
             Vendor = vendor;
-            Items = new List<TransactionItem>
-            {
-                new TransactionItem(new JObject
-                {
-                    { "sku", "tes" },
-                    { "item_name", "item" },
-                    { "quantity", 10 },
-                    { "information", "2345d" },
-                    { "status", "pending" }
-                })
-            };
+            Items = new List<TransactionItem>();
         }
 
         public TransactionRecord(JObject record)

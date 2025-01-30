@@ -1,12 +1,8 @@
 using Record;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using TMPro;
-using UnityEditorInternal.Profiling.Memory.Experimental;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 namespace CompanySystem
 {
@@ -36,7 +32,7 @@ namespace CompanySystem
             selectedDate.month = DateTime.Now.Month.ToString();
             selectedDate.year = DateTime.Now.Year.ToString();
             
-            LoadDate();   
+            LoadDate();
         }
 
         public void AddNewTransaction()
@@ -47,8 +43,7 @@ namespace CompanySystem
                 { "code", newTransaction.Code },
                 { "invoice_number", newTransaction.InvoiceNumber },
                 { "invoice_date", newTransaction.InvoiceDate },
-                { "vendor", newTransaction.Vendor },
-                { "items", newTransaction.Items.Select(item => item.ToDictionary()).ToList() }
+                { "vendor", newTransaction.Vendor }
             };
 
             StartCoroutine(FirebaseServices.WriteData("transactions", transactionData, "invoice_number", message =>
