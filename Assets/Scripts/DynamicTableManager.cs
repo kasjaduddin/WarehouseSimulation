@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace CompanySystem
@@ -12,6 +11,7 @@ namespace CompanySystem
         public float templateHeight;
         private float upperBound;
         private float lowerBound;
+        public float lowerBoundTolerance;
 
         private int count;
         // Start is called before the first frame update
@@ -38,7 +38,7 @@ namespace CompanySystem
 
             CountRecord();
             containerHeigth = templateHeight * count;
-            lowerBound = containerHeigth - maskHeight + upperBound;
+            lowerBound = containerHeigth - maskHeight + upperBound + lowerBoundTolerance;
         }
 
         private void CountRecord()

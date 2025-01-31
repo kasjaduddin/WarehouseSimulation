@@ -68,7 +68,7 @@ namespace CompanySystem
                 RectTransform entryRectTransform = newRow.GetComponent<RectTransform>();
 
                 // Fill the UI elements with data
-                entryRectTransform.anchoredPosition = new Vector2(0f, 228f + (-templateHigh * i));
+                entryRectTransform.anchoredPosition = new Vector2(0f, 46f + (-templateHigh * i));
                 newRowTransform.Find("Id").GetComponent<TextMeshProUGUI>().text = (i + 1).ToString();
                 newRowTransform.Find("SKU").GetComponent<TextMeshProUGUI>().text = item.Sku;
                 newRowTransform.Find("Item Name").GetComponent<TextMeshProUGUI>().text = item.ItemName;
@@ -79,7 +79,7 @@ namespace CompanySystem
                 {
                     newRowTransform.Find("Record Background").GetComponent<Image>().color = new Color32(111, 191, 177, 255);
                 }
-                else if (TransactionListManager.selectedRecord.Items[i].Information.Equals("Not approved"))
+                else if (TransactionListManager.selectedRecord.Items[i].Information.Equals("Rejected"))
                 {
                     newRowTransform.Find("Record Background").GetComponent<Image>().color = new Color32(210, 102, 90, 255);
                 }
@@ -140,7 +140,7 @@ namespace CompanySystem
             optionButtons.SetActive(true);
             float recordY = recordTransform.GetComponent<RectTransform>().anchoredPosition.y;
             RectTransform optionButtonRectTransform = optionButtons.GetComponent<RectTransform>();
-            optionButtonRectTransform.anchoredPosition = new Vector2(optionButtonRectTransform.anchoredPosition.x, recordY - 46f);
+            optionButtonRectTransform.anchoredPosition = new Vector2(optionButtonRectTransform.anchoredPosition.x, recordY - 90f);
             optionButtons.transform.SetAsLastSibling();
         }
 
