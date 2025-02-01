@@ -1,7 +1,9 @@
 using Record;
 using System.Collections;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using static Record.TransactionRecord;
 
@@ -16,6 +18,9 @@ namespace CompanySystem
 
         public GameObject editPage; // Page to edit selected record data
         public GameObject optionButtons;
+
+        public GameObject popup;
+        private GameObject warningPanel;
 
         // Start is called before the first frame update
         void OnEnable()
@@ -142,6 +147,69 @@ namespace CompanySystem
             RectTransform optionButtonRectTransform = optionButtons.GetComponent<RectTransform>();
             optionButtonRectTransform.anchoredPosition = new Vector2(optionButtonRectTransform.anchoredPosition.x, recordY - 90f);
             optionButtons.transform.SetAsLastSibling();
+
+            Button approveButton = optionButtons.transform.Find("Approve Button").GetComponent<Button>();
+            Button rejectButton = optionButtons.transform.Find("Reject Button").GetComponent<Button>();
+            Button deleteButton = optionButtons.transform.Find("Delete Button").GetComponent<Button>();
+
+            deleteButton.onClick.AddListener(() => DeleteItem(TransactionListManager.selectedRecord.Code, selectedRecord.Sku));
+        }
+
+        private IEnumerator RefreshTable()
+        {
+            yield return new WaitForSeconds(0.1f);
+            gameObject.SetActive(false);
+            gameObject.SetActive(true);
+        }
+
+        private void ShowPopup()
+        {
+            popup.SetActive(true);
+        }
+
+        private void HidePopup()
+        {
+            if (warningPanel != null && warningPanel.activeSelf)
+            {
+                warningPanel.transform.parent.gameObject.SetActive(false);
+                warningPanel.SetActive(false);
+            }
+        }
+
+        private void DeleteItem(string code, string sku)
+        {
+            ShowPopup();
+            warningPanel = popup.transform.Find("Delete Item").gameObject;
+            warningPanel.SetActive(true);
+
+            string message = $"Items with sku {sku} will be removed\r\nfrom transaction {code}.\r\nAre you sure?";
+            TextMeshProUGUI warningText = warningPanel.GetComponentInChildren<TextMeshProUGUI>();
+            warningText.text = message;
+
+            GameObject replaceItemButton = warningPanel.transform.Find("Buttons").Find("Yes Button").gameObject;
+
+            // Add event trigger to replace bin button
+            EventTrigger trigger = replaceItemButton.GetComponent<EventTrigger>() ?? replaceItemButton.AddComponent<EventTrigger>();
+            trigger.triggers.Clear();
+
+            // Create entry for click/ pointer down event
+            EventTrigger.Entry entry = new EventTrigger.Entry
+            {
+                eventID = EventTriggerType.PointerDown
+            };
+
+            entry.callback.AddListener((eventData) =>
+            {
+                StartCoroutine(FirebaseServices.DeleteData("transactions", "code", code, "items", "sku", sku, deleteResult => 
+                {
+                    if (deleteResult.Contains("successfully"))
+                    {
+                        HidePopup();
+                        StartCoroutine(RefreshTable());
+                    }
+                }));
+            });
+            trigger.triggers.Add(entry);
         }
 
         public static void ResetSelectedRecord()
