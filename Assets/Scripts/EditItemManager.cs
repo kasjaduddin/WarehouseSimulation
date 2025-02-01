@@ -24,6 +24,11 @@ namespace CompanySystem
             // Invoke GetData method after a short delay
             Invoke("GetBinCodes", 0.1f);
         }
+
+        private void OnDisable()
+        {
+            binCodeDropdown.options.Clear();
+        }
         public void GetBinCodes()
         {
             StartCoroutine(FirebaseServices.ReadData("bins", data =>

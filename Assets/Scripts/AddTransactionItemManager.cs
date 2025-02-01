@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace CompanySystem
 {
@@ -13,10 +14,18 @@ namespace CompanySystem
 
         public GameObject itemTable;
 
+        public GameObject popup;
+        private GameObject warningPanel;
+
         private void OnEnable()
         {
             // Invoke GetData method after a short delay
             Invoke("GetItems", 0.1f);
+        }
+
+        private void OnDisable()
+        {
+            itemDropdown.options.Clear();
         }
 
         public void GetItems()
@@ -48,7 +57,7 @@ namespace CompanySystem
             {
                 if (data != null)
                 {
-                    StartCoroutine(UpdateData(sku, data));
+                    StartCoroutine(UpdateData(data));
                 }
                 else
                 {
@@ -57,10 +66,11 @@ namespace CompanySystem
             }));
         }
 
-        private IEnumerator UpdateData(string sku, JObject data)
+        private IEnumerator UpdateData(JObject data)
         {
             string code = TransactionListManager.selectedRecord.Code;
             int quantity = int.Parse(quantityInputField.text);
+            bool transactionSuccess = false;
 
             var newTransactionItem = new Dictionary<string, object>
             {
@@ -70,22 +80,20 @@ namespace CompanySystem
                 { "information", "Unprocessed" }
             };
 
-            var newItemQuantity = new Dictionary<string, object>
+            StartCoroutine(FirebaseServices.WriteData("transactions", "code", code, "items", newTransactionItem, "sku", message =>
             {
-                { "sku", data["sku"].ToString() },
-                { "quantity", int.Parse(data["quantity"].ToString()) + quantity }
-            };
-
-            bool transactionSuccess = false;
-            bool updateQuantitySuccess = false;
-
-            StartCoroutine(FirebaseServices.ModifyData("transactions", "code", code, "items", newTransactionItem, message =>
-            {
-                transactionSuccess = message.Contains("successfully");
-                if (transactionSuccess)
+                
+                if (message.Contains("successfully"))
                 {
+                    HidePopup();
                     Debug.Log("Item added to transaction.");
                     ResetInput();
+                    transactionSuccess = true;
+                }
+                else if (message.Contains("registered"))
+                {
+                    ShowPopup();
+                    ItemRegisteredHandler(message, code, newTransactionItem["sku"].ToString());
                 }
                 else
                 {
@@ -93,22 +101,13 @@ namespace CompanySystem
                 }
             }));
 
-            StartCoroutine(FirebaseServices.ModifyData("items", newItemQuantity, sku, "sku", message =>
+            yield return new WaitUntil(() => transactionSuccess);
+            if (transactionSuccess)
             {
-                updateQuantitySuccess = message.Contains("successfully");
-                if (updateQuantitySuccess)
-                {
-                    Debug.Log("Item quantity updated.");
-                }
-                else
-                {
-                    Debug.LogError("Failed to update item quantity.");
-                }
-            }));
-
-            yield return new WaitUntil(() => transactionSuccess && updateQuantitySuccess);
-            RefreshTable();
-            gameObject.SetActive(false);
+                yield return new WaitForSeconds(0.1f);
+                RefreshTable();
+                gameObject.SetActive(false);
+            }
         }
 
         // Reset input field
@@ -116,13 +115,58 @@ namespace CompanySystem
         {
             if (quantityInputField.text.Length > 0)
                 quantityInputField.text = quantityInputField.text.Remove(0);
-
-            itemDropdown.options.Clear();
         }
         private void RefreshTable()
         {
             itemTable.SetActive(false);
             itemTable.SetActive(true);
+        }
+
+        private void ShowPopup()
+        {
+            popup.SetActive(true);
+        }
+
+        private void HidePopup()
+        {
+            if (warningPanel != null && warningPanel.activeSelf)
+            {
+                warningPanel.transform.parent.gameObject.SetActive(false);
+                warningPanel.SetActive(false);
+            }
+        }
+
+        private void ItemRegisteredHandler(string message, string code, string sku)
+        {
+            warningPanel = popup.transform.Find("Item Registered").gameObject;
+            warningPanel.SetActive(true);
+
+            TextMeshProUGUI warningText = warningPanel.GetComponentInChildren<TextMeshProUGUI>();
+            warningText.text = message;
+
+            GameObject replaceItemButton = warningPanel.transform.Find("Buttons").Find("Yes Button").gameObject;
+
+            // Add event trigger to replace bin button
+            EventTrigger trigger = replaceItemButton.GetComponent<EventTrigger>() ?? replaceItemButton.AddComponent<EventTrigger>();
+            trigger.triggers.Clear();
+
+            // Create entry for click/ pointer down event
+            EventTrigger.Entry entry = new EventTrigger.Entry
+            {
+                eventID = EventTriggerType.PointerDown
+            };
+
+            entry.callback.AddListener((eventData) =>
+            {
+                StartCoroutine(FirebaseServices.DeleteData("transactions", "code", code, "items", "sku", sku, deleteResult =>
+                {
+                    if (deleteResult.Contains("successfully"))
+                    {
+                        AddNewItem();
+                    }
+                }));
+            });
+            trigger.triggers.Add(entry);
         }
     }
 }

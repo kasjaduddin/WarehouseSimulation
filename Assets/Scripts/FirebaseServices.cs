@@ -154,6 +154,175 @@ public class FirebaseServices : MonoBehaviour
         yield return WriteData(collectionName, data, callback);
     }
 
+    public static IEnumerator WriteData(string collectionName, string documentPrimaryKey, string documentKey, string listName, Dictionary<string, object> newItem, System.Action<string> callback = null)
+    {
+        // Search documents by documentPrimaryKey and documentKey
+        var getDocumentTask = reference.Child(collectionName).OrderByChild(documentPrimaryKey).EqualTo(documentKey).GetValueAsync();
+        yield return new WaitUntil(() => getDocumentTask.IsCompleted);
+
+        if (getDocumentTask.Exception != null)
+        {
+            string message = $"Failed to find document with {documentPrimaryKey} = {documentKey} in {collectionName} collection: {getDocumentTask.Exception}";
+            Debug.LogError(message);
+            callback?.Invoke(message);
+            yield break;
+        }
+
+        DataSnapshot snapshot = getDocumentTask.Result;
+        if (!snapshot.Exists)
+        {
+            string message = $"{collectionName.Remove(collectionName.Length - 1)} with {documentPrimaryKey} = {documentKey} does not exist.";
+            Debug.LogWarning(message);
+            callback?.Invoke(message);
+            yield break;
+        }
+
+        // Get the document ID
+        string documentId = null;
+        foreach (DataSnapshot childSnapshot in snapshot.Children)
+        {
+            documentId = childSnapshot.Key;
+            break;
+        }
+
+        // Get the document reference
+        DatabaseReference docRef = reference.Child(collectionName).Child(documentId);
+
+        var getListTask = docRef.Child(listName).GetValueAsync();
+        yield return new WaitUntil(() => getListTask.IsCompleted);
+
+        if (getListTask.Exception != null)
+        {
+            string message = $"Failed to get list {listName} from document: {getListTask.Exception}";
+            Debug.LogError(message);
+            callback?.Invoke(message);
+            yield break;
+        }
+
+        DataSnapshot listSnapshot = getListTask.Result;
+        List<Dictionary<string, object>> itemsList = new List<Dictionary<string, object>>();
+
+        if (listSnapshot.Exists)
+        {
+            foreach (DataSnapshot itemSnapshot in listSnapshot.Children)
+            {
+                itemsList.Add(itemSnapshot.Value as Dictionary<string, object>);
+            }
+        }
+
+        // Add new item to list
+        itemsList.Add(newItem);
+
+        // Update list in Firebase
+        var updateTask = docRef.Child(listName).SetValueAsync(itemsList);
+        yield return new WaitUntil(() => updateTask.IsCompleted);
+
+        if (updateTask.Exception != null)
+        {
+            string message = $"Failed to add item to list {listName} in document: {updateTask.Exception}";
+            Debug.LogError(message);
+            callback?.Invoke(message);
+        }
+        else
+        {
+            string message = $"Item successfully added to list {listName} in document.";
+            Debug.Log(message);
+            callback?.Invoke(message);
+        }
+    }
+
+    public static IEnumerator WriteData(string collectionName, string documentPrimaryKey, string documentKey, string listName, Dictionary<string, object> newItem, string itemPrimaryKey, System.Action<string> callback = null)
+    {
+        // Search documents by documentPrimaryKey and documentKey
+        var getDocumentTask = reference.Child(collectionName).OrderByChild(documentPrimaryKey).EqualTo(documentKey).GetValueAsync();
+        yield return new WaitUntil(() => getDocumentTask.IsCompleted);
+
+        if (getDocumentTask.Exception != null)
+        {
+            string message = $"Failed to find document with {documentPrimaryKey} = {documentKey} in {collectionName} collection: {getDocumentTask.Exception}";
+            Debug.LogError(message);
+            callback?.Invoke(message);
+            yield break;
+        }
+
+        DataSnapshot snapshot = getDocumentTask.Result;
+        if (!snapshot.Exists)
+        {
+            string message = $"{collectionName.Remove(collectionName.Length - 1)} with {documentPrimaryKey} = {documentKey} does not exist.";
+            Debug.LogWarning(message);
+            callback?.Invoke(message);
+            yield break;
+        }
+
+        // Get the document ID
+        string documentId = null;
+        foreach (DataSnapshot childSnapshot in snapshot.Children)
+        {
+            documentId = childSnapshot.Key;
+            break;
+        }
+
+        // Get the document reference
+        DatabaseReference docRef = reference.Child(collectionName).Child(documentId);
+
+        var getListTask = docRef.Child(listName).GetValueAsync();
+        yield return new WaitUntil(() => getListTask.IsCompleted);
+
+        if (getListTask.Exception != null)
+        {
+            string message = $"Failed to get list {listName} from document: {getListTask.Exception}";
+            Debug.LogError(message);
+            callback?.Invoke(message);
+            yield break;
+        }
+
+        DataSnapshot listSnapshot = getListTask.Result;
+        List<Dictionary<string, object>> itemsList = new List<Dictionary<string, object>>();
+
+        bool itemExists = false;
+
+        if (listSnapshot.Exists)
+        {
+            foreach (DataSnapshot itemSnapshot in listSnapshot.Children)
+            {
+                var item = itemSnapshot.Value as Dictionary<string, object>;
+                if (item != null && item.ContainsKey(itemPrimaryKey) && item[itemPrimaryKey].ToString() == newItem[itemPrimaryKey].ToString())
+                {
+                    // Item with the primary key already exists
+                    itemExists = true;
+                    string message = $"Item with {itemPrimaryKey} {newItem[itemPrimaryKey]} is already registered.";
+                    Debug.LogWarning(message);
+                    callback?.Invoke(message);
+                    yield break;
+                }
+                itemsList.Add(item);
+            }
+        }
+
+        if (!itemExists)
+        {
+            // Add new item to list
+            itemsList.Add(newItem);
+
+            // Update list in Firebase
+            var updateTask = docRef.Child(listName).SetValueAsync(itemsList);
+            yield return new WaitUntil(() => updateTask.IsCompleted);
+
+            if (updateTask.Exception != null)
+            {
+                string message = $"Failed to add item to list {listName} in document: {updateTask.Exception}";
+                Debug.LogError(message);
+                callback?.Invoke(message);
+            }
+            else
+            {
+                string message = $"Item successfully added to list {listName} in document.";
+                Debug.Log(message);
+                callback?.Invoke(message);
+            }
+        }
+    }
+
     public static IEnumerator ReadData(string collectionName, System.Action<JArray> callback)
     {
         yield return reference.Child(collectionName).GetValueAsync().ContinueWithOnMainThread(task =>
@@ -380,7 +549,53 @@ public class FirebaseServices : MonoBehaviour
         yield return ModifyData(collectionName, newData, oldSecondPrimaryKey, secondPrimaryKey, callback);
     }
 
-    public static IEnumerator ModifyData(string collectionName, string documentPrimaryKey, string documentKey, string listName, Dictionary<string, object> newItem, System.Action<string> callback = null)
+    public static IEnumerator DeleteData(string collectionName, string primaryKey, string key, System.Action<string> callback = null)
+    {
+        string message = null;
+
+        // Mencari data dengan primaryKey dan key yang sesuai
+        var checkTask = reference.Child(collectionName).OrderByChild(primaryKey).EqualTo(key).GetValueAsync();
+        yield return new WaitUntil(() => checkTask.IsCompleted);
+
+        if (checkTask.Exception != null)
+        {
+            message = $"Error checking for {primaryKey} {key}: {checkTask.Exception}";
+            Debug.LogError(message);
+            callback?.Invoke(message);
+            yield break;
+        }
+
+        DataSnapshot snapshot = checkTask.Result;
+        if (snapshot.Exists)
+        {
+            // Menghapus data yang ditemukan
+            foreach (DataSnapshot child in snapshot.Children)
+            {
+                string documentId = child.Key;
+                var deleteTask = reference.Child(collectionName).Child(documentId).RemoveValueAsync();
+                yield return new WaitUntil(() => deleteTask.IsCompleted);
+
+                if (deleteTask.Exception != null)
+                {
+                    message = $"Failed to delete data with {primaryKey} {key} in {collectionName} collection: {deleteTask.Exception}";
+                    Debug.LogError(message);
+                    callback?.Invoke(message);
+                    yield break;
+                }
+            }
+            message = $"Data with {primaryKey} {key} successfully deleted in {collectionName} collection.";
+            Debug.Log(message);
+            callback?.Invoke(message);
+        }
+        else
+        {
+            message = $"No data found with {primaryKey} {key} in {collectionName} collection.";
+            Debug.LogWarning(message);
+            callback?.Invoke(message);
+        }
+    }
+
+    public static IEnumerator DeleteData(string collectionName, string documentPrimaryKey, string documentKey, string listName, string itemPrimaryKey, string itemKey, System.Action<string> callback = null)
     {
         // Search documents by documentPrimaryKey and documentKey
         var getDocumentTask = reference.Child(collectionName).OrderByChild(documentPrimaryKey).EqualTo(documentKey).GetValueAsync();
@@ -427,79 +642,47 @@ public class FirebaseServices : MonoBehaviour
 
         DataSnapshot listSnapshot = getListTask.Result;
         List<Dictionary<string, object>> itemsList = new List<Dictionary<string, object>>();
+        bool itemDeleted = false;
 
         if (listSnapshot.Exists)
         {
             foreach (DataSnapshot itemSnapshot in listSnapshot.Children)
             {
-                itemsList.Add(itemSnapshot.Value as Dictionary<string, object>);
+                var item = itemSnapshot.Value as Dictionary<string, object>;
+                if (item != null && item.ContainsKey(itemPrimaryKey) && item[itemPrimaryKey].ToString() == itemKey)
+                {
+                    // Delete the item with the specified primary key
+                    itemDeleted = true;
+                    continue;
+                }
+                itemsList.Add(item);
             }
         }
 
-        // Add new item to list
-        itemsList.Add(newItem);
+        if (!itemDeleted)
+        {
+            string message = $"Item with {itemPrimaryKey} = {itemKey} does not exist in the list.";
+            Debug.LogWarning(message);
+            callback?.Invoke(message);
+            yield break;
+        }
 
-        // Update list in Firebase
+        // Update list in Firebase after deletion
         var updateTask = docRef.Child(listName).SetValueAsync(itemsList);
         yield return new WaitUntil(() => updateTask.IsCompleted);
 
         if (updateTask.Exception != null)
         {
-            string message = $"Failed to add item to list {listName} in document: {updateTask.Exception}";
+            string message = $"Failed to delete item from list {listName} in document: {updateTask.Exception}";
             Debug.LogError(message);
             callback?.Invoke(message);
         }
         else
         {
-            string message = $"Item successfully added to list {listName} in document.";
+            string message = $"Item with {itemPrimaryKey} = {itemKey} successfully deleted from list {listName} in document.";
             Debug.Log(message);
             callback?.Invoke(message);
         }
     }
 
-    public static IEnumerator DeleteData(string collectionName, string primaryKey, string key, System.Action<string> callback = null)
-    {
-        string message = null;
-
-        // Mencari data dengan primaryKey dan key yang sesuai
-        var checkTask = reference.Child(collectionName).OrderByChild(primaryKey).EqualTo(key).GetValueAsync();
-        yield return new WaitUntil(() => checkTask.IsCompleted);
-
-        if (checkTask.Exception != null)
-        {
-            message = $"Error checking for {primaryKey} {key}: {checkTask.Exception}";
-            Debug.LogError(message);
-            callback?.Invoke(message);
-            yield break;
-        }
-
-        DataSnapshot snapshot = checkTask.Result;
-        if (snapshot.Exists)
-        {
-            // Menghapus data yang ditemukan
-            foreach (DataSnapshot child in snapshot.Children)
-            {
-                string documentId = child.Key;
-                var deleteTask = reference.Child(collectionName).Child(documentId).RemoveValueAsync();
-                yield return new WaitUntil(() => deleteTask.IsCompleted);
-
-                if (deleteTask.Exception != null)
-                {
-                    message = $"Failed to delete data with {primaryKey} {key} in {collectionName} collection: {deleteTask.Exception}";
-                    Debug.LogError(message);
-                    callback?.Invoke(message);
-                    yield break;
-                }
-            }
-            message = $"Data with {primaryKey} {key} successfully deleted in {collectionName} collection.";
-            Debug.Log(message);
-            callback?.Invoke(message);
-        }
-        else
-        {
-            message = $"No data found with {primaryKey} {key} in {collectionName} collection.";
-            Debug.LogWarning(message);
-            callback?.Invoke(message);
-        }
-    }
 }

@@ -22,6 +22,11 @@ namespace CompanySystem
             StartCoroutine(SetLowerBound());
         }
 
+        private void OnDisable()
+        {
+            tableContainer.anchoredPosition = new Vector2(0f, upperBound);
+        }
+
         // Update is called once per frame
         void Update()
         {
