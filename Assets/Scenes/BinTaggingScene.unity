@@ -12998,7 +12998,6 @@ GameObject:
   - component: {fileID: 375438118}
   - component: {fileID: 375438117}
   - component: {fileID: 375438116}
-  - component: {fileID: 375438115}
   m_Layer: 0
   m_Name: Reset Button
   m_TagString: Untagged
@@ -13025,35 +13024,6 @@ RectTransform:
   m_AnchoredPosition: {x: -226.88, y: -291.99997}
   m_SizeDelta: {x: 91, y: 45}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &375438115
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 375438113}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Delegates:
-  - eventID: 2
-    callback:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 154009580}
-          m_TargetAssemblyTypeName: CompanySystem.AddTransactionItemManager, Assembly-CSharp
-          m_MethodName: ResetInput
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
 --- !u!114 &375438116
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13097,7 +13067,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 375438117}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 154009580}
+        m_TargetAssemblyTypeName: CompanySystem.AddTransactionItemManager, Assembly-CSharp
+        m_MethodName: ResetInput
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &375438117
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -27505,7 +27487,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 804384736}
-  - component: {fileID: 804384735}
+  - component: {fileID: 804384737}
   m_Layer: 0
   m_Name: Edit Item
   m_TagString: Untagged
@@ -27513,22 +27495,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 0
---- !u!114 &804384735
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 804384734}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b9e5e36d030abca45a56ee96b5116db1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  itemDropdown: {fileID: 2100479474}
-  quantityInputField: {fileID: 1679154763}
-  itemTable: {fileID: 1988272130}
-  popup: {fileID: 0}
 --- !u!224 &804384736
 RectTransform:
   m_ObjectHideFlags: 0
@@ -27554,6 +27520,22 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -40}
   m_SizeDelta: {x: 1920, y: 1000}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &804384737
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 804384734}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1a2fbcf88560a64c8e8e8c307d0c5fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemDropdown: {fileID: 2100479474}
+  quantityInputField: {fileID: 1679154763}
+  itemTable: {fileID: 1988272130}
+  popup: {fileID: 1793854878}
 --- !u!1 &804857247
 GameObject:
   m_ObjectHideFlags: 0
@@ -54507,7 +54489,6 @@ GameObject:
   - component: {fileID: 1610931622}
   - component: {fileID: 1610931621}
   - component: {fileID: 1610931620}
-  - component: {fileID: 1610931619}
   m_Layer: 0
   m_Name: Reset Button
   m_TagString: Untagged
@@ -54534,35 +54515,6 @@ RectTransform:
   m_AnchoredPosition: {x: -226.88, y: -291.99997}
   m_SizeDelta: {x: 91, y: 45}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1610931619
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1610931617}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Delegates:
-  - eventID: 2
-    callback:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 804384735}
-          m_TargetAssemblyTypeName: CompanySystem.AddTransactionItemManager, Assembly-CSharp
-          m_MethodName: ResetInput
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
 --- !u!114 &1610931620
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -54606,7 +54558,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1610931621}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 804384737}
+        m_TargetAssemblyTypeName: CompanySystem.EditTransactionItemManager, Assembly-CSharp
+        m_MethodName: ResetInput
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1610931621
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -56029,7 +55993,7 @@ GameObject:
   - component: {fileID: 1643729403}
   - component: {fileID: 1643729402}
   - component: {fileID: 1643729401}
-  - component: {fileID: 1643729400}
+  - component: {fileID: 1643729404}
   m_Layer: 0
   m_Name: Cancel Button
   m_TagString: Untagged
@@ -56056,59 +56020,6 @@ RectTransform:
   m_AnchoredPosition: {x: -113.48999, y: -291.99997}
   m_SizeDelta: {x: 104, y: 45}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1643729400
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1643729398}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Delegates:
-  - eventID: 2
-    callback:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 804384735}
-          m_TargetAssemblyTypeName: CompanySystem.AddTransactionItemManager, Assembly-CSharp
-          m_MethodName: ResetInput
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 1988272130}
-          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-          m_MethodName: SetActive
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 1
-          m_CallState: 2
-        - m_Target: {fileID: 804384734}
-          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-          m_MethodName: SetActive
-          m_Mode: 6
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
 --- !u!114 &1643729401
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -56191,6 +56102,59 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1643729398}
   m_CullTransparentMesh: 1
+--- !u!114 &1643729404
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1643729398}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 2
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 804384737}
+          m_TargetAssemblyTypeName: CompanySystem.EditTransactionItemManager, Assembly-CSharp
+          m_MethodName: ResetInput
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 1988272130}
+          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_MethodName: SetActive
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 1
+          m_CallState: 2
+        - m_Target: {fileID: 804384734}
+          m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_MethodName: SetActive
+          m_Mode: 6
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &1649699769
 GameObject:
   m_ObjectHideFlags: 0
@@ -66193,9 +66157,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 804384735}
-        m_TargetAssemblyTypeName: CompanySystem.AddTransactionItemManager, Assembly-CSharp
-        m_MethodName: AddNewItem
+      - m_Target: {fileID: 804384737}
+        m_TargetAssemblyTypeName: CompanySystem.EditTransactionItemManager, Assembly-CSharp
+        m_MethodName: EditItem
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
