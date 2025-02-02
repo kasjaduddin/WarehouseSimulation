@@ -549,7 +549,7 @@ public class FirebaseServices : MonoBehaviour
         yield return ModifyData(collectionName, newData, oldSecondPrimaryKey, secondPrimaryKey, callback);
     }
 
-    public static IEnumerator ModifyData(string collectionName, string documentPrimaryKey, string documentKey, string listName, Dictionary<string, object> newItem, string oldItemKey, string itemPrimaryKey, System.Action<string> callback = null)
+    public static IEnumerator ModifyData(string collectionName, string documentPrimaryKey, string documentKey, string listName, Dictionary<string, object> newItemData, string oldItemKey, string itemPrimaryKey, System.Action<string> callback = null)
     {
         // Search documents by documentPrimaryKey and documentKey
         var getDocumentTask = reference.Child(collectionName).OrderByChild(documentPrimaryKey).EqualTo(documentKey).GetValueAsync();
@@ -609,15 +609,15 @@ public class FirebaseServices : MonoBehaviour
                     {
                         // Update existing item
                         itemUpdated = true;
-                        foreach (var key in newItem.Keys)
+                        foreach (var key in newItemData.Keys)
                         {
-                            item[key] = newItem[key];
+                            item[key] = newItemData[key];
                         }
                     }
-                    else if (item[itemPrimaryKey].ToString() == newItem[itemPrimaryKey].ToString())
+                    else if (item[itemPrimaryKey].ToString() == newItemData[itemPrimaryKey].ToString())
                     {
                         // Item with the primary key already exists
-                        string message = $"Item with {itemPrimaryKey} {newItem[itemPrimaryKey]} is already registered.";
+                        string message = $"Item with {itemPrimaryKey} {newItemData[itemPrimaryKey]} is already registered.";
                         Debug.LogWarning(message);
                         callback?.Invoke(message);
                         yield break;
@@ -629,7 +629,7 @@ public class FirebaseServices : MonoBehaviour
 
         if (!itemUpdated)
         {
-            string message = $"{listName.Remove(collectionName.Length - 1)} with {itemPrimaryKey} {newItem[itemPrimaryKey]} does not exist.";
+            string message = $"{listName.Remove(collectionName.Length - 1)} with {itemPrimaryKey} {newItemData[itemPrimaryKey]} does not exist.";
             Debug.LogError(message);
             callback?.Invoke(message);
         }

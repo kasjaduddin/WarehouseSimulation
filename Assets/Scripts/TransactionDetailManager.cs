@@ -1,7 +1,9 @@
 using Record;
 using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
+using UnityEditorInternal.Profiling.Memory.Experimental;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -80,13 +82,14 @@ namespace CompanySystem
                 newRowTransform.Find("Quantity").GetComponent<TextMeshProUGUI>().text = item.Quantity.ToString();
                 newRowTransform.Find("Information").GetComponent<TextMeshProUGUI>().text = item.Information;
 
-                if (TransactionListManager.selectedRecord.Items[i].Information.Equals("Approved"))
+                if (TransactionListManager.selectedRecord.Items[i].Information.Equals("approved"))
                 {
                     newRowTransform.Find("Record Background").GetComponent<Image>().color = new Color32(111, 191, 177, 255);
                 }
-                else if (TransactionListManager.selectedRecord.Items[i].Information.Equals("Rejected"))
+                else if (TransactionListManager.selectedRecord.Items[i].Information.Equals("rejected"))
                 {
-                    newRowTransform.Find("Record Background").GetComponent<Image>().color = new Color32(210, 102, 90, 255);
+                    newRowTransform.Find("Record Background").GetComponent<Image>().color = new Color32(255, 41, 41, 255);
+                    newRowTransform.Find("Buttons").gameObject.SetActive(false);
                 }
                 if (i % 2 != 0)
                 {
@@ -152,34 +155,55 @@ namespace CompanySystem
             Button rejectButton = optionButtons.transform.Find("Reject Button").GetComponent<Button>();
             Button deleteButton = optionButtons.transform.Find("Delete Button").GetComponent<Button>();
 
+            rejectButton.onClick.AddListener(() => RejectItem(TransactionListManager.selectedRecord.Code, selectedRecord.Sku));
             deleteButton.onClick.AddListener(() => DeleteItem(TransactionListManager.selectedRecord.Code, selectedRecord.Sku));
         }
 
-        private IEnumerator RefreshTable()
+        private void RejectItem(string code, string sku)
         {
-            yield return new WaitForSeconds(0.1f);
-            gameObject.SetActive(false);
-            gameObject.SetActive(true);
-        }
-
-        private void ShowPopup()
-        {
-            popup.SetActive(true);
-        }
-
-        private void HidePopup()
-        {
-            if (warningPanel != null && warningPanel.activeSelf)
+            var newItemData = new Dictionary<string, object>
             {
-                warningPanel.transform.parent.gameObject.SetActive(false);
-                warningPanel.SetActive(false);
-            }
-        }
+                { "sku", sku },
+                { "information", "rejected" }
+            };
 
+            ShowPopup();
+            warningPanel = popup.transform.Find("Manage Item").gameObject;
+            warningPanel.SetActive(true);
+
+            string message = $"Items with sku {selectedRecord.Sku} will be rejected\r\nfrom transaction {TransactionListManager.selectedRecord.Code}.\r\nAre you sure?";
+            TextMeshProUGUI warningText = warningPanel.GetComponentInChildren<TextMeshProUGUI>();
+            warningText.text = message;
+
+            GameObject replaceItemButton = warningPanel.transform.Find("Buttons").Find("Yes Button").gameObject;
+
+            // Add event trigger to replace bin button
+            EventTrigger trigger = replaceItemButton.GetComponent<EventTrigger>() ?? replaceItemButton.AddComponent<EventTrigger>();
+            trigger.triggers.Clear();
+
+            // Create entry for click/ pointer down event
+            EventTrigger.Entry entry = new EventTrigger.Entry
+            {
+                eventID = EventTriggerType.PointerDown
+            };
+
+            entry.callback.AddListener((eventData) =>
+            {
+                StartCoroutine(FirebaseServices.ModifyData("transactions", "code", code, "items", newItemData, sku, "sku", updateResult =>
+                {
+                    if (updateResult.Contains("successfully"))
+                    {
+                        HidePopup();
+                        StartCoroutine(RefreshTable());
+                    }
+                }));
+            });
+            trigger.triggers.Add(entry);
+        }
         private void DeleteItem(string code, string sku)
         {
             ShowPopup();
-            warningPanel = popup.transform.Find("Delete Item").gameObject;
+            warningPanel = popup.transform.Find("Manage Item").gameObject;
             warningPanel.SetActive(true);
 
             string message = $"Items with sku {sku} will be removed\r\nfrom transaction {code}.\r\nAre you sure?";
@@ -210,6 +234,27 @@ namespace CompanySystem
                 }));
             });
             trigger.triggers.Add(entry);
+        }
+
+        private IEnumerator RefreshTable()
+        {
+            yield return new WaitForSeconds(0.1f);
+            gameObject.SetActive(false);
+            gameObject.SetActive(true);
+        }
+
+        private void ShowPopup()
+        {
+            popup.SetActive(true);
+        }
+
+        private void HidePopup()
+        {
+            if (warningPanel != null && warningPanel.activeSelf)
+            {
+                warningPanel.transform.parent.gameObject.SetActive(false);
+                warningPanel.SetActive(false);
+            }
         }
 
         public static void ResetSelectedRecord()
