@@ -6,6 +6,7 @@ using Unity.VisualScripting;
 using UnityEditorInternal.Profiling.Memory.Experimental;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Rendering.LookDev;
 using UnityEngine.UI;
 using static Record.TransactionRecord;
 
@@ -84,14 +85,15 @@ namespace CompanySystem
 
                 if (TransactionListManager.selectedRecord.Items[i].Information.Equals("approved"))
                 {
-                    newRowTransform.Find("Record Background").GetComponent<Image>().color = new Color32(111, 191, 177, 255);
+                    newRowTransform.Find("Record Background").GetComponent<Image>().color = new Color32(22, 196, 127, 255);
+                    newRowTransform.Find("Buttons").gameObject.SetActive(false);
                 }
                 else if (TransactionListManager.selectedRecord.Items[i].Information.Equals("rejected"))
                 {
                     newRowTransform.Find("Record Background").GetComponent<Image>().color = new Color32(255, 41, 41, 255);
                     newRowTransform.Find("Buttons").gameObject.SetActive(false);
                 }
-                if (i % 2 != 0)
+                else if (i % 2 != 0)
                 {
                     newRowTransform.Find("Record Background").GetComponent<Image>().color = new Color32(255, 255, 255, 255);
                 }
@@ -155,8 +157,86 @@ namespace CompanySystem
             Button rejectButton = optionButtons.transform.Find("Reject Button").GetComponent<Button>();
             Button deleteButton = optionButtons.transform.Find("Delete Button").GetComponent<Button>();
 
+            approveButton.onClick.AddListener(() => StartCoroutine(ApproveItem(TransactionListManager.selectedRecord.Code, selectedRecord.Sku)));
             rejectButton.onClick.AddListener(() => RejectItem(TransactionListManager.selectedRecord.Code, selectedRecord.Sku));
             deleteButton.onClick.AddListener(() => DeleteItem(TransactionListManager.selectedRecord.Code, selectedRecord.Sku));
+        }
+
+        private IEnumerator ApproveItem(string code, string sku)
+        {
+            bool transactionUpdated = false;
+            bool itemUpdated = false;
+            int newQuantity = 0;
+
+            StartCoroutine(FirebaseServices.ReadData("items", "sku", sku, data =>
+            {
+                if (data != null)
+                {
+                    newQuantity = int.Parse(data["quantity"].ToString()) + selectedRecord.Quantity; Debug.Log($"{data["quantity"]}+{selectedRecord.Quantity}={newQuantity}");
+                }
+                else
+                {
+                    Debug.LogError("Failed to retrieve data.");
+                }
+            }));
+
+            var newItemData = new Dictionary<string, object>
+            {
+                { "sku", selectedRecord.Sku },
+                { "information", "approved" }
+            };
+            yield return new WaitUntil(() => newQuantity != 0);
+            var newItemQuantity = new Dictionary<string, object>
+            {
+                { "sku", selectedRecord.Sku },
+                { "quantity", newQuantity }
+            };
+
+            ShowPopup();
+            warningPanel = popup.transform.Find("Manage Item").gameObject;
+            warningPanel.SetActive(true);
+
+            string message = $"Items with sku {sku} will be approved\r\nfrom transaction {code}.\r\nAre you sure?";
+            TextMeshProUGUI warningText = warningPanel.GetComponentInChildren<TextMeshProUGUI>();
+            warningText.text = message;
+
+            GameObject replaceItemButton = warningPanel.transform.Find("Buttons").Find("Yes Button").gameObject;
+
+            // Add event trigger to replace bin button
+            EventTrigger trigger = replaceItemButton.GetComponent<EventTrigger>() ?? replaceItemButton.AddComponent<EventTrigger>();
+            trigger.triggers.Clear();
+
+            // Create entry for click/ pointer down event
+            EventTrigger.Entry entry = new EventTrigger.Entry
+            {
+                eventID = EventTriggerType.PointerDown
+            };
+
+            entry.callback.AddListener((eventData) =>
+            {
+                StartCoroutine(FirebaseServices.ModifyData("transactions", "code", code, "items", newItemData, sku, "sku", updateResult =>
+                {
+                    if (updateResult.Contains("successfully"))
+                    {
+                        transactionUpdated = true;Debug.Log(updateResult);
+                    }
+                }));
+                StartCoroutine(FirebaseServices.ModifyData("items", newItemQuantity, sku, "sku", updateResult =>
+                {
+                    if (updateResult.Contains("successfully"))
+                    {
+                        itemUpdated = true; Debug.Log(updateResult);
+                    }
+                }));
+            });
+            trigger.triggers.Add(entry);
+
+            yield return new WaitUntil(() => transactionUpdated && itemUpdated);
+            if (transactionUpdated && itemUpdated)
+            {
+                HidePopup();
+                StartCoroutine(RefreshTable());
+            }
         }
 
         private void RejectItem(string code, string sku)
@@ -171,7 +251,7 @@ namespace CompanySystem
             warningPanel = popup.transform.Find("Manage Item").gameObject;
             warningPanel.SetActive(true);
 
-            string message = $"Items with sku {selectedRecord.Sku} will be rejected\r\nfrom transaction {TransactionListManager.selectedRecord.Code}.\r\nAre you sure?";
+            string message = $"Items with sku {sku} will be rejected\r\nfrom transaction {code}.\r\nAre you sure?";
             TextMeshProUGUI warningText = warningPanel.GetComponentInChildren<TextMeshProUGUI>();
             warningText.text = message;
 
