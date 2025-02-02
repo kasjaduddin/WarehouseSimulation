@@ -50,10 +50,24 @@ namespace CompanySystem
 
         private void LoadItem()
         {
-            binCodeDropdown.captionText.text = ItemListManager.selectedRecord.BinCode.ToString();
+            foreach (var option in binCodeDropdown.options)
+            {
+                if (option.text == ItemListManager.selectedRecord.BinCode.ToString())
+                {
+                    binCodeDropdown.value = binCodeDropdown.options.IndexOf(option);
+                    break;
+                }
+            }
             skuInputField.text = ItemListManager.selectedRecord.Sku.ToString();
             itemNameInputField.text = ItemListManager.selectedRecord.ItemName.ToString();
-            uomDropdown.captionText.text = ItemListManager.selectedRecord.UOM.ToString();
+            foreach (var option in uomDropdown.options)
+            {
+                if (option.text == ItemListManager.selectedRecord.UOM.ToString())
+                {
+                    uomDropdown.value = uomDropdown.options.IndexOf(option);
+                    break;
+                }
+            }
         }
 
         // Edit item to system

@@ -51,7 +51,14 @@ namespace CompanySystem
 
         private void LoadItem()
         {
-            itemDropdown.captionText.text = TransactionDetailManager.selectedRecord.Sku + " - " + TransactionDetailManager.selectedRecord.ItemName;
+            foreach (var option in itemDropdown.options)
+            {
+                if (option.text == $"{TransactionDetailManager.selectedRecord.Sku} - {TransactionDetailManager.selectedRecord.ItemName}")
+                {
+                    itemDropdown.value = itemDropdown.options.IndexOf(option);
+                    break;
+                }
+            }
             quantityInputField.text = TransactionDetailManager.selectedRecord.Quantity.ToString();
         }
 
@@ -95,7 +102,6 @@ namespace CompanySystem
                 if (message.Contains("successfully"))
                 {
                     HidePopup();
-                    Debug.Log("Item updated to transaction.");
                     ResetInput();
                     transactionSuccess = true;
                 }
@@ -106,7 +112,6 @@ namespace CompanySystem
                 }
                 else
                 {
-                    Debug.Log(message);
                     Debug.LogError("Failed to add item to transaction.");
                 }
             }));
@@ -152,7 +157,7 @@ namespace CompanySystem
             warningPanel.SetActive(true);
 
             TextMeshProUGUI warningText = warningPanel.GetComponentInChildren<TextMeshProUGUI>();
-            warningText.text = message;
+            warningText.text = message + "\r\nReplace data item?";
 
             GameObject replaceItemButton = warningPanel.transform.Find("Buttons").Find("Yes Button").gameObject;
 

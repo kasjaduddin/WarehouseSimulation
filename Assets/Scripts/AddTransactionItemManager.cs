@@ -141,7 +141,7 @@ namespace CompanySystem
             warningPanel.SetActive(true);
 
             TextMeshProUGUI warningText = warningPanel.GetComponentInChildren<TextMeshProUGUI>();
-            warningText.text = message;
+            warningText.text = message + "\r\nReplace data item?";
 
             GameObject replaceItemButton = warningPanel.transform.Find("Buttons").Find("Yes Button").gameObject;
 
