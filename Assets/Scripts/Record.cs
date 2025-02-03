@@ -124,4 +124,65 @@ namespace Record
             }
         }
     }
+
+    public struct ReservationRecord
+    {
+        public struct ReservationItem
+        {
+            public string Sku;
+            public string ItemName;
+            public int Quantity;
+            public string Information;
+
+            public ReservationItem(JObject item)
+            {
+                Sku = item["sku"].ToString();
+                ItemName = item["item_name"].ToString();
+                Quantity = int.Parse(item["quantity"].ToString());
+                Information = item["information"].ToString();
+            }
+
+            public Dictionary<string, object> ToDictionary()
+            {
+                return new Dictionary<string, object>
+                {
+                    { "sku", Sku },
+                    { "item_name", ItemName },
+                    { "quantity", Quantity },
+                    { "information", Information }
+                };
+            }
+        }
+
+        public string Code;
+        public string ReservationDate;
+        public string Client;
+        public List<ReservationItem> Items;
+
+        public ReservationRecord(string reservatioDate, string client)
+        {
+            string date = $"{DateTime.Now.Year}{DateTime.Now.Month:D2}{DateTime.Now.Day:D2}";
+            string time = $"{DateTime.Now.Hour:D2}{DateTime.Now.Minute:D2}{DateTime.Now.Second:D2}";
+
+            Code = $"TRANS-{date}-{time}";
+            ReservationDate = reservatioDate;
+            Client = client;
+            Items = new List<ReservationItem>();
+        }
+
+        public ReservationRecord(JObject record)
+        {
+            Code = record["code"].ToString();
+            ReservationDate = record["reservatio_date"].ToString();
+            Client = record["client"].ToString();
+            Items = new List<ReservationItem>();
+            if (record["items"] != null)
+            {
+                foreach (var item in record["items"])
+                {
+                    Items.Add(new ReservationItem(item.ToObject<JObject>()));
+                }
+            }
+        }
+    }
 }
