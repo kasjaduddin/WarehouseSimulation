@@ -164,7 +164,7 @@ namespace Record
             string date = $"{DateTime.Now.Year}{DateTime.Now.Month:D2}{DateTime.Now.Day:D2}";
             string time = $"{DateTime.Now.Hour:D2}{DateTime.Now.Minute:D2}{DateTime.Now.Second:D2}";
 
-            Code = $"TRANS-{date}-{time}";
+            Code = $"RESV-{date}-{time}";
             ReservationDate = reservatioDate;
             Client = client;
             Items = new List<ReservationItem>();
