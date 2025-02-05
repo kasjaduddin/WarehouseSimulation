@@ -67,7 +67,7 @@ namespace CompanySystem
             {
                 ReservationItem item = ReservationListManager.selectedRecord.Items[i];
                 string stock = null;
-                yield return FirebaseServices.ReadData("items", "sku", item.Sku, data =>
+                StartCoroutine(FirebaseServices.ReadData("items", "sku", item.Sku, data =>
                 {
                     if (data != null)
                     {
@@ -77,8 +77,9 @@ namespace CompanySystem
                     {
                         Debug.LogError("Failed to retrieve data.");
                     }
-                });
+                }));
 
+                yield return new WaitUntil(() => stock != null);
                 GameObject newRow = Instantiate(recordTemplate, container);
                 Transform newRowTransform = newRow.transform;
                 RectTransform entryRectTransform = newRow.GetComponent<RectTransform>();
@@ -90,7 +91,7 @@ namespace CompanySystem
                 newRowTransform.Find("Item Name").GetComponent<TextMeshProUGUI>().text = item.ItemName;
                 newRowTransform.Find("Quantity").GetComponent<TextMeshProUGUI>().text = item.Quantity.ToString();
                 newRowTransform.Find("Information").GetComponent<TextMeshProUGUI>().text = item.Information;
-                newRowTransform.Find("Stock").GetComponent<TextMeshProUGUI>().text = stock.ToString();
+                newRowTransform.Find("Stock").GetComponent<TextMeshProUGUI>().text = stock;
 
                 if (ReservationListManager.selectedRecord.Items[i].Information.Equals("approved"))
                 {

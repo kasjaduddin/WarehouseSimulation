@@ -7,7 +7,7 @@ using UnityEngine.EventSystems;
 
 namespace CompanySystem
 {
-    public class AddTransactionItemManager : MonoBehaviour
+    public class AddReservationItemManager : MonoBehaviour
     {
         public TMP_Dropdown itemDropdown;
         public TMP_InputField quantityInputField;
@@ -47,7 +47,7 @@ namespace CompanySystem
             }));
         }
 
-        // Add item to transaction
+        // Add item to reservation
         public void AddNewItem()
         {
             string[] selectedItem = itemDropdown.captionText.text.Split('-');
@@ -68,11 +68,11 @@ namespace CompanySystem
 
         private IEnumerator UpdateData(JObject data)
         {
-            string code = TransactionListManager.selectedRecord.Code;
+            string code = ReservationListManager.selectedRecord.Code;
             int quantity = int.Parse(quantityInputField.text);
-            bool transactionSuccess = false;
+            bool reservationSuccess = false;
 
-            var newTransactionItem = new Dictionary<string, object>
+            var newReservationItem = new Dictionary<string, object>
             {
                 { "sku", data["sku"].ToString() },
                 { "item_name", data["item_name"].ToString() },
@@ -80,27 +80,27 @@ namespace CompanySystem
                 { "information", "unprocessed" }
             };
 
-            StartCoroutine(FirebaseServices.WriteData("transactions", "code", code, "items", newTransactionItem, "sku", message =>
+            StartCoroutine(FirebaseServices.WriteData("reservations", "code", code, "items", newReservationItem, "sku", message =>
             {
                 if (message.Contains("successfully"))
                 {
                     HidePopup();
                     ResetInput();
-                    transactionSuccess = true;
+                    reservationSuccess = true;
                 }
                 else if (message.Contains("registered"))
                 {
                     ShowPopup();
-                    ItemRegisteredHandler(message, code, newTransactionItem["sku"].ToString());
+                    ItemRegisteredHandler(message, code, newReservationItem["sku"].ToString());
                 }
                 else
                 {
-                    Debug.LogError("Failed to add item to transaction.");
+                    Debug.LogError("Failed to add item to reservation.");
                 }
             }));
 
-            yield return new WaitUntil(() => transactionSuccess);
-            if (transactionSuccess)
+            yield return new WaitUntil(() => reservationSuccess);
+            if (reservationSuccess)
             {
                 yield return new WaitForSeconds(0.15f);
                 RefreshTable();
@@ -156,7 +156,7 @@ namespace CompanySystem
 
             entry.callback.AddListener((eventData) =>
             {
-                StartCoroutine(FirebaseServices.DeleteData("transactions", "code", code, "items", "sku", sku, deleteResult =>
+                StartCoroutine(FirebaseServices.DeleteData("reservations", "code", code, "items", "sku", sku, deleteResult =>
                 {
                     if (deleteResult.Contains("successfully"))
                     {
@@ -168,3 +168,4 @@ namespace CompanySystem
         }
     }
 }
+
