@@ -1,20 +1,20 @@
 using Record;
-using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using static Record.ReservationRecord;
 using UnityEngine.EventSystems;
+using System.Collections;
 using UnityEngine.UI;
-using static Record.TransactionRecord;
 
 namespace CompanySystem
 {
-    public class TransactionDetailManager : MonoBehaviour
+    public class ReservationDetailManager : MonoBehaviour
     {
         public GameObject Table;
         public Transform container; // Container to hold the instantiated records
         public GameObject recordTemplate; // Template for displaying each record
-        public static TransactionItem selectedRecord; // Variabel to hold selected record data
+        public static ReservationItem selectedRecord; // Variabel to hold selected record data
 
         public GameObject editPage; // Page to edit selected record data
         public GameObject optionButtons;
@@ -34,15 +34,15 @@ namespace CompanySystem
             DestroyRecord();
         }
 
-        // Get all transaction data from Database
+        // Get all reservation data from Database
         private IEnumerator LoadData()
         {
-            StartCoroutine(FirebaseServices.ReadData("transactions", "code", TransactionListManager.selectedRecord.Code, data =>
+            StartCoroutine(FirebaseServices.ReadData("reservations", "code", ReservationListManager.selectedRecord.Code, data =>
             {
                 if (data != null)
                 {
-                    TransactionRecord record = new TransactionRecord(data);
-                    TransactionListManager.selectedRecord = record;
+                    ReservationRecord record = new ReservationRecord(data);
+                    ReservationListManager.selectedRecord = record;
                 }
                 else
                 {
@@ -51,41 +51,53 @@ namespace CompanySystem
             }));
 
             Transform information = gameObject.transform.Find("Information");
-            information.Find("Code").GetComponent<TextMeshProUGUI>().text = TransactionListManager.selectedRecord.Code;
-            information.Find("Invoice Number").GetComponent<TextMeshProUGUI>().text = TransactionListManager.selectedRecord.InvoiceNumber;
-            information.Find("Invoice Date").GetComponent<TextMeshProUGUI>().text = TransactionListManager.selectedRecord.InvoiceDate;
-            information.Find("Vendor").GetComponent<TextMeshProUGUI>().text = TransactionListManager.selectedRecord.Vendor;
+            information.Find("Code").GetComponent<TextMeshProUGUI>().text = ReservationListManager.selectedRecord.Code;
+            information.Find("Reservation Date").GetComponent<TextMeshProUGUI>().text = ReservationListManager.selectedRecord.ReservationDate;
+            information.Find("Client").GetComponent<TextMeshProUGUI>().text = ReservationListManager.selectedRecord.Client;
 
             yield return new WaitForSeconds(0.1f);
-            ShowItems();
+            StartCoroutine(ShowItems());
         }
 
-        // Display all transaction data to transaction table
-        void ShowItems()
+        // Display all reservation data to reservation table
+        private IEnumerator ShowItems()
         {
             float templateHigh = 91f;
-            for (int i = 0; i < TransactionListManager.selectedRecord.Items.Count; i++)
+            for (int i = 0; i < ReservationListManager.selectedRecord.Items.Count; i++)
             {
-                TransactionItem item = TransactionListManager.selectedRecord.Items[i];
+                ReservationItem item = ReservationListManager.selectedRecord.Items[i];
+                string stock = null;
+                yield return FirebaseServices.ReadData("items", "sku", item.Sku, data =>
+                {
+                    if (data != null)
+                    {
+                        stock = data["quantity"].ToString();
+                    }
+                    else
+                    {
+                        Debug.LogError("Failed to retrieve data.");
+                    }
+                });
 
                 GameObject newRow = Instantiate(recordTemplate, container);
                 Transform newRowTransform = newRow.transform;
                 RectTransform entryRectTransform = newRow.GetComponent<RectTransform>();
 
                 // Fill the UI elements with data
-                entryRectTransform.anchoredPosition = new Vector2(0f, 46f + (-templateHigh * i));
+                entryRectTransform.anchoredPosition = new Vector2(0f, 60f + (-templateHigh * i));
                 newRowTransform.Find("Id").GetComponent<TextMeshProUGUI>().text = (i + 1).ToString();
                 newRowTransform.Find("SKU").GetComponent<TextMeshProUGUI>().text = item.Sku;
                 newRowTransform.Find("Item Name").GetComponent<TextMeshProUGUI>().text = item.ItemName;
                 newRowTransform.Find("Quantity").GetComponent<TextMeshProUGUI>().text = item.Quantity.ToString();
                 newRowTransform.Find("Information").GetComponent<TextMeshProUGUI>().text = item.Information;
+                newRowTransform.Find("Stock").GetComponent<TextMeshProUGUI>().text = stock.ToString();
 
-                if (TransactionListManager.selectedRecord.Items[i].Information.Equals("approved"))
+                if (ReservationListManager.selectedRecord.Items[i].Information.Equals("approved"))
                 {
                     newRowTransform.Find("Record Background").GetComponent<Image>().color = new Color32(22, 196, 127, 255);
                     newRowTransform.Find("Buttons").gameObject.SetActive(false);
                 }
-                else if (TransactionListManager.selectedRecord.Items[i].Information.Equals("rejected"))
+                else if (ReservationListManager.selectedRecord.Items[i].Information.Equals("rejected"))
                 {
                     newRowTransform.Find("Record Background").GetComponent<Image>().color = new Color32(255, 41, 41, 255);
                     newRowTransform.Find("Buttons").gameObject.SetActive(false);
@@ -102,14 +114,14 @@ namespace CompanySystem
 
         private void GetRecord(Transform recordTransform)
         {
-            string code = TransactionListManager.selectedRecord.Code;
+            string code = ReservationListManager.selectedRecord.Code;
             string sku = recordTransform.Find("SKU").GetComponent<TextMeshProUGUI>().text;
 
-            StartCoroutine(FirebaseServices.ReadData("transactions", "code", code, "items", "sku", sku, data =>
+            StartCoroutine(FirebaseServices.ReadData("reservations", "code", code, "items", "sku", sku, data =>
             {
                 if (data != null)
                 {
-                    TransactionItem record = new TransactionItem(data);
+                    ReservationItem record = new ReservationItem(data);
                     selectedRecord = record;
                 }
                 else
@@ -154,14 +166,14 @@ namespace CompanySystem
             Button rejectButton = optionButtons.transform.Find("Reject Button").GetComponent<Button>();
             Button deleteButton = optionButtons.transform.Find("Delete Button").GetComponent<Button>();
 
-            approveButton.onClick.AddListener(() => StartCoroutine(ApproveItem(TransactionListManager.selectedRecord.Code, selectedRecord.Sku)));
-            rejectButton.onClick.AddListener(() => RejectItem(TransactionListManager.selectedRecord.Code, selectedRecord.Sku));
-            deleteButton.onClick.AddListener(() => DeleteItem(TransactionListManager.selectedRecord.Code, selectedRecord.Sku));
+            approveButton.onClick.AddListener(() => StartCoroutine(ApproveItem(ReservationListManager.selectedRecord.Code, selectedRecord.Sku)));
+            rejectButton.onClick.AddListener(() => RejectItem(ReservationListManager.selectedRecord.Code, selectedRecord.Sku));
+            deleteButton.onClick.AddListener(() => DeleteItem(ReservationListManager.selectedRecord.Code, selectedRecord.Sku));
         }
 
         private IEnumerator ApproveItem(string code, string sku)
         {
-            bool transactionUpdated = false;
+            bool reservationUpdated = false;
             bool itemUpdated = false;
             int newQuantity = 0;
 
@@ -169,7 +181,7 @@ namespace CompanySystem
             {
                 if (data != null)
                 {
-                    newQuantity = int.Parse(data["quantity"].ToString()) + selectedRecord.Quantity; Debug.Log($"{data["quantity"]}+{selectedRecord.Quantity}={newQuantity}");
+                    newQuantity = int.Parse(data["quantity"].ToString()) - selectedRecord.Quantity; Debug.Log($"{data["quantity"]}+{selectedRecord.Quantity}={newQuantity}");
                 }
                 else
                 {
@@ -193,7 +205,7 @@ namespace CompanySystem
             warningPanel = popup.transform.Find("Manage Item").gameObject;
             warningPanel.SetActive(true);
 
-            string message = $"Items with sku {sku} will be approved\r\nfrom transaction {code}.\r\nAre you sure?";
+            string message = $"Items with sku {sku} will be approved\r\nfrom reservation {code}.\r\nAre you sure?";
             TextMeshProUGUI warningText = warningPanel.GetComponentInChildren<TextMeshProUGUI>();
             warningText.text = message;
 
@@ -211,11 +223,11 @@ namespace CompanySystem
 
             entry.callback.AddListener((eventData) =>
             {
-                StartCoroutine(FirebaseServices.ModifyData("transactions", "code", code, "items", newItemData, sku, "sku", updateResult =>
+                StartCoroutine(FirebaseServices.ModifyData("reservations", "code", code, "items", newItemData, sku, "sku", updateResult =>
                 {
                     if (updateResult.Contains("successfully"))
                     {
-                        transactionUpdated = true;Debug.Log(updateResult);
+                        reservationUpdated = true; Debug.Log(updateResult);
                     }
                 }));
                 StartCoroutine(FirebaseServices.ModifyData("items", newItemQuantity, sku, "sku", updateResult =>
@@ -228,8 +240,8 @@ namespace CompanySystem
             });
             trigger.triggers.Add(entry);
 
-            yield return new WaitUntil(() => transactionUpdated && itemUpdated);
-            if (transactionUpdated && itemUpdated)
+            yield return new WaitUntil(() => reservationUpdated && itemUpdated);
+            if (reservationUpdated && itemUpdated)
             {
                 HidePopup();
                 StartCoroutine(RefreshTable());
@@ -248,7 +260,7 @@ namespace CompanySystem
             warningPanel = popup.transform.Find("Manage Item").gameObject;
             warningPanel.SetActive(true);
 
-            string message = $"Items with sku {sku} will be rejected\r\nfrom transaction {code}.\r\nAre you sure?";
+            string message = $"Items with sku {sku} will be rejected\r\nfrom reservation {code}.\r\nAre you sure?";
             TextMeshProUGUI warningText = warningPanel.GetComponentInChildren<TextMeshProUGUI>();
             warningText.text = message;
 
@@ -266,7 +278,7 @@ namespace CompanySystem
 
             entry.callback.AddListener((eventData) =>
             {
-                StartCoroutine(FirebaseServices.ModifyData("transactions", "code", code, "items", newItemData, sku, "sku", updateResult =>
+                StartCoroutine(FirebaseServices.ModifyData("reservations", "code", code, "items", newItemData, sku, "sku", updateResult =>
                 {
                     if (updateResult.Contains("successfully"))
                     {
@@ -283,7 +295,7 @@ namespace CompanySystem
             warningPanel = popup.transform.Find("Manage Item").gameObject;
             warningPanel.SetActive(true);
 
-            string message = $"Items with sku {sku} will be removed\r\nfrom transaction {code}.\r\nAre you sure?";
+            string message = $"Items with sku {sku} will be removed\r\nfrom reservation {code}.\r\nAre you sure?";
             TextMeshProUGUI warningText = warningPanel.GetComponentInChildren<TextMeshProUGUI>();
             warningText.text = message;
 
@@ -301,7 +313,7 @@ namespace CompanySystem
 
             entry.callback.AddListener((eventData) =>
             {
-                StartCoroutine(FirebaseServices.DeleteData("transactions", "code", code, "items", "sku", sku, deleteResult => 
+                StartCoroutine(FirebaseServices.DeleteData("reservations", "code", code, "items", "sku", sku, deleteResult =>
                 {
                     if (deleteResult.Contains("successfully"))
                     {
@@ -336,11 +348,11 @@ namespace CompanySystem
 
         public static void ResetSelectedRecord()
         {
-            TransactionItem emptyTransaction = new TransactionItem();
-            selectedRecord = emptyTransaction;
+            ReservationItem emptyReservation = new ReservationItem();
+            selectedRecord = emptyReservation;
         }
 
-        // Delete shows all transaction data in the transaction table
+        // Delete shows all reservation data in the reservation table
         public void DestroyRecord()
         {
             foreach (Transform child in container)
@@ -354,5 +366,4 @@ namespace CompanySystem
             optionButtons.SetActive(false);
         }
     }
-
 }

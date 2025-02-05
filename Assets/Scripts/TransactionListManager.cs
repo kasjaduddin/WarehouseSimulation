@@ -109,7 +109,7 @@ namespace CompanySystem
         {
             GetRecord(recordTransform);
 
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitUntil(() => selectedRecord.Code != null);
             gameObject.SetActive(false);
             detailPage.SetActive(true);
         }

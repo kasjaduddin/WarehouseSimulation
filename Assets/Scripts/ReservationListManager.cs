@@ -69,7 +69,6 @@ namespace CompanySystem
                 {
                     newRowTransform.Find("Record Background").GetComponent<Image>().color = new Color32(255, 255, 255, 255);
                 }
-
                 Table.GetComponent<DynamicTableManager>().enabled = true;
             }
             recordTemplate.SetActive(false);
@@ -78,7 +77,7 @@ namespace CompanySystem
         private void GetRecord(Transform recordTransform)
         {
             string code = recordTransform.Find("Code").GetComponent<TextMeshProUGUI>().text;
-
+            
             StartCoroutine(FirebaseServices.ReadData("reservations", "code", code, data =>
             {
                 if (data != null)
@@ -102,7 +101,7 @@ namespace CompanySystem
         {
             GetRecord(recordTransform);
 
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitUntil(() => selectedRecord.Code != null);
             gameObject.SetActive(false);
             detailPage.SetActive(true);
         }

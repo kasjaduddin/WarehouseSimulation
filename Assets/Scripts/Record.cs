@@ -173,7 +173,7 @@ namespace Record
         public ReservationRecord(JObject record)
         {
             Code = record["code"].ToString();
-            ReservationDate = record["reservatio_date"].ToString();
+            ReservationDate = record["reservation_date"].ToString();
             Client = record["client"].ToString();
             Items = new List<ReservationItem>();
             if (record["items"] != null)
