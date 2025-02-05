@@ -7,7 +7,7 @@ using UnityEngine.EventSystems;
 
 namespace CompanySystem
 {
-    public class EditTransactionItemManager : MonoBehaviour
+    public class EditReservationItemManager : MonoBehaviour
     {
         public TMP_Dropdown itemDropdown;
         public TMP_InputField quantityInputField;
@@ -51,16 +51,16 @@ namespace CompanySystem
         {
             foreach (var option in itemDropdown.options)
             {
-                if (option.text == $"{TransactionDetailManager.selectedRecord.Sku} - {TransactionDetailManager.selectedRecord.ItemName}")
+                if (option.text == $"{ReservationDetailManager.selectedRecord.Sku} - {ReservationDetailManager.selectedRecord.ItemName}")
                 {
                     itemDropdown.value = itemDropdown.options.IndexOf(option);
                     break;
                 }
             }
-            quantityInputField.text = TransactionDetailManager.selectedRecord.Quantity.ToString();
+            quantityInputField.text = ReservationDetailManager.selectedRecord.Quantity.ToString();
         }
 
-        // Edit item to transaction
+        // Edit item to reservation
         public void EditItem()
         {
             string[] selectedItem = itemDropdown.captionText.text.Split('-');
@@ -81,12 +81,12 @@ namespace CompanySystem
 
         private IEnumerator UpdateData(JObject data)
         {
-            string code = TransactionListManager.selectedRecord.Code;
+            string code = ReservationListManager.selectedRecord.Code;
             int quantity = int.Parse(quantityInputField.text);
-            string oldSku = TransactionDetailManager.selectedRecord.Sku;
-            bool transactionSuccess = false;
+            string oldSku = ReservationDetailManager.selectedRecord.Sku;
+            bool reservationSuccess = false;
 
-            var newTransactionItem = new Dictionary<string, object>
+            var newReservationItem = new Dictionary<string, object>
             {
                 { "sku", data["sku"].ToString() },
                 { "item_name", data["item_name"].ToString() },
@@ -94,28 +94,28 @@ namespace CompanySystem
                 { "information", "Unprocessed" }
             };
 
-            StartCoroutine(FirebaseServices.ModifyData("transactions", "code", code, "items", newTransactionItem, oldSku, "sku", message =>
+            StartCoroutine(FirebaseServices.ModifyData("reservations", "code", code, "items", newReservationItem, oldSku, "sku", message =>
             {
 
                 if (message.Contains("successfully"))
                 {
                     HidePopup();
                     ResetInput();
-                    transactionSuccess = true;
+                    reservationSuccess = true;
                 }
                 else if (message.Contains("registered"))
                 {
                     ShowPopup();
-                    ItemRegisteredHandler(message, code, newTransactionItem["sku"].ToString());
+                    ItemRegisteredHandler(message, code, newReservationItem["sku"].ToString());
                 }
                 else
                 {
-                    Debug.LogError("Failed to add item to transaction.");
+                    Debug.LogError("Failed to add item to reservation.");
                 }
             }));
 
-            yield return new WaitUntil(() => transactionSuccess);
-            if (transactionSuccess)
+            yield return new WaitUntil(() => reservationSuccess);
+            if (reservationSuccess)
             {
                 yield return new WaitForSeconds(0.1f);
                 RefreshTable();
@@ -171,7 +171,7 @@ namespace CompanySystem
 
             entry.callback.AddListener((eventData) =>
             {
-                StartCoroutine(FirebaseServices.DeleteData("transactions", "code", code, "items", "sku", sku, deleteResult =>
+                StartCoroutine(FirebaseServices.DeleteData("reservations", "code", code, "items", "sku", sku, deleteResult =>
                 {
                     if (deleteResult.Contains("successfully"))
                     {

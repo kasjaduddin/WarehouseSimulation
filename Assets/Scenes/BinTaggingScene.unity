@@ -5670,7 +5670,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1341234206}
-        m_TargetAssemblyTypeName: CompanySystem.AddTransactionItemManager, Assembly-CSharp
+        m_TargetAssemblyTypeName: CompanySystem.AddReservationItemManager, Assembly-CSharp
         m_MethodName: AddNewItem
         m_Mode: 1
         m_Arguments:
@@ -31419,7 +31419,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 1341234206}
-          m_TargetAssemblyTypeName: CompanySystem.AddTransactionItemManager, Assembly-CSharp
+          m_TargetAssemblyTypeName: CompanySystem.AddReservationItemManager, Assembly-CSharp
           m_MethodName: ResetInput
           m_Mode: 1
           m_Arguments:
@@ -36516,7 +36516,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1341234206}
-        m_TargetAssemblyTypeName: CompanySystem.AddTransactionItemManager, Assembly-CSharp
+        m_TargetAssemblyTypeName: CompanySystem.AddReservationItemManager, Assembly-CSharp
         m_MethodName: ResetInput
         m_Mode: 1
         m_Arguments:
@@ -54381,7 +54381,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1341234204}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b9e5e36d030abca45a56ee96b5116db1, type: 3}
+  m_Script: {fileID: 11500000, guid: bd731baa5da2ddb4aa68902a74fbb37a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   itemDropdown: {fileID: 174099403}
@@ -57232,8 +57232,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1559783695}
-        m_TargetAssemblyTypeName: CompanySystem.EditTransactionItemManager, Assembly-CSharp
+      - m_Target: {fileID: 1559783697}
+        m_TargetAssemblyTypeName: CompanySystem.EditReservationItemManager, Assembly-CSharp
         m_MethodName: EditItem
         m_Mode: 1
         m_Arguments:
@@ -58777,8 +58777,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1559783695}
-        m_TargetAssemblyTypeName: CompanySystem.EditTransactionItemManager, Assembly-CSharp
+      - m_Target: {fileID: 1559783697}
+        m_TargetAssemblyTypeName: CompanySystem.EditReservationItemManager, Assembly-CSharp
         m_MethodName: ResetInput
         m_Mode: 1
         m_Arguments:
@@ -61290,8 +61290,8 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 1559783695}
-          m_TargetAssemblyTypeName: CompanySystem.EditTransactionItemManager, Assembly-CSharp
+        - m_Target: {fileID: 1559783697}
+          m_TargetAssemblyTypeName: CompanySystem.EditReservationItemManager, Assembly-CSharp
           m_MethodName: ResetInput
           m_Mode: 1
           m_Arguments:
@@ -61711,7 +61711,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1559783696}
-  - component: {fileID: 1559783695}
+  - component: {fileID: 1559783697}
   m_Layer: 0
   m_Name: Edit Item
   m_TagString: Untagged
@@ -61719,22 +61719,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 0
---- !u!114 &1559783695
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1559783694}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f1a2fbcf88560a64c8e8e8c307d0c5fd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  itemDropdown: {fileID: 464375917}
-  quantityInputField: {fileID: 2116037572}
-  itemTable: {fileID: 1644981548}
-  popup: {fileID: 882477840}
 --- !u!224 &1559783696
 RectTransform:
   m_ObjectHideFlags: 0
@@ -61760,6 +61744,22 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -40}
   m_SizeDelta: {x: 1920, y: 1000}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1559783697
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1559783694}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f775500c1aed5a43ad14156c4795c15, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemDropdown: {fileID: 464375917}
+  quantityInputField: {fileID: 2116037572}
+  itemTable: {fileID: 1644981548}
+  popup: {fileID: 882477840}
 --- !u!1 &1560477504
 GameObject:
   m_ObjectHideFlags: 0
