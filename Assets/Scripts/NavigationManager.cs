@@ -27,6 +27,8 @@ namespace CompanySystem
         Navbar navbar;
         Breadcrumb breadcrumb;
 
+        public GameObject keyBoard;
+
         // Start is called before the first frame update
         void Start()
         {
@@ -65,6 +67,7 @@ namespace CompanySystem
                             child.gameObject.SetActive(false);
                     }
                     page.SetActive(true);
+                    keyBoard.SetActive(false);
                 }
                 else
                 {
