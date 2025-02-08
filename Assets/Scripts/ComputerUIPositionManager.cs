@@ -31,14 +31,14 @@ public class ComputerUIPositionManager : MonoBehaviour
         Vector3 screenPosition = screen.transform.position;
         screenPosition.y = cameraPosition.y;
         screen.transform.position = screenPosition;
-        Debug.Log(screenPosition.x);
+        
         SetKeyboardPosition();
     }
 
     // Set keyboard position
     private void SetKeyboardPosition()
     {
-        Vector3 screenPosition = screen.transform.position;Debug.Log(screenPosition.x);
+        Vector3 screenPosition = screen.transform.position;
         Vector3 keyboardPosition = new Vector3(screenPosition.x - 0.1f, screenPosition.y - 0.25f, screenPosition.z);
         keyboard.transform.position = keyboardPosition;
     }
