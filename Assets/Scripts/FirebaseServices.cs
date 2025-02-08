@@ -9,6 +9,7 @@ using Newtonsoft.Json.Linq;
 public class FirebaseServices : MonoBehaviour
 {
     private static DatabaseReference reference;
+
     // Start is called before the first frame update
     void Start()
     {

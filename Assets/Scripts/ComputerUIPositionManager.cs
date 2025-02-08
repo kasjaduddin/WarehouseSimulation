@@ -1,3 +1,5 @@
+using System;
+using System.Collections;
 using UnityEngine;
 public class ComputerUIPositionManager : MonoBehaviour
 {
@@ -6,6 +8,17 @@ public class ComputerUIPositionManager : MonoBehaviour
     private GameObject screen; // Computer screen game object
     [SerializeField]
     private GameObject keyboard; // Computer keyboard game object
+
+    [Serializable]
+    public struct ComputerUIOffset
+    {
+        public float x;
+        public float y;
+        public float z;
+    }
+
+    [SerializeField]
+    ComputerUIOffset screenOffset = new ComputerUIOffset();
 
     // Start is called before the first frame update
     void Start()
@@ -17,7 +30,7 @@ public class ComputerUIPositionManager : MonoBehaviour
         if (screen != null)
         {
             screen.transform.position = new Vector3(screen.transform.position.x, screen.transform.position.y, screen.transform.position.z);
-            screen.transform.rotation = Quaternion.Euler(0, 0, 0);
+            screen.transform.rotation = Quaternion.Euler(0, 90, 0);
         }
 
         // Set initial keyboard static position and rotation
@@ -29,23 +42,25 @@ public class ComputerUIPositionManager : MonoBehaviour
 
     private void OnEnable()
     {
-        Invoke("SetScreenPosition", 0.1f);
-        Invoke("SetKeyboardPosition", 0.1f);
+        StartCoroutine(SetScreenPosition());
     }
 
     // Set screen position
-    public void SetScreenPosition()
+    private IEnumerator SetScreenPosition()
     {
+        yield return new WaitForSeconds(0.1f);
         Vector3 cameraPosition = mainCamera.transform.position;
-        Vector3 screenPosition = new Vector3(screen.transform.position.x, cameraPosition.y, cameraPosition.z + 0.4f);
+        Vector3 screenPosition = new Vector3(cameraPosition.x + screenOffset.x, cameraPosition.y + screenOffset.y, cameraPosition.z + screenOffset.z);
         screen.transform.position = screenPosition;
+
+        SetKeyboardPosition();
     }
 
     // Set keyboard position
-    public void SetKeyboardPosition()
+    private void SetKeyboardPosition()
     {
-        Vector3 cameraPosition = mainCamera.transform.position;
-        Vector3 keyboardPosition = new Vector3(keyboard.transform.position.x, cameraPosition.y - 0.2f, cameraPosition.z + 0.35f);
+        Vector3 screenPosition = screen.transform.position;
+        Vector3 keyboardPosition = new Vector3(screenPosition.x, screenPosition.y - 0.2f, screenPosition.z);
         keyboard.transform.position = keyboardPosition;
     }
 }
