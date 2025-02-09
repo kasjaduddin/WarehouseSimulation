@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class WindowsManager : MonoBehaviour
@@ -13,18 +14,6 @@ public class WindowsManager : MonoBehaviour
     [SerializeField]
     private GameObject pomQm; // POM QM game object
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public void OpenWindow()
     {
         window.SetActive(true);
@@ -35,9 +24,45 @@ public class WindowsManager : MonoBehaviour
         GameObject windowPanel = window.transform.Find("Background").gameObject;
         foreach (Transform child in windowPanel.transform)
         {
-            if (child.gameObject.name != "Power Button")
-                child.gameObject.SetActive(false);
+            child.gameObject.SetActive(child.gameObject.name == "Power Button" || child.gameObject.name == "Shortcut");
         }
         window.SetActive(false);
+    }
+
+    public void OnClickCompanySystemShortcut()
+    {
+        StartCoroutine(OpenCompanySystem());
+    }
+
+    private IEnumerator OpenCompanySystem()
+    {
+        CloseCompanySystem();
+        yield return new WaitForSeconds(0.1f);
+        companySystem.SetActive(true);
+    }
+
+    public void CloseCompanySystem()
+    {
+        foreach (Transform child in companySystem.transform)
+        {
+            if (child.gameObject.name == "Master Data Bin")
+            {
+                ActivteList(child, "Bin List");
+                child.gameObject.SetActive(true); 
+            }
+            else
+            {
+                child.gameObject.SetActive(child.gameObject.name == "Title Bar");
+            }
+        }
+        companySystem.SetActive(false);
+    }
+
+    private void ActivteList(Transform parent, string listName)
+    {
+        foreach (Transform child in parent)
+        {
+            child.gameObject.SetActive(child.gameObject.name == listName);
+        }
     }
 }
