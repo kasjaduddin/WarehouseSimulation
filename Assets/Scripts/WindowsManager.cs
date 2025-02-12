@@ -52,7 +52,7 @@ public class WindowsManager : MonoBehaviour
             }
             else
             {
-                child.gameObject.SetActive(child.gameObject.name == "Title Bar");
+                child.gameObject.SetActive(child.gameObject.name == "Title Bar" || child.gameObject.name == "Navigation Manager");
             }
         }
         companySystem.SetActive(false);
