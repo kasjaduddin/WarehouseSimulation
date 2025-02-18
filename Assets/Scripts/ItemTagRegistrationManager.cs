@@ -1,10 +1,7 @@
 using CompanySystem;
-using Newtonsoft.Json.Linq;
 using Record;
-using System.Collections;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Rendering.LookDev;
 using UnityEngine.UI;
 using static Record.TransactionRecord;
 
