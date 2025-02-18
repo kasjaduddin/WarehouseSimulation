@@ -18253,7 +18253,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 212, y: -19}
+  m_AnchoredPosition: {x: 212, y: -5}
   m_SizeDelta: {x: 660, y: 185}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &380112815
@@ -21050,7 +21050,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -345, y: -11}
+  m_AnchoredPosition: {x: -345, y: 15}
   m_SizeDelta: {x: 400, y: 220}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &430175753
@@ -37566,7 +37566,7 @@ GameObject:
   - component: {fileID: 758990559}
   - component: {fileID: 758990558}
   m_Layer: 0
-  m_Name: SKU
+  m_Name: Code
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -60539,8 +60539,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -18, y: 225}
-  m_SizeDelta: {x: 200, y: 50}
+  m_AnchoredPosition: {x: 180, y: 230}
+  m_SizeDelta: {x: 600, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1297006074
 MonoBehaviour:
@@ -60564,8 +60564,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 5d8b071772237e54c8a58ad9962b06c6, type: 2}
-  m_sharedMaterial: {fileID: -5754898109975303011, guid: 5d8b071772237e54c8a58ad9962b06c6, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -60597,7 +60597,7 @@ MonoBehaviour:
   m_fontSizeMax: 72
   m_fontStyle: 0
   m_HorizontalAlignment: 1
-  m_VerticalAlignment: 256
+  m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_wordSpacing: 0
@@ -88691,9 +88691,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1045955345}
-        m_TargetAssemblyTypeName: Rfid.ItemTagRegistrationManager, Assembly-CSharp
-        m_MethodName: SelectItem
+      - m_Target: {fileID: 1060752899}
+        m_TargetAssemblyTypeName: Rfid.RemoveItemTagManager, Assembly-CSharp
+        m_MethodName: SelectReservation
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 758990558}
