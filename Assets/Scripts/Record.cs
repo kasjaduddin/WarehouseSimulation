@@ -69,6 +69,7 @@ namespace Record
             public string ItemName;
             public int Quantity;
             public string Information;
+            public bool Tagged;
 
             public TransactionItem(JObject item)
             {
@@ -76,6 +77,7 @@ namespace Record
                 ItemName = item["item_name"].ToString();
                 Quantity = int.Parse(item["quantity"].ToString());
                 Information = item["information"].ToString();
+                Tagged = bool.Parse(item["tagged"].ToString());
             }
 
             public Dictionary<string, object> ToDictionary()
@@ -85,7 +87,8 @@ namespace Record
                     { "sku", Sku },
                     { "item_name", ItemName },
                     { "quantity", Quantity },
-                    { "information", Information }
+                    { "information", Information },
+                    { "tagged", Tagged }
                 };
             }
         }
@@ -133,6 +136,7 @@ namespace Record
             public string ItemName;
             public int Quantity;
             public string Information;
+            public bool Packed;
 
             public ReservationItem(JObject item)
             {
@@ -140,6 +144,7 @@ namespace Record
                 ItemName = item["item_name"].ToString();
                 Quantity = int.Parse(item["quantity"].ToString());
                 Information = item["information"].ToString();
+                Packed = bool.Parse(item["packed"].ToString());
             }
 
             public Dictionary<string, object> ToDictionary()
@@ -149,7 +154,8 @@ namespace Record
                     { "sku", Sku },
                     { "item_name", ItemName },
                     { "quantity", Quantity },
-                    { "information", Information }
+                    { "information", Information },
+                    { "packed", Packed }
                 };
             }
         }

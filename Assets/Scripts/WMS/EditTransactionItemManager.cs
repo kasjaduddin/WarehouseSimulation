@@ -7,7 +7,7 @@ using UnityEngine.EventSystems;
 
 namespace CompanySystem
 {
-    public class AddTransactionItemManager : MonoBehaviour
+    public class EditTransactionItemManager : MonoBehaviour
     {
         public TMP_Dropdown itemDropdown;
         public TMP_InputField quantityInputField;
@@ -38,7 +38,7 @@ namespace CompanySystem
                     {
                         itemDropdown.options.Add(new TMP_Dropdown.OptionData($"{item["sku"]} - {item["item_name"]}"));
                     }
-                    itemDropdown.captionText.text = itemDropdown.options[0].text;
+                    LoadItem();
                 }
                 else
                 {
@@ -47,8 +47,21 @@ namespace CompanySystem
             }));
         }
 
-        // Add item to transaction
-        public void AddNewItem()
+        private void LoadItem()
+        {
+            foreach (var option in itemDropdown.options)
+            {
+                if (option.text == $"{TransactionDetailManager.selectedRecord.Sku} - {TransactionDetailManager.selectedRecord.ItemName}")
+                {
+                    itemDropdown.value = itemDropdown.options.IndexOf(option);
+                    break;
+                }
+            }
+            quantityInputField.text = TransactionDetailManager.selectedRecord.Quantity.ToString();
+        }
+
+        // Edit item to transaction
+        public void EditItem()
         {
             string[] selectedItem = itemDropdown.captionText.text.Split('-');
             string sku = selectedItem[0].Trim();
@@ -70,6 +83,7 @@ namespace CompanySystem
         {
             string code = TransactionListManager.selectedRecord.Code;
             int quantity = int.Parse(quantityInputField.text);
+            string oldSku = TransactionDetailManager.selectedRecord.Sku;
             bool transactionSuccess = false;
 
             var newTransactionItem = new Dictionary<string, object>
@@ -77,11 +91,13 @@ namespace CompanySystem
                 { "sku", data["sku"].ToString() },
                 { "item_name", data["item_name"].ToString() },
                 { "quantity", quantity },
-                { "information", "unprocessed" }
+                { "information", "Unprocessed" },
+                { "tagged", false }
             };
 
-            StartCoroutine(FirebaseServices.WriteData("transactions", "code", code, "items", newTransactionItem, "sku", message =>
+            StartCoroutine(FirebaseServices.ModifyData("transactions", "code", code, "items", newTransactionItem, oldSku, "sku", message =>
             {
+
                 if (message.Contains("successfully"))
                 {
                     HidePopup();
@@ -102,7 +118,7 @@ namespace CompanySystem
             yield return new WaitUntil(() => transactionSuccess);
             if (transactionSuccess)
             {
-                yield return new WaitForSeconds(0.15f);
+                yield return new WaitForSeconds(0.1f);
                 RefreshTable();
                 gameObject.SetActive(false);
             }
@@ -160,7 +176,7 @@ namespace CompanySystem
                 {
                     if (deleteResult.Contains("successfully"))
                     {
-                        AddNewItem();
+                        EditItem();
                     }
                 }));
             });

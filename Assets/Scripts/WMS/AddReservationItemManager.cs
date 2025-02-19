@@ -7,7 +7,7 @@ using UnityEngine.EventSystems;
 
 namespace CompanySystem
 {
-    public class EditTransactionItemManager : MonoBehaviour
+    public class AddReservationItemManager : MonoBehaviour
     {
         public TMP_Dropdown itemDropdown;
         public TMP_InputField quantityInputField;
@@ -38,7 +38,7 @@ namespace CompanySystem
                     {
                         itemDropdown.options.Add(new TMP_Dropdown.OptionData($"{item["sku"]} - {item["item_name"]}"));
                     }
-                    LoadItem();
+                    itemDropdown.captionText.text = itemDropdown.options[0].text;
                 }
                 else
                 {
@@ -47,21 +47,8 @@ namespace CompanySystem
             }));
         }
 
-        private void LoadItem()
-        {
-            foreach (var option in itemDropdown.options)
-            {
-                if (option.text == $"{TransactionDetailManager.selectedRecord.Sku} - {TransactionDetailManager.selectedRecord.ItemName}")
-                {
-                    itemDropdown.value = itemDropdown.options.IndexOf(option);
-                    break;
-                }
-            }
-            quantityInputField.text = TransactionDetailManager.selectedRecord.Quantity.ToString();
-        }
-
-        // Edit item to transaction
-        public void EditItem()
+        // Add item to reservation
+        public void AddNewItem()
         {
             string[] selectedItem = itemDropdown.captionText.text.Split('-');
             string sku = selectedItem[0].Trim();
@@ -81,43 +68,42 @@ namespace CompanySystem
 
         private IEnumerator UpdateData(JObject data)
         {
-            string code = TransactionListManager.selectedRecord.Code;
+            string code = ReservationListManager.selectedRecord.Code;
             int quantity = int.Parse(quantityInputField.text);
-            string oldSku = TransactionDetailManager.selectedRecord.Sku;
-            bool transactionSuccess = false;
+            bool reservationSuccess = false;
 
-            var newTransactionItem = new Dictionary<string, object>
+            var newReservationItem = new Dictionary<string, object>
             {
                 { "sku", data["sku"].ToString() },
                 { "item_name", data["item_name"].ToString() },
                 { "quantity", quantity },
-                { "information", "Unprocessed" }
+                { "information", "unprocessed" },
+                { "packed", false }
             };
 
-            StartCoroutine(FirebaseServices.ModifyData("transactions", "code", code, "items", newTransactionItem, oldSku, "sku", message =>
+            StartCoroutine(FirebaseServices.WriteData("reservations", "code", code, "items", newReservationItem, "sku", message =>
             {
-
                 if (message.Contains("successfully"))
                 {
                     HidePopup();
                     ResetInput();
-                    transactionSuccess = true;
+                    reservationSuccess = true;
                 }
                 else if (message.Contains("registered"))
                 {
                     ShowPopup();
-                    ItemRegisteredHandler(message, code, newTransactionItem["sku"].ToString());
+                    ItemRegisteredHandler(message, code, newReservationItem["sku"].ToString());
                 }
                 else
                 {
-                    Debug.LogError("Failed to add item to transaction.");
+                    Debug.LogError("Failed to add item to reservation.");
                 }
             }));
 
-            yield return new WaitUntil(() => transactionSuccess);
-            if (transactionSuccess)
+            yield return new WaitUntil(() => reservationSuccess);
+            if (reservationSuccess)
             {
-                yield return new WaitForSeconds(0.1f);
+                yield return new WaitForSeconds(0.15f);
                 RefreshTable();
                 gameObject.SetActive(false);
             }
@@ -171,11 +157,11 @@ namespace CompanySystem
 
             entry.callback.AddListener((eventData) =>
             {
-                StartCoroutine(FirebaseServices.DeleteData("transactions", "code", code, "items", "sku", sku, deleteResult =>
+                StartCoroutine(FirebaseServices.DeleteData("reservations", "code", code, "items", "sku", sku, deleteResult =>
                 {
                     if (deleteResult.Contains("successfully"))
                     {
-                        EditItem();
+                        AddNewItem();
                     }
                 }));
             });
@@ -183,3 +169,4 @@ namespace CompanySystem
         }
     }
 }
+
