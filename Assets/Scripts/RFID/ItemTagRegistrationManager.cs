@@ -93,17 +93,22 @@ namespace Rfid
         private void ShowItems()
         {
             float templateHigh = 32f;
-            for (int i = 0; i < transactionRecord.Items.Count; i++)
+            int i = 0;
+            for (int j = 0; j < transactionRecord.Items.Count; j++)
             {
-                TransactionItem item = transactionRecord.Items[i];
+                TransactionItem item = transactionRecord.Items[j];
 
                 GameObject newRow = Instantiate(recordTemplate, container);
                 Transform newRowTransform = newRow.transform;
                 RectTransform entryRectTransform = newRow.GetComponent<RectTransform>();
 
                 // Fill the UI elements with data
-                entryRectTransform.anchoredPosition = new Vector2(0f, 46f + (-templateHigh * i));
-                newRowTransform.Find("Button").Find("SKU").GetComponent<TextMeshProUGUI>().text = item.Sku;
+                if (!item.Tagged) // Check if the item is already tagged
+                {
+                    entryRectTransform.anchoredPosition = new Vector2(0f, 46f + (-templateHigh * i));
+                    newRowTransform.Find("Button").Find("SKU").GetComponent<TextMeshProUGUI>().text = item.Sku;
+                    i++;
+                }
 
                 table.GetComponent<DynamicTableManager>().enabled = true;
             }
