@@ -103,7 +103,7 @@ namespace Rfid
                 RectTransform entryRectTransform = newRow.GetComponent<RectTransform>();
 
                 // Fill the UI elements with data
-                if (!item.Tagged) // Check if the item is already tagged
+                if (item.Information.Equals("approved") && !item.Tagged)
                 {
                     entryRectTransform.anchoredPosition = new Vector2(0f, 46f + (-templateHigh * i));
                     newRowTransform.Find("Button").Find("SKU").GetComponent<TextMeshProUGUI>().text = item.Sku;
