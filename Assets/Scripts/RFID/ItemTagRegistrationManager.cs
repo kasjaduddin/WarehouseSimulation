@@ -98,13 +98,13 @@ namespace Rfid
             {
                 TransactionItem item = transactionRecord.Items[j];
 
-                GameObject newRow = Instantiate(recordTemplate, container);
-                Transform newRowTransform = newRow.transform;
-                RectTransform entryRectTransform = newRow.GetComponent<RectTransform>();
-
                 // Fill the UI elements with data
                 if (item.Information.Equals("approved") && !item.Tagged)
                 {
+                    GameObject newRow = Instantiate(recordTemplate, container);
+                    Transform newRowTransform = newRow.transform;
+                    RectTransform entryRectTransform = newRow.GetComponent<RectTransform>();
+
                     entryRectTransform.anchoredPosition = new Vector2(0f, 46f + (-templateHigh * i));
                     newRowTransform.Find("Button").Find("SKU").GetComponent<TextMeshProUGUI>().text = item.Sku;
                     i++;
