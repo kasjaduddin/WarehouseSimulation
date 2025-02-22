@@ -109,36 +109,41 @@ namespace Rfid
         private IEnumerator ShowItems()
         {
             float templateHigh = 32f;
-            for (int i = 0; i < reservationRecord.Items.Count; i++)
+            int i = 0;
+            for (int j = 0; j < reservationRecord.Items.Count; j++)
             {
-                ItemRecord item = new ItemRecord();
-                StartCoroutine(FirebaseServices.ReadData("items", "sku", reservationRecord.Items[i].Sku, data =>
+                if (reservationRecord.Items[j].Information.Equals("approved") && !reservationRecord.Items[j].Packed)
                 {
-                    if (data != null)
+                    ItemRecord item = new ItemRecord();
+                    StartCoroutine(FirebaseServices.ReadData("items", "sku", reservationRecord.Items[j].Sku, data =>
                     {
-                        ItemRecord record = new ItemRecord(data);
-                        item = record;
-                    }
-                    else
-                    {
-                        Debug.LogError("Failed to retrieve data.");
-                    }
-                }));
+                        if (data != null)
+                        {
+                            ItemRecord record = new ItemRecord(data);
+                            item = record;
+                        }
+                        else
+                        {
+                            Debug.LogError("Failed to retrieve data.");
+                        }
+                    }));
 
-                yield return new WaitUntil(() => item.Sku == reservationRecord.Items[i].Sku);
-                GameObject newRow = Instantiate(itemRecordTemplate, itemContainer);
-                Transform newRowTransform = newRow.transform;
-                RectTransform entryRectTransform = newRow.GetComponent<RectTransform>();
+                    yield return new WaitUntil(() => item.Sku == reservationRecord.Items[j].Sku);
 
-                // Fill the UI elements with data
-                entryRectTransform.anchoredPosition = new Vector2(0f, 46f + (-templateHigh * i));
-                newRowTransform.Find("No").GetComponent<TextMeshProUGUI>().text = (i + 1).ToString();
-                newRowTransform.Find("Bin Code").GetComponent<TextMeshProUGUI>().text = item.BinCode;
-                newRowTransform.Find("SKU").GetComponent<TextMeshProUGUI>().text = item.Sku;
-                newRowTransform.Find("Item Name").GetComponent<TextMeshProUGUI>().text = item.ItemName;
-                newRowTransform.Find("Quantity").GetComponent<TextMeshProUGUI>().text = reservationRecord.Items[i].Quantity.ToString();
-                newRowTransform.Find("Stock").GetComponent<TextMeshProUGUI>().text = item.Quantity.ToString();
+                    GameObject newRow = Instantiate(itemRecordTemplate, itemContainer);
+                    Transform newRowTransform = newRow.transform;
+                    RectTransform entryRectTransform = newRow.GetComponent<RectTransform>();
 
+                    // Fill the UI elements with data
+                    entryRectTransform.anchoredPosition = new Vector2(0f, 46f + (-templateHigh * i));
+                    newRowTransform.Find("No").GetComponent<TextMeshProUGUI>().text = (i + 1).ToString();
+                    newRowTransform.Find("Bin Code").GetComponent<TextMeshProUGUI>().text = item.BinCode;
+                    newRowTransform.Find("SKU").GetComponent<TextMeshProUGUI>().text = item.Sku;
+                    newRowTransform.Find("Item Name").GetComponent<TextMeshProUGUI>().text = item.ItemName;
+                    newRowTransform.Find("Quantity").GetComponent<TextMeshProUGUI>().text = reservationRecord.Items[i].Quantity.ToString();
+                    newRowTransform.Find("Stock").GetComponent<TextMeshProUGUI>().text = item.Quantity.ToString();
+                    i++;
+                }
                 itemTable.GetComponent<DynamicTableManager>().enabled = true;
             }
             itemRecordTemplate.SetActive(false);

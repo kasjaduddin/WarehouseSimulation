@@ -91,7 +91,7 @@ namespace CompanySystem
                 { "sku", data["sku"].ToString() },
                 { "item_name", data["item_name"].ToString() },
                 { "quantity", quantity },
-                { "information", "Unprocessed" },
+                { "information", "unprocessed" },
                 { "packed", false }
             };
 
