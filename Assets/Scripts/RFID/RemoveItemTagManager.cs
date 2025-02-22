@@ -51,7 +51,7 @@ namespace Rfid
                 if (data != null)
                 {
                     reservations = data;
-                    ShowReservation();
+                    StartCoroutine(ShowReservation());
                 }
                 else
                 {
@@ -67,22 +67,68 @@ namespace Rfid
             StartCoroutine(GetItems(code.text));
         }
 
-        private void ShowReservation()
+        private IEnumerator ShowReservation()
         {
+            yield return new WaitUntil(() => reservations != null);
             float templateHigh = 32f;
             for (int i = 0; i < reservations.Count; i++)
             {
-                GameObject newRow = Instantiate(reservationRecordTemplate, reservationContainer);
-                Transform newRowTransform = newRow.transform;
-                RectTransform entryRectTransform = newRow.GetComponent<RectTransform>();
+                bool itemAvailibilityChecked = false;
+                bool haveUnpackedItem = false;
+                StartCoroutine(FirebaseServices.ReadData("reservations", "code", reservations[i]["code"].ToString(), data =>
+                {
+                    if (data != null)
+                    {
+                        if (CheckItemAvailibility(data))
+                        {
+                            haveUnpackedItem = true;
+                        }
+                        itemAvailibilityChecked = true;
+                    }
+                    else
+                    {
+                        Debug.LogError("Failed to retrieve data.");
+                    }
+                }));
 
-                // Fill the UI elements with data
-                entryRectTransform.anchoredPosition = new Vector2(0f, 46f + (-templateHigh * i));
-                newRowTransform.Find("Button").Find("Code").GetComponent<TextMeshProUGUI>().text = reservations[i]["code"].ToString();
-                
-                reservationTable.GetComponent<DynamicTableManager>().enabled = true;
+                yield return new WaitUntil(() => itemAvailibilityChecked);
+                if (haveUnpackedItem)
+                {
+                    GameObject newRow = Instantiate(reservationRecordTemplate, reservationContainer);
+                    Transform newRowTransform = newRow.transform;
+                    RectTransform entryRectTransform = newRow.GetComponent<RectTransform>();
+
+                    // Fill the UI elements with data
+                    entryRectTransform.anchoredPosition = new Vector2(0f, 46f + (-templateHigh * i));
+                    newRowTransform.Find("Button").Find("Code").GetComponent<TextMeshProUGUI>().text = reservations[i]["code"].ToString();
+
+                    reservationTable.GetComponent<DynamicTableManager>().enabled = true;
+                }
             }
             reservationRecordTemplate.SetActive(false);
+        }
+
+        private bool CheckItemAvailibility(JObject data)
+        {
+            ReservationRecord record = new ReservationRecord(data);
+
+            int counter = 0;
+            foreach (var item in record.Items)
+            {
+                if (item.Information.Equals("approved") && !item.Packed)
+                {
+                    counter++; Debug.Log(item.ItemName);
+                }
+            }
+            Debug.Log($"{record.Items.Count} {counter} {record.Items.Count > 0 && counter == record.Items.Count}");
+            if (record.Items.Count > 0 && counter > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         private IEnumerator GetItems(string code)
