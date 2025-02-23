@@ -34,6 +34,11 @@ public class WindowsManager : MonoBehaviour
         StartCoroutine(OpenCompanySystem());
     }
 
+    public void OnClickRfidShortcut()
+    {
+        StartCoroutine(OpenRfid());
+    }
+
     private IEnumerator OpenCompanySystem()
     {
         CloseCompanySystem();
@@ -56,6 +61,23 @@ public class WindowsManager : MonoBehaviour
             }
         }
         companySystem.SetActive(false);
+    }
+
+    private IEnumerator OpenRfid()
+    {
+        CloseRfid();
+        yield return new WaitForSeconds(0.1f);
+        rfid.SetActive(true);
+    }
+
+    public void CloseRfid()
+    {
+        foreach (Transform child in rfid.transform)
+        {
+            string name = child.gameObject.name;
+            child.gameObject.SetActive(name.Equals("Title Bar") || name.Equals("Main Menu"));
+        }
+        rfid.SetActive(false);
     }
 
     private void ActivteList(Transform parent, string listName)
