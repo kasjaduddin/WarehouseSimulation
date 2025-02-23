@@ -41,9 +41,12 @@ public class WindowsManager : MonoBehaviour
 
     private IEnumerator OpenCompanySystem()
     {
-        CloseCompanySystem();
-        yield return new WaitForSeconds(0.1f);
-        companySystem.SetActive(true);
+        if (!companySystem.activeSelf)
+        {
+            CloseCompanySystem();
+            yield return new WaitForSeconds(0.1f);
+            companySystem.SetActive(true);
+        }
     }
 
     public void CloseCompanySystem()
@@ -65,9 +68,12 @@ public class WindowsManager : MonoBehaviour
 
     private IEnumerator OpenRfid()
     {
-        CloseRfid();
-        yield return new WaitForSeconds(0.1f);
-        rfid.SetActive(true);
+        if (!rfid.activeSelf)
+        {
+            CloseRfid();
+            yield return new WaitForSeconds(0.1f);
+            rfid.SetActive(true);
+        }
     }
 
     public void CloseRfid()
