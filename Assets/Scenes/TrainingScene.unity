@@ -4371,7 +4371,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Reservation Picking
+  m_text: Item Picking
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -14184,7 +14184,7 @@ GameObject:
   - component: {fileID: 305850982}
   - component: {fileID: 305850981}
   m_Layer: 0
-  m_Name: Receive Registration Button
+  m_Name: Receive Item Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -42977,7 +42977,7 @@ GameObject:
   - component: {fileID: 918240700}
   - component: {fileID: 918240699}
   m_Layer: 0
-  m_Name: Reservation Picking Button
+  m_Name: Item Picking Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -64247,7 +64247,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Receive Registration
+  m_text: Receive Item
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
