@@ -1,6 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class WindowsManager : MonoBehaviour
@@ -44,7 +42,9 @@ public class WindowsManager : MonoBehaviour
         if (!companySystem.activeSelf)
         {
             CloseCompanySystem();
-            yield return new WaitForSeconds(0.1f);
+            CompanySystem.BinListManager binListManager = companySystem.transform.Find("Master Data Bin").Find("Bin List").GetComponent<CompanySystem.BinListManager>();
+            yield return new WaitUntil(() => binListManager.enabled == false);
+            binListManager.enabled = true;
             companySystem.SetActive(true);
         }
     }
@@ -55,7 +55,9 @@ public class WindowsManager : MonoBehaviour
         {
             if (child.gameObject.name == "Master Data Bin")
             {
-                ActivteList(child, "Bin List");
+                string listName = "Bin List";
+                child.transform.Find(listName).GetComponent<CompanySystem.BinListManager>().enabled = false;
+                ActivteList(child, listName);
                 child.gameObject.SetActive(true); 
             }
             else
