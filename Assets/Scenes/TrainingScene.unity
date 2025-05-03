@@ -44939,7 +44939,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &967622474
 Transform:
   m_ObjectHideFlags: 0
@@ -86661,6 +86661,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlasticBox02_Blue
       objectReference: {fileID: 0}
+    - target: {fileID: 5880781052741094521, guid: e34d2813388ebf347b350f865cfae29e, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6315290900686454425, guid: e34d2813388ebf347b350f865cfae29e, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.8
@@ -86675,7 +86679,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6315290900686454425, guid: e34d2813388ebf347b350f865cfae29e, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -6.685
+      value: -6.658
       objectReference: {fileID: 0}
     - target: {fileID: 6315290900686454425, guid: e34d2813388ebf347b350f865cfae29e, type: 3}
       propertyPath: m_LocalPosition.y
@@ -96980,16 +96984,28 @@ PrefabInstance:
       value: RFID Reader
       objectReference: {fileID: 0}
     - target: {fileID: 4071826853082590302, guid: 008a6dfed0404a145b94ca90e59f95dc, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4071826853082590302, guid: 008a6dfed0404a145b94ca90e59f95dc, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4071826853082590302, guid: 008a6dfed0404a145b94ca90e59f95dc, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4071826853082590302, guid: 008a6dfed0404a145b94ca90e59f95dc, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -6.934
+      value: -7.31
       objectReference: {fileID: 0}
     - target: {fileID: 4071826853082590302, guid: 008a6dfed0404a145b94ca90e59f95dc, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.76
+      value: 0.767
       objectReference: {fileID: 0}
     - target: {fileID: 4071826853082590302, guid: 008a6dfed0404a145b94ca90e59f95dc, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 9.16
+      value: 8.915
       objectReference: {fileID: 0}
     - target: {fileID: 4071826853082590302, guid: 008a6dfed0404a145b94ca90e59f95dc, type: 3}
       propertyPath: m_LocalRotation.w
@@ -97017,6 +97033,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4071826853082590302, guid: 008a6dfed0404a145b94ca90e59f95dc, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4071826853082590302, guid: 008a6dfed0404a145b94ca90e59f95dc, type: 3}
+      propertyPath: m_ConstrainProportionsScale
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
